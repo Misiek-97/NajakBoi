@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tile : MonoBehaviour
 {
     public int hitpoints;   
     public Sprite sprite;
-    public SpriteRenderer spriteRenderer;
+    public Image image;
     public Collider2D col;
 
     private int _currentHitpoints;
@@ -17,7 +18,7 @@ public class Tile : MonoBehaviour
         _currentHitpoints = hitpoints;
 
         if(sprite != null )
-            spriteRenderer.sprite = sprite;
+            image.sprite = sprite;
     }
 
 
