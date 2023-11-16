@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,5 +15,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         
+    }
+
+    public static void PlayerDeath()
+    {
+        SceneManager.LoadScene("Game");
     }
 }
