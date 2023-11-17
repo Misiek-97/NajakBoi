@@ -1,20 +1,37 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class CharacterController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
-    private bool isGrounded;
-    public int hitpoints;
-    public int maxHealth = 100;
-    public int currentHealth;
-
+    private bool _isGrounded;
     public HealthBar healthBar;
+    public float maxHealth = 100f;
+    public float currentHealth;
 
-    private int _currentHitpoints;
+    private bool _isDead;
 
+
+    private void Start()
+    {
+        healthBar.character = this;
+        currentHealth = maxHealth;
+    }
     // Update is called once per frame
     void Update()
+    {
+        if (_isDead) return;
+        
+        ControlCharacter();
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GetDamaged(20);
+        }
+    }
+
+    private void ControlCharacter()
     {
         // Move the character left and right
         float horizontalInput = Input.GetAxis("Horizontal");
@@ -22,13 +39,14 @@ public class CharacterController : MonoBehaviour
         transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
 
         // Check if the character is on the ground (you may need to adjust the ground check position)
-        isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.1f);
+        _isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.1f);
 
         // Jump when the spacebar is pressed and the character is on the ground
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        if (Input.GetButtonDown("Jump") && _isGrounded)
         {
             GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
+        
     }
 
 
@@ -36,37 +54,24 @@ public class CharacterController : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("DeathZone"))
         {
-            Destroy(gameObject);
-            GameManager.PlayerDeath();
+            _isDead = true;
+            GameManager.Instance.PlayerDeath();
         }
     }
     public void GetDamaged(int dmg)
     {
-        _currentHitpoints -= dmg;
+        currentHealth -= dmg;
+        
 
-
-        if (_currentHitpoints <= 0)
-            Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        currentHealth = maxHealth;
-        healthBar.SetMaxHealth(maxHealth);
-    }
-
-    private void LateUpdate()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (currentHealth <= 0)
         {
-            TakeDamage(20);
+            currentHealth = 0f;
+            _isDead = true;
+            GameManager.Instance.PlayerDeath();
         }
     }
 
-    void TakeDamage(int damage)
-    {
-        currentHealth -= damage;
-        healthBar.SetHealth(currentHealth);
-    }
+  
+
 
 }

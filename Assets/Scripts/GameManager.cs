@@ -1,24 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TestTools;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject gameOverScreen;
+
+    public static GameManager Instance;
+
+    private void Awake()
     {
+        if (Instance)
+        {
+            Debug.Log("GameManager Instance already exists!");
+            Destroy(gameObject);
+            return;
+        }
         
+        Instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDestroy()
     {
-        
+        Instance = null;
     }
 
-    public static void PlayerDeath()
+    public void PlayerDeath()
+    {
+        gameOverScreen.SetActive(true);
+    }
+
+    public void RestartGame()
     {
         SceneManager.LoadScene("Game");
     }
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+    
 }

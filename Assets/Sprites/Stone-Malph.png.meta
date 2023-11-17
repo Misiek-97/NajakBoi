@@ -169,7 +169,8 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Stone-Malph_0: 4010170578379315729
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,9 @@ public class Launcher : MonoBehaviour
     public float forceMultiplier;
 
     private float _force;
+    public GameObject canvas;
 
+   
 
 
     // Update is called once per frame
@@ -34,9 +37,8 @@ public class Launcher : MonoBehaviour
             var pos = gameObject.transform.position;
             Vector3 dir = (Input.mousePosition - pos).normalized;
 
-            var projectileInstance = Instantiate(projectilePrefab, barrel);
-            projectileInstance.transform.parent = GameObject.Find("Canvas").transform;
-            Debug.Log(projectileInstance.transform.position);
+            var projectileInstance = Instantiate(projectilePrefab, canvas.transform);
+            projectileInstance.transform.position = barrel.transform.position;
             var projectile = projectileInstance.GetComponent<Projectile>();
             projectile.rb.AddForce(dir * _force);
 
