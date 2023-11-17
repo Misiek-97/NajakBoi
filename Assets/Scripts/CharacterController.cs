@@ -5,6 +5,13 @@ public class CharacterController : MonoBehaviour
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
     private bool isGrounded;
+    public int hitpoints;
+    public int maxHealth = 100;
+    public int currentHealth;
+
+    public HealthBar healthBar;
+
+    private int _currentHitpoints;
 
     // Update is called once per frame
     void Update()
@@ -33,4 +40,33 @@ public class CharacterController : MonoBehaviour
             GameManager.PlayerDeath();
         }
     }
+    public void GetDamaged(int dmg)
+    {
+        _currentHitpoints -= dmg;
+
+
+        if (_currentHitpoints <= 0)
+            Destroy(gameObject);
+    }
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+    }
+
+    private void LateUpdate()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            TakeDamage(20);
+        }
+    }
+
+    void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
+    }
+
 }
