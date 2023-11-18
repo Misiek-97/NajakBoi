@@ -12,6 +12,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     public int id;
     public TileType type;
     public GameObject tileMenuPrefab;
+    public Vector2 position;
 
     public BoxCollider2D col;
 
