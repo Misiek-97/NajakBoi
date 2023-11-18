@@ -9,6 +9,14 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
+      propertyPath: col
+      value: 
+      objectReference: {fileID: 7695385784815131173, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
+    - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
+      propertyPath: type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
       propertyPath: sprite
       value: 
       objectReference: {fileID: -8275502208090371910, guid: bc3508ec6d6df62408cfbaa0d14537c1, type: 3}
@@ -16,6 +24,10 @@ PrefabInstance:
       propertyPath: hitpoints
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
+      propertyPath: tileMenuPrefab
+      value: 
+      objectReference: {fileID: 2561403470868381975, guid: 9a3cb708bc55ed14ab2b974518435670, type: 3}
     - target: {fileID: 4386100971532046557, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

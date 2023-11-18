@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 227660377990114791}
   m_Layer: 5
   m_Name: Tile
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -52,9 +52,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 229449589abf7da48b15228938b51124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hitpoints: 100
+  hitPoints: 0
   sprite: {fileID: 0}
   image: {fileID: 3213672945085748166}
+  id: 0
+  type: 0
+  tileMenuPrefab: {fileID: 2561403470868381975, guid: 9a3cb708bc55ed14ab2b974518435670, type: 3}
   col: {fileID: 7695385784815131173}
 --- !u!114 &3213672945085748166
 MonoBehaviour:
@@ -93,7 +96,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7072242599811475678}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
