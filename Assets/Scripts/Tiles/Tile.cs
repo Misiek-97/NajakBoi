@@ -1,21 +1,32 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
+using Tiles;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Tile : MonoBehaviour
+public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
-    public int hitpoints;   
+    public int hitPoints;   
     public Sprite sprite;
     public Image image;
-    public Collider2D col;
+    public int id;
+    public TileType type;
+    public GameObject tileMenuPrefab;
+    public Vector2 position;
 
-    private int _currentHitpoints;
+    public BoxCollider2D col;
+
+    private int _currentHitPoints;
 
 
     private void Awake()
     {
-        _currentHitpoints = hitpoints;
+        if (type == TileType.Empty)
+        {
+            col.enabled = false;
+        }
+        
+        _currentHitPoints = hitPoints;
 
         if(sprite != null )
             image.sprite = sprite;
@@ -24,11 +35,9 @@ public class Tile : MonoBehaviour
 
     public void GetDamaged(int dmg)
     {
-        _currentHitpoints -= dmg;
-
-        Debug.Log(_currentHitpoints);
-
-        if(_currentHitpoints <= 0)
+        _currentHitPoints -= dmg;
+        
+        if(_currentHitPoints <= 0)
             Destroy(gameObject);
     }
 
@@ -42,6 +51,37 @@ public class Tile : MonoBehaviour
             Destroy(collision.gameObject);
         }
     }
+ 
+    public void UpdateTile(Tile tile)
+    {
+        hitPoints = tile.hitPoints;
+        sprite = tile.sprite;
+        type = tile.type;
+        id = tile.id;
+        
+        image.color = Color.white;
+        image.sprite = sprite;
+        _currentHitPoints = hitPoints;
+        col.enabled = true;
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        image.color = new Color(0, 255, 0, 100);
+    }
+    
+    public void OnPointerExit(PointerEventData eventData)
+    { 
+        image.color = Color.white;
+    }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (!TileMenu.Instance)
+            Instantiate(tileMenuPrefab, GameObject.Find("Canvas").transform);
+        else
+            TileMenu.Instance.transform.position = Input.mousePosition;
+        
+        TileMenu.TileBeingEdited = this;
+    }
 
 }

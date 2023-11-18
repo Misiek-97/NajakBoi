@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &2769457597503835352
+--- !u!1001 &3166127884332030260
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -13,21 +13,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 7695385784815131173, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
     - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
-      propertyPath: type
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
       propertyPath: sprite
       value: 
-      objectReference: {fileID: 4010170578379315729, guid: c78d0cea3a654e84ca6bdee0b3a9ca06, type: 3}
-    - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
-      propertyPath: hitpoints
-      value: 75
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 5179650501336446038, guid: 8767968a0d5f6ad41a7ccf085ee88dc7, type: 3}
     - target: {fileID: 2628600020481159506, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
       propertyPath: tileMenuPrefab
       value: 
       objectReference: {fileID: 2561403470868381975, guid: 9a3cb708bc55ed14ab2b974518435670, type: 3}
+    - target: {fileID: 3213672945085748166, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4386100971532046557, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -110,7 +106,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7072242599811475678, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
       propertyPath: m_Name
-      value: Tile-Stone
+      value: Tile-Empty
+      objectReference: {fileID: 0}
+    - target: {fileID: 7695385784815131173, guid: a76eb02956af35246bf33e690157cfa9, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
