@@ -1,5 +1,6 @@
 ﻿namespace Tiles
 {
+    [System.Serializable]
     public enum TileType
     {
         Empty = 0,
