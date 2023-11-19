@@ -1,4 +1,3 @@
-using System;
 using Tiles;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,7 +11,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
     public int id;
     public TileType type;
     public GameObject tileMenuPrefab;
-    public Vector2 position;
+    public Vector2 gridPos;
 
     public BoxCollider2D col;
 
