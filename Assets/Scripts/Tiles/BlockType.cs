@@ -1,7 +1,7 @@
 ﻿namespace Tiles
 {
     [System.Serializable]
-    public enum TileType
+    public enum BlockType
     {
         Empty = 0,
         Dirt = 1,

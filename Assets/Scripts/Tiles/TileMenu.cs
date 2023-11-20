@@ -6,11 +6,11 @@ using UnityEngine.Serialization;
 public class TileMenu : MonoBehaviour
 {
     public static TileMenu Instance;
-    public Tile[] tiles;
+    public Block[] tiles;
     public GameObject tileBtnPrefab;
     public Transform content;
 
-    public static Tile TileBeingEdited;
+    public static Block BlockBeingEdited;
 
 
     private void Awake()
@@ -34,12 +34,12 @@ public class TileMenu : MonoBehaviour
     {
         foreach (var t in tiles)
         {
-            if (t.type == TileType.Empty) continue;
+            if (t.type == BlockType.Empty) continue;
 
             var btnGo = Instantiate(tileBtnPrefab, content);
 
             var tileBtn = btnGo.GetComponent<TileMenuButton>();
-            tileBtn.tile = t;
+            tileBtn.block = t;
             tileBtn.SetUpButton();
         }
     }

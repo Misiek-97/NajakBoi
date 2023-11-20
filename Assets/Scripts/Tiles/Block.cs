@@ -3,34 +3,41 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class Block : MonoBehaviour
 {
+          
+    public GameObject blockMenuPrefab;
+    public Material mat;
+    private BoxCollider _collider;
+    private MeshRenderer _renderer;
+    
+    
     public int hitPoints;   
     public Sprite sprite;
     public Image image;
     public int id;
-    public TileType type;
+    public BlockType type;
     public GameObject tileMenuPrefab;
     public Vector2 gridPos;
 
-    public BoxCollider2D col;
-
     private int _currentHitPoints;
 
-
-    private void Awake()
+    
+    void Awake()
     {
-        if (type == TileType.Empty)
+        _renderer = GetComponent<MeshRenderer>();
+        _renderer.material = mat;
+        
+        
+        _collider = GetComponent<BoxCollider>();
+        if (type == BlockType.Empty)
         {
-            col.enabled = false;
+            _collider.enabled = false;
         }
         
         _currentHitPoints = hitPoints;
-
-        if(sprite != null )
-            image.sprite = sprite;
+        
     }
-
 
     public void GetDamaged(int dmg)
     {
@@ -40,7 +47,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
             Destroy(gameObject);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Projectile"))
         {
@@ -51,28 +58,19 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         }
     }
  
-    public void UpdateTile(Tile tile)
+    public void UpdateBlockProperties(Block block)
     {
-        hitPoints = tile.hitPoints;
-        sprite = tile.sprite;
-        type = tile.type;
-        id = tile.id;
+        hitPoints = block.hitPoints;
+        sprite = block.sprite;
+        type = block.type;
+        mat = block.mat;
+        id = block.id;
         
-        image.color = Color.white;
-        image.sprite = sprite;
         _currentHitPoints = hitPoints;
-        col.enabled = true;
-    }
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        image.color = new Color(0, 255, 0, 100);
+
+        _collider.enabled = block.type != BlockType.Empty;
     }
     
-    public void OnPointerExit(PointerEventData eventData)
-    { 
-        image.color = Color.white;
-    }
-
     public void OnPointerClick(PointerEventData eventData)
     {
         if (!TileMenu.Instance)
@@ -80,7 +78,7 @@ public class Tile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IP
         else
             TileMenu.Instance.transform.position = Input.mousePosition;
         
-        TileMenu.TileBeingEdited = this;
+        TileMenu.BlockBeingEdited = this;
     }
 
 }
