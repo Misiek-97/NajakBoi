@@ -5,12 +5,12 @@ public class HealthBar : MonoBehaviour
 {
     public Image healthBarFill;
     public float drainSpeed;
-    public CharacterController character;
+    public PlayerController player;
     
     // Update is called once per frame
     void Update()
     {
-        var currentHealth = character.currentHealth;
+        var currentHealth = player.currentHealth;
         // Example: Drain the health over time
         if (currentHealth > 0)
         {
@@ -20,7 +20,7 @@ public class HealthBar : MonoBehaviour
             currentHealth = Mathf.Max(currentHealth, 0.0f);
 
             // Calculate health percentage
-            float healthPercentage = currentHealth / character.maxHealth;
+            float healthPercentage = currentHealth / player.maxHealth;
 
             // Lerp the health bar fill amount
             SetHealthBarFill(Mathf.Lerp(healthBarFill.fillAmount, healthPercentage, Time.deltaTime * 5.0f));

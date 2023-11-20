@@ -1,7 +1,6 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class CharacterController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public float moveSpeed = 5f;
     public float jumpForce = 10f;
@@ -15,7 +14,7 @@ public class CharacterController : MonoBehaviour
 
     private void Start()
     {
-        healthBar.character = this;
+        healthBar.player = this;
         currentHealth = maxHealth;
     }
     // Update is called once per frame
