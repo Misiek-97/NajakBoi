@@ -62,7 +62,10 @@ namespace Weapons
             // Create a new projectile at pExit position
             var instance = Instantiate(projectilePrefab);
             var projectile = instance.GetComponent<Projectile>();
-            instance.transform.position = pExit;
+            
+            //Ensure Projectile and Direction is at 0z
+            direction = new Vector3(direction.x, direction.y, 0f);
+            instance.transform.position = new Vector3(pExit.x, pExit.y, 0.0f);
 
             // Apply force to the Rigidbody in the calculated direction
             projectile.rb.AddForce(direction * force, ForceMode.Impulse);

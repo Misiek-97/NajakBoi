@@ -11,6 +11,11 @@ namespace Weapons
 
         private float _currentLifetime;
 
+        private void Start()
+        {
+            Physics.IgnoreLayerCollision(gameObject.layer,  LayerMask.NameToLayer("IgnoreCollision"));
+        }
+
         private void Update()
         {
             _currentLifetime += 1 * Time.deltaTime;

@@ -10,6 +10,8 @@ namespace Weapons
         // Update is called once per frame
         void Update()
         {
+            if (GameManager.Instance.editMode) return;
+            
             if (Input.GetMouseButton(0))
             {
                 GameManager.Instance.playerController.isAiming = true;

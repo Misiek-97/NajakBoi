@@ -19,10 +19,7 @@ namespace Blocks
 
         public void Clicked()
         {
-            BlockMenu.BlockBeingEdited.UpdateBlockProperties(block);
-            BlockMenu.Instance.Close();
+            BlockMenu.Instance.blockToPlace = block;
         }
-    
-    
     }
 }
