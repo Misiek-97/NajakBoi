@@ -1,50 +1,26 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Launcher : MonoBehaviour
+namespace Weapons
 {
-    public GameObject projectilePrefab;
-    public Transform barrel;
-    public float forceMultiplier;
-
-    private float _force;
-    public GameObject canvas;
-
-   
-
-
-    // Update is called once per frame
-    void Update()
+    public class Launcher : Weapon
     {
-        // Get the mouse position in world space
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        public float forceMultiplier;
+        private float _force;
 
-        // Calculate the angle between the current object position and the mouse position
-        float angle = Mathf.Atan2(mousePos.y - transform.position.y, mousePos.x - transform.position.x) * Mathf.Rad2Deg;
-
-        // Rotate the object to face the mouse
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle - 90f));
-
-        if (Input.GetMouseButton(0))
+        // Update is called once per frame
+        void Update()
         {
-            _force += forceMultiplier * Time.deltaTime;
-        }
+            if (Input.GetMouseButton(0))
+            {
+                GameManager.Instance.playerController.isAiming = true;
+                _force += forceMultiplier * Time.deltaTime;
+            }
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            var pos = gameObject.transform.position;
-            Vector3 dir = (Input.mousePosition - pos).normalized;
-
-            var projectileInstance = Instantiate(projectilePrefab, canvas.transform);
-            projectileInstance.transform.position = barrel.transform.position;
-            var projectile = projectileInstance.GetComponent<Projectile>();
-            projectile.rb.AddForce(dir * _force);
-
-
-            _force = 0f;
-
+            if (Input.GetMouseButtonUp(0))
+            {
+                Fire(_force);
+                _force = 0f;
+            }
         }
     }
 }

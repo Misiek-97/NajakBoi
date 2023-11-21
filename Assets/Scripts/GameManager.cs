@@ -1,9 +1,11 @@
+using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
+    public ThirdPersonController playerController;
 
     public static GameManager Instance;
 
