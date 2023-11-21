@@ -12,9 +12,6 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
-    public LayerMask ignoreCollision;
-    public LayerMask blockLayer;
-
     private void Awake()
     {
         if (Instance)
