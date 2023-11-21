@@ -1,17 +1,22 @@
+using Blocks;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour
+namespace Weapons
 {
-    public int damage;
-    public Rigidbody2D rb;
-    public float lifetime;
-
-    private float _currentLifetime;
-
-    private void Update()
+    public class Projectile : MonoBehaviour
     {
-        _currentLifetime += 1 * Time.deltaTime;
-        if (_currentLifetime >= lifetime)
-            Destroy(gameObject);
+        public int damage;
+        public Rigidbody rb;
+        public float lifetime;
+
+        private float _currentLifetime;
+
+        private void Update()
+        {
+            _currentLifetime += 1 * Time.deltaTime;
+            if (_currentLifetime >= lifetime)
+                Destroy(gameObject);
+        }
+       
     }
 }

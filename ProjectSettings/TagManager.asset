@@ -6,7 +6,8 @@ TagManager:
   tags:
   - Projectile
   - DeathZone
-  - Tile
+  - CinemachineTarget
+  - Block
   layers:
   - Default
   - TransparentFX
