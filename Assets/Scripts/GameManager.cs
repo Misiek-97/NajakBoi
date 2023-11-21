@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
     public ThirdPersonController playerController;
+    public bool editMode;
+
+    public GameObject editCanvas;
 
     public static GameManager Instance;
 
@@ -24,6 +27,15 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         Instance = null;
+    }
+
+    public void EditMode()
+    {
+        editMode = !editMode;
+        editCanvas.SetActive(editMode);
+
+        if (!editMode)
+            SceneManager.LoadScene("Game");
     }
 
     public void PlayerDeath()

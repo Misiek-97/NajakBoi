@@ -48,6 +48,8 @@ namespace Blocks
                 Destroy(collision.gameObject);
             }
         }
+        
+        //EDIT MODE
  
         public void UpdateBlockProperties(Block block)
         {
@@ -58,26 +60,40 @@ namespace Blocks
             id = block.id;
             
             _renderer.material = mat;
+            if (!GameManager.Instance.editMode && type == BlockType.Empty)
+                _renderer.enabled = false;
+            
             _currentHitPoints = hitPoints;
+            gameObject.name = $"{type}@{gridPos}#{id}";
+            gameObject.layer = type == BlockType.Empty ? LayerMask.NameToLayer("IgnoreCollision") : 0;
         }
 
         private void OnMouseDown()
         {
+            if (!GameManager.Instance.editMode) return;
+            
+            /*
             if (!BlockMenu.Instance)
                 Instantiate(blockMenuPrefab, GameObject.Find("Canvas").transform);
             else
                 BlockMenu.Instance.transform.position = Input.mousePosition;
-        
+        */
             BlockMenu.BlockBeingEdited = this;
+            if(BlockMenu.Instance.blockToPlace)
+                UpdateBlockProperties(BlockMenu.Instance.blockToPlace);
         }
 
         private void OnMouseEnter()
         {
+            if (!GameManager.Instance.editMode) return;
+            
             highlightGo.SetActive(true);
         }
         
         private void OnMouseExit()
         {
+            if (!GameManager.Instance.editMode) return;
+            
             highlightGo.SetActive(false);
         }
     }

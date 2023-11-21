@@ -99,6 +99,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         
         public bool isAiming;
+        public LayerMask layersToIgnore;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -136,6 +137,7 @@ namespace StarterAssets
 
         private void Start()
         {
+            Physics.IgnoreLayerCollision(gameObject.layer,  LayerMask.NameToLayer("IgnoreCollision"));
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);

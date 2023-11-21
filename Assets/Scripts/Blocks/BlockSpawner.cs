@@ -12,6 +12,8 @@ namespace Blocks
     {
         public GameObject blockPrefab;
         public List<GameObject> blocksList = new (); //Available Tiles
+        public bool isPlayer;
+        
         private readonly List<Block> _gridBlocks = new (); //Active Tiles in the Grid
         private readonly Dictionary<GameObject, Block> _blocksDictionary = new (); //Available Tiles Dictionary
     
@@ -33,6 +35,12 @@ namespace Blocks
             SetUpBlockDictionary();
             var filePath = Application.persistentDataPath + "/BlockGrid.json";
 
+            if (!isPlayer)
+            {
+                CreateGrid(true);
+                return;
+            }
+            
             if (File.Exists(filePath))
             {
                 LoadSavedGrid();
