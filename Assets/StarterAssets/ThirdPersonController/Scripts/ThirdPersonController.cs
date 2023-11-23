@@ -99,7 +99,6 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         
         public bool isAiming;
-        public LayerMask layersToIgnore;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;

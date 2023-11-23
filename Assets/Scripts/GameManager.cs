@@ -1,3 +1,4 @@
+using System;
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -5,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
+
+    public GameObject player;
+    public GameObject opponent;
+    public bool playerTurn;
     public ThirdPersonController playerController;
     public bool editMode;
 
@@ -24,9 +29,41 @@ public class GameManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+        playerTurn = true;
+        player.SetActive(true);
+        opponent.SetActive(true);
+    }
+
     private void OnDestroy()
     {
         Instance = null;
+    }
+
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.T))
+            EndTurn();
+    }
+
+    public void EndTurn()
+    {
+        playerTurn = !playerTurn;
+        
+        player.SetActive(false);
+        opponent.SetActive(false);
+
+        if (playerTurn)
+        {
+            player.SetActive(true);
+            opponent.SetActive(true);
+        }
+        else
+        {
+            opponent.SetActive(true);
+            player.SetActive(true);
+        }
     }
 
     public void EditMode()
