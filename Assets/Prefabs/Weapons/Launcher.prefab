@@ -167,4 +167,7 @@ MonoBehaviour:
   model: {fileID: 509768939404777616}
   projectilePrefab: {fileID: 38431640591625171, guid: 57e30e586a32b75488b4631d7c65a445, type: 3}
   projectileExit: {fileID: 2486157663291739366}
+  playerController: {fileID: 0}
+  minForce: 1
+  maxForce: 20
   forceMultiplier: 10

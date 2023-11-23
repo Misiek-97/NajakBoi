@@ -8,6 +8,7 @@ public class MovementBar : Bar
 
     public void UpdateMovement()
     {
+        if (!player) return;
         amount = player.currentMovement;
         maxAmount = player.maxMovement;
     }

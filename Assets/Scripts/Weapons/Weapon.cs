@@ -80,6 +80,7 @@ namespace Weapons
             // Apply force to the Rigidbody in the calculated direction
             projectile.rb.AddForce(direction * force, ForceMode.Impulse);
             GameManager.Instance.playerController.isAiming = false;
+            GameManager.Instance.EndTurn();
         }
     }
 }

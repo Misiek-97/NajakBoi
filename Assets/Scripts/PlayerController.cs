@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public PlayerId playerId;
     public HealthBar healthBar;
     public MovementBar movementBar;
+    public ChargeBar chargeBar;
     public float maxHealth = 100f;
     public float currentHealth;
     public float currentMovement;
@@ -34,16 +35,19 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("DeathZone"))
-        {
-            GetDamaged(currentHealth);
-        }
-
         if (other.gameObject.CompareTag("Projectile"))
         {
             var p = other.gameObject.GetComponent<Projectile>();
             GetDamaged(p.damage);
             Destroy(p.gameObject);
+        }
+    } 
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("DeathZone"))
+        {
+            GetDamaged(currentHealth);
         }
     }
 
@@ -53,7 +57,6 @@ public class PlayerController : MonoBehaviour, IDamageable
         movementBar.UpdateMovement();
         if(currentMovement <= 0f)
         {           
-            currentMovement = maxMovement;
             GameManager.Instance.EndTurn();
             return true;
         }

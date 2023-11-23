@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject gameOverScreen;
+    public EndGameScreen endGameScreen;
 
     public PlayerController player;
     public PlayerController opponent;
@@ -42,6 +42,11 @@ public class GameManager : MonoBehaviour
         opponent.gameObject.SetActive(true);
     }
 
+    private void FixedUpdate()
+    {
+        Debug.Log(playerTurn);
+    }
+
 
     private void Update()
     {
@@ -68,6 +73,9 @@ public class GameManager : MonoBehaviour
                 opponent.gameObject.SetActive(true);
                 break;
         }
+
+        player.currentMovement = player.maxMovement;
+        opponent.currentMovement = opponent.maxMovement;
     }
 
     public void EditMode()
@@ -81,19 +89,12 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDeath(PlayerId player)
     {
-        if(player == PlayerId.Player)
-        {
-            gameOverScreen.SetActive(true);
-        }
-
-        if(player == PlayerId.Opponent)
-        {
-            gameOverScreen.SetActive(true);
-        }
+        endGameScreen.GameEnded(player);
     }
 
     public void RestartGame()
     {
+        playerTurn = PlayerId.Player;
         SceneManager.LoadScene("Game");
     }
     public void MainMenu()

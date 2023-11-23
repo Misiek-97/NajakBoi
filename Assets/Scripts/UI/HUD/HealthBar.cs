@@ -9,6 +9,7 @@ public class HealthBar : Bar
 
     public void UpdateHealth()
     {
+        if (!player) return;
         amount = player.currentHealth;
         maxAmount = player.maxHealth;
     }
