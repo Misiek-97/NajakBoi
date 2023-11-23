@@ -5,9 +5,11 @@ namespace Weapons
 {
     public class Projectile : MonoBehaviour
     {
-        public int damage;
+        public float damage;
         public Rigidbody rb;
         public float lifetime;
+        public float explosionRadius;
+        public GameObject explosionFx;
 
         private float _currentLifetime;
 
@@ -23,5 +25,42 @@ namespace Weapons
                 Destroy(gameObject);
         }
        
+
+        private void Explosion()
+        {
+            Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+
+            foreach (Collider collider in colliders)
+            {
+                // Check if the collider has a component that can take damage
+                IDamageable damageable = collider.GetComponent<IDamageable>();
+
+                if (damageable != null)
+                {
+                    Debug.Log($"Damaged {collider.gameObject.name}");
+                    // Apply damage to the object
+                    damageable.GetDamaged(damage);
+                }
+            }
+
+            // Destroy the explosion prefab after applying damage
+            Destroy(gameObject);
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.red; // Set the color of the wire sphere
+
+            // Draw a wire sphere around the object to represent the explosion radius
+            Gizmos.DrawWireSphere(transform.position, explosionRadius);
+        }
+
+        private void OnDestroy()
+        {
+            Explosion();
+            var fx = Instantiate(explosionFx);
+            fx.transform.position = transform.position;
+            fx.transform.localScale = fx.transform.localScale * (explosionRadius * 2);
+        }
     }
 }

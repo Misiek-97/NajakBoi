@@ -1,24 +1,29 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using Weapons;
 
 namespace Blocks
 {
-    public class Block : MonoBehaviour
+    public class Block : MonoBehaviour, IDamageable
     {
         public GameObject blockMenuPrefab;
         public Material mat;
         public GameObject highlightGo;
+        public BlockHealthBar healthBar;
+        public GameObject blockCanvasPrefab;
+        private GameObject _canvas;
+
         private BoxCollider _collider;
         private MeshRenderer _renderer;
-    
-        public int hitPoints;   
+     
         public Sprite sprite;
         public int id;
         public BlockType type;
         public Vector2 gridPos;
 
-        private int _currentHitPoints;
+        public float maxHealth;
+        public float currentHealth;
 
         void Awake()
         {
@@ -27,14 +32,23 @@ namespace Blocks
 
             _collider = GetComponent<BoxCollider>();
             
-            _currentHitPoints = hitPoints;
+            currentHealth = maxHealth;
+            if(blockCanvasPrefab)
+            {
+                _canvas = Instantiate(blockCanvasPrefab, transform);
+                _canvas.transform.localPosition = new Vector3(0f, 0f, -0.51f);
+                _canvas.SetActive(false);
+                healthBar = _canvas.GetComponent<BlockHealthBar>();                
+            }
+        
         }
 
-        public void GetDamaged(int dmg)
+        public void GetDamaged(float dmg)
         {
-            _currentHitPoints -= dmg;
-        
-            if(_currentHitPoints <= 0)
+            currentHealth -= dmg;
+            healthBar.UpdateHealth();
+            _canvas.SetActive(true);
+            if(currentHealth <= 0)
                 Destroy(gameObject);
         }
 
@@ -53,7 +67,7 @@ namespace Blocks
  
         public void UpdateBlockProperties(Block block)
         {
-            hitPoints = block.hitPoints;
+            maxHealth = block.maxHealth;
             sprite = block.sprite;
             type = block.type;
             mat = block.mat;
@@ -61,9 +75,16 @@ namespace Blocks
             
             _renderer.material = mat;
             if (!GameManager.Instance.editMode && type == BlockType.Empty)
+            {
                 _renderer.enabled = false;
-            
-            _currentHitPoints = hitPoints;
+                _canvas.SetActive(false);
+            }
+
+            currentHealth = maxHealth;
+
+            if (healthBar)
+                healthBar.UpdateHealth();
+
             gameObject.name = $"{type}@{gridPos}#{id}";
             gameObject.layer = type == BlockType.Empty ? LayerMask.NameToLayer("IgnoreCollision") : 0;
         }

@@ -2,7 +2,7 @@ using StarterAssets;
 using UnityEngine;
 using Weapons;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
 
     public PlayerId playerId;
@@ -51,8 +51,4 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.PlayerDeath(playerId);
         }
     }
-
-  
-
-
 }
