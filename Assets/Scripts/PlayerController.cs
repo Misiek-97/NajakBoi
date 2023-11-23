@@ -7,9 +7,11 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public PlayerId playerId;
     public HealthBar healthBar;
+    public MovementBar movementBar;
     public float maxHealth = 100f;
     public float currentHealth;
-    public float moveUsed;
+    public float currentMovement;
+    public float maxMovement = 100f;
 
     public ThirdPersonController controller;
 
@@ -18,9 +20,15 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Start()
     {
-        healthBar.player = this;
         currentHealth = maxHealth;
+
+        healthBar.player = this;
         healthBar.UpdateHealth();
+
+        currentMovement = maxMovement;
+
+        movementBar.player = this;
+        movementBar.UpdateMovement();
     }
 
 
@@ -38,6 +46,20 @@ public class PlayerController : MonoBehaviour, IDamageable
             Destroy(p.gameObject);
         }
     }
+
+    public bool UseMovement(float amount)
+    {
+        currentMovement -= amount;
+        movementBar.UpdateMovement();
+        if(currentMovement <= 0f)
+        {           
+            currentMovement = maxMovement;
+            GameManager.Instance.EndTurn();
+            return true;
+        }
+        return false;
+    }
+
     public void GetDamaged(float dmg)
     {
         currentHealth -= dmg;

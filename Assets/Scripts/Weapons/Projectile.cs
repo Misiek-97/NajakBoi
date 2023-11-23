@@ -37,7 +37,6 @@ namespace Weapons
 
                 if (damageable != null)
                 {
-                    Debug.Log($"Damaged {collider.gameObject.name}");
                     // Apply damage to the object
                     damageable.GetDamaged(damage);
                 }

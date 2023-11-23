@@ -99,6 +99,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         
         public bool isAiming;
+        private PlayerController _playerController;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -142,6 +143,7 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
+            _playerController = GetComponent<PlayerController>(); 
 #if ENABLE_INPUT_SYSTEM 
             _playerInput = GetComponent<PlayerInput>();
 #else
@@ -247,10 +249,17 @@ namespace StarterAssets
 
                 // round speed to 3 decimal places
                 _speed = Mathf.Round(_speed * 1000f) / 1000f;
+                
             }
             else
             {
                 _speed = targetSpeed;
+            }
+
+            if (_playerController.UseMovement(_speed / 100f))
+            {
+                _input.move = Vector2.zero;
+                _speed = 0f;
             }
 
             _animationBlend = Mathf.Lerp(_animationBlend, targetSpeed, Time.deltaTime * SpeedChangeRate);
@@ -285,6 +294,8 @@ namespace StarterAssets
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
+
+            
         }
 
         private void JumpAndGravity()
