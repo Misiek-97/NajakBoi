@@ -8,11 +8,7 @@ public class ChargeBar : MonoBehaviour
 
     private float currentFill = 0f;
 
-    void Update()
-    {
-        // Simulate charging over time
-        ChargeOverTime();
-    }
+   
 
     void ChargeOverTime()
     {
