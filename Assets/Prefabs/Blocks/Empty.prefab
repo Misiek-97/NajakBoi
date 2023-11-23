@@ -122,11 +122,14 @@ MonoBehaviour:
   blockMenuPrefab: {fileID: 2561403470868381975, guid: 9a3cb708bc55ed14ab2b974518435670, type: 3}
   mat: {fileID: 2100000, guid: 9bd6431f69107db4da8a29cbe935102c, type: 2}
   highlightGo: {fileID: 6414106734337839382}
-  hitPoints: 0
+  healthBar: {fileID: 0}
+  blockCanvasPrefab: {fileID: 4476433331368364450, guid: abbf6c770c511884eafc2577abcd2109, type: 3}
   sprite: {fileID: 21300000, guid: 4cb88413b821333458b0d165c0ad8bb8, type: 3}
   id: 0
   type: 0
   gridPos: {x: 0, y: 0}
+  maxHealth: 0
+  currentHealth: 0
 --- !u!1001 &7102262423381949847
 PrefabInstance:
   m_ObjectHideFlags: 0

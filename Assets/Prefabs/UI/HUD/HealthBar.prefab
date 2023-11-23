@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4606908045521496030, guid: a6ec1a3d4936bb048a71a047a8674320, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a6ec1a3d4936bb048a71a047a8674320, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -203,8 +203,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bar: {fileID: 4128593446256704732}
   drainSpeed: 5
-  currentValue: 0
-  maxValue: 0
+  amount: 0
+  maxAmount: 0
   player: {fileID: 0}
 --- !u!1 &4814244959704449923
 GameObject:
@@ -271,8 +271,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: -8227546954408941770, guid: b8828543eb0441e49bebc2e6ac5d739f, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
