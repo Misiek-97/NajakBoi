@@ -1,13 +1,17 @@
+using StarterAssets;
 using UnityEngine;
+using Weapons;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float jumpForce = 10f;
-    private bool _isGrounded;
+
+    public PlayerId playerId;
     public HealthBar healthBar;
     public float maxHealth = 100f;
     public float currentHealth;
+    public float moveUsed;
+
+    public ThirdPersonController controller;
 
     private bool _isDead;
 
@@ -16,57 +20,35 @@ public class PlayerController : MonoBehaviour
     {
         healthBar.player = this;
         currentHealth = maxHealth;
+        healthBar.UpdateHealth();
     }
-    // Update is called once per frame
-    void Update()
+
+
+    private void OnCollisionEnter(Collision other)
     {
-        if (_isDead) return;
-        
-        ControlCharacter();
-        
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (other.gameObject.CompareTag("DeathZone"))
         {
-            GetDamaged(20);
+            GetDamaged(currentHealth);
+        }
+
+        if (other.gameObject.CompareTag("Projectile"))
+        {
+            var p = other.gameObject.GetComponent<Projectile>();
+            GetDamaged(p.damage);
+            Destroy(p.gameObject);
         }
     }
-
-    private void ControlCharacter()
-    {
-        // Move the character left and right
-        float horizontalInput = Input.GetAxis("Horizontal");
-        Vector3 moveDirection = new Vector3(horizontalInput, 0f, 0f);
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
-
-        // Check if the character is on the ground (you may need to adjust the ground check position)
-        _isGrounded = Physics.Raycast(transform.position, Vector3.down, 0.1f);
-
-        // Jump when the spacebar is pressed and the character is on the ground
-        if (Input.GetButtonDown("Jump") && _isGrounded)
-        {
-            GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-        
-    }
-
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("DeathZone"))
-        {
-            _isDead = true;
-            GameManager.Instance.PlayerDeath();
-        }
-    }
-    public void GetDamaged(int dmg)
+    public void GetDamaged(float dmg)
     {
         currentHealth -= dmg;
-        
+
+        healthBar.UpdateHealth();
 
         if (currentHealth <= 0)
         {
             currentHealth = 0f;
             _isDead = true;
-            GameManager.Instance.PlayerDeath();
+            GameManager.Instance.PlayerDeath(playerId);
         }
     }
 

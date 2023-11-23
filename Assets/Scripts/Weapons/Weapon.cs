@@ -12,6 +12,13 @@ namespace Weapons
         public GameObject model;
         public GameObject projectilePrefab;
         public Transform projectileExit;
+        public PlayerController playerController;
+        public GameManager gameManager => GameManager.Instance;
+
+        private void Awake()
+        {
+            playerController = GetComponentInParent<PlayerController>();
+        }
 
 
         public void Fire(float force)
@@ -62,6 +69,9 @@ namespace Weapons
             // Create a new projectile at pExit position
             var instance = Instantiate(projectilePrefab);
             var projectile = instance.GetComponent<Projectile>();
+            var col = instance.GetComponent<Collider>();
+
+            Physics.IgnoreCollision(col, playerController.GetComponent<Collider>());
             
             //Ensure Projectile and Direction is at 0z
             direction = new Vector3(direction.x, direction.y, 0f);

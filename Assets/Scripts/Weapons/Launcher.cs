@@ -10,11 +10,11 @@ namespace Weapons
         // Update is called once per frame
         void Update()
         {
-            if (GameManager.Instance.editMode) return;
+            if (gameManager.editMode || playerController.playerId != gameManager.playerTurn) return;
             
             if (Input.GetMouseButton(0))
             {
-                GameManager.Instance.playerController.isAiming = true;
+                gameManager.playerController.isAiming = true;
                 _force += forceMultiplier * Time.deltaTime;
             }
 

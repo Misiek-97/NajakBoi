@@ -7,9 +7,10 @@ public class GameManager : MonoBehaviour
 {
     public GameObject gameOverScreen;
 
-    public GameObject player;
-    public GameObject opponent;
-    public bool playerTurn;
+    public PlayerController player;
+    public PlayerController opponent;
+
+    public PlayerId playerTurn;
     public ThirdPersonController playerController;
     public bool editMode;
 
@@ -28,18 +29,19 @@ public class GameManager : MonoBehaviour
         
         Instance = this;
     }
-
-    private void Start()
-    {
-        playerTurn = true;
-        player.SetActive(true);
-        opponent.SetActive(true);
-    }
-
     private void OnDestroy()
     {
         Instance = null;
     }
+
+
+    private void Start()
+    {
+        playerTurn = PlayerId.Player;
+        player.gameObject.SetActive(true);
+        opponent.gameObject.SetActive(true);
+    }
+
 
     private void Update()
     {
@@ -49,20 +51,22 @@ public class GameManager : MonoBehaviour
 
     public void EndTurn()
     {
-        playerTurn = !playerTurn;
-        
-        player.SetActive(false);
-        opponent.SetActive(false);
+        player.gameObject.SetActive(false);
+        opponent.gameObject.SetActive(false);
 
-        if (playerTurn)
+        switch (playerTurn)
         {
-            player.SetActive(true);
-            opponent.SetActive(true);
-        }
-        else
-        {
-            opponent.SetActive(true);
-            player.SetActive(true);
+            case PlayerId.Player:
+                playerTurn = PlayerId.Opponent;
+                opponent.gameObject.SetActive(true);
+                player.gameObject.SetActive(true);
+                break; 
+
+            case PlayerId.Opponent: 
+                playerTurn = PlayerId.Player;
+                player.gameObject.SetActive(true);
+                opponent.gameObject.SetActive(true);
+                break;
         }
     }
 
@@ -75,9 +79,17 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene("Game");
     }
 
-    public void PlayerDeath()
+    public void PlayerDeath(PlayerId player)
     {
-        gameOverScreen.SetActive(true);
+        if(player == PlayerId.Player)
+        {
+            gameOverScreen.SetActive(true);
+        }
+
+        if(player == PlayerId.Opponent)
+        {
+            gameOverScreen.SetActive(true);
+        }
     }
 
     public void RestartGame()
