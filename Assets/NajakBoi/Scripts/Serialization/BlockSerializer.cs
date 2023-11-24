@@ -52,7 +52,7 @@ namespace NajakBoi.Scripts.Serialization
                 blockDataList = list;
             }
         }
-        public static void SaveTileDataList(List<Block> blocks)
+        public static void SaveTileDataList(List<Block> blocks, PlayerId playerId)
         {
             var blockDataList = new List<string>();
 
@@ -68,7 +68,12 @@ namespace NajakBoi.Scripts.Serialization
             var wrapper = new BlockDataWrapper(blockDataList.Select(JsonUtility.FromJson<BlockData>).ToList());
 
             // Specify the default file path for saving and loading
-            var filePath = Application.persistentDataPath + "/BlockGrid.json";
+            var filePath = playerId switch
+            {
+                PlayerId.Player => Application.persistentDataPath + "/PlayerBlockGrid.json",
+                PlayerId.Opponent => Application.persistentDataPath + "/OpponentBlockGrid.json",
+                _ => ""
+            };
 
             // Convert the wrapper to a JSON string
             var json = JsonUtility.ToJson(wrapper);
@@ -76,9 +81,14 @@ namespace NajakBoi.Scripts.Serialization
             File.WriteAllText(filePath, json);
         }
 
-        public static List<BlockData> LoadBlockDataList()
+        public static List<BlockData> LoadBlockDataList(PlayerId playerId)
         {
-            var filePath = Application.persistentDataPath + "/BlockGrid.json";
+            var filePath = playerId switch
+            {
+                PlayerId.Player => Application.persistentDataPath + "/PlayerBlockGrid.json",
+                PlayerId.Opponent => Application.persistentDataPath + "/OpponentBlockGrid.json",
+                _ => ""
+            };
 
             if (File.Exists(filePath))
             {
@@ -107,7 +117,7 @@ namespace NajakBoi.Scripts.Serialization
                 }
             }
 
-            Debug.LogWarning("BlockGrid.json not found. Returning an empty list.");
+            Debug.LogWarning($"{playerId}BlockGrid.json not found. Returning an empty list.");
             return new List<BlockData>();
 
         }

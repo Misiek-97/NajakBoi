@@ -73,7 +73,7 @@ namespace NajakBoi.Scripts.Blocks
             id = block.id;
             
             _renderer.material = mat;
-            if (!GameManager.Instance.editMode && type == BlockType.Empty)
+            if (!GameManager.Instance.editMode && type == BlockType.Empty && GameManager.Instance.editMode)
             {
                 _renderer.enabled = false;
                 _canvas.SetActive(false);
@@ -92,12 +92,6 @@ namespace NajakBoi.Scripts.Blocks
         {
             if (!GameManager.Instance.editMode) return;
             
-            /*
-            if (!BlockMenu.Instance)
-                Instantiate(blockMenuPrefab, GameObject.Find("Canvas").transform);
-            else
-                BlockMenu.Instance.transform.position = Input.mousePosition;
-        */
             BlockMenu.BlockBeingEdited = this;
             if(BlockMenu.Instance.blockToPlace)
                 UpdateBlockProperties(BlockMenu.Instance.blockToPlace);

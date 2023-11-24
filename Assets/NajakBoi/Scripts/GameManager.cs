@@ -1,4 +1,7 @@
+using System;
+using NajakBoi.Scripts.Blocks;
 using NajakBoi.Scripts.UI;
+using NajakBoi.Scripts.UI.EditMode;
 using StarterAssets;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,9 +11,15 @@ namespace NajakBoi.Scripts
     public class GameManager : MonoBehaviour
     {
         public EndGameScreen endGameScreen;
+        public GameObject hud;
+        public EditMenuManager editMenu;
+        public CameraManager cameraManager;
 
         public PlayerController player;
         public PlayerController opponent;
+
+        public BlockSpawner playerGrid;
+        public BlockSpawner opponentGrid;
 
         public PlayerId playerTurn;
         public ThirdPersonController playerController;
@@ -39,21 +48,49 @@ namespace NajakBoi.Scripts
 
         private void Start()
         {
+            EditingStage();
             playerTurn = PlayerId.Player;
+        }
+
+        private void StartGame()
+        {
+            playerTurn = PlayerId.Player;
+            editMode = false;
+            
+            hud.SetActive(true);
+            editCanvas.SetActive(false);
+            
             player.gameObject.SetActive(true);
             opponent.gameObject.SetActive(true);
         }
 
-        private void FixedUpdate()
+        private void EditingStage()
         {
-            Debug.Log(playerTurn);
+            playerTurn = PlayerId.Player;
+            editMode = true;
+            hud.SetActive(false);
+            editMenu.gameObject.SetActive(true);
+            editMenu.StartEditTurn(playerTurn);
+
         }
 
-
-        private void Update()
+        public void EndEdit()
         {
-            if(Input.GetKeyDown(KeyCode.T))
-                EndTurn();
+            switch (playerTurn)
+            {
+                case PlayerId.Player:
+                    playerTurn = PlayerId.Opponent;
+                    editMenu.StartEditTurn(playerTurn);
+                    playerGrid.SaveGrid();
+                    break;
+                case PlayerId.Opponent:
+                    playerTurn = PlayerId.Player;
+                    opponentGrid.SaveGrid();
+                    StartGame();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         public void EndTurn()
@@ -89,9 +126,9 @@ namespace NajakBoi.Scripts
                 SceneManager.LoadScene("Game");
         }
 
-        public void PlayerDeath(PlayerId player)
+        public void PlayerDeath(PlayerId playerId)
         {
-            endGameScreen.GameEnded(player);
+            endGameScreen.GameEnded(playerId);
         }
 
         public void RestartGame()

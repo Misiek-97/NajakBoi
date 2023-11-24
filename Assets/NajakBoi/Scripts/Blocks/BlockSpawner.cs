@@ -13,6 +13,8 @@ namespace NajakBoi.Scripts.Blocks
         public GameObject blockPrefab;
         public List<GameObject> blocksList = new (); //Available Tiles
         public bool isPlayer;
+
+        public PlayerId playerId;
         
         private readonly List<Block> _gridBlocks = new (); //Active Tiles in the Grid
         private readonly Dictionary<GameObject, Block> _blocksDictionary = new (); //Available Tiles Dictionary
@@ -33,22 +35,36 @@ namespace NajakBoi.Scripts.Blocks
         private void Start()
         {
             SetUpBlockDictionary();
-            var filePath = Application.persistentDataPath + "/BlockGrid.json";
 
             if (!isPlayer)
             {
-                CreateGrid(true);
-                return;
-            }
-            
-            if (File.Exists(filePath))
-            {
-                LoadSavedGrid();
+                playerId = PlayerId.Opponent;
+                
+                var filePath = Application.persistentDataPath + "/OpponentBlockGrid.json";
+                if (File.Exists(filePath))
+                {
+                    LoadSavedGrid();
+                }
+                else
+                {
+                    CreateGrid();
+                }
             }
             else
             {
-                CreateGrid();
+                playerId = PlayerId.Player;
+                
+                var filePath = Application.persistentDataPath + "/PlayerBlockGrid.json";
+                if (File.Exists(filePath))
+                {
+                    LoadSavedGrid();
+                }
+                else
+                {
+                    CreateGrid();
+                }
             }
+            
         }
 
         private void ClearGrid()
@@ -62,7 +78,7 @@ namespace NajakBoi.Scripts.Blocks
 
         public void SaveGrid()
         {
-            BlockSerializer.SaveTileDataList(_gridBlocks);
+            BlockSerializer.SaveTileDataList(_gridBlocks, playerId);
         }
     
         private static BlockType GetRandomBlockType()
@@ -100,7 +116,7 @@ namespace NajakBoi.Scripts.Blocks
         public void LoadSavedGrid()
         {
             ClearGrid();
-            var blockDataList = BlockSerializer.LoadBlockDataList();
+            var blockDataList = BlockSerializer.LoadBlockDataList(playerId);
 
             var id = 0;
             foreach (var b in blockDataList)
@@ -152,10 +168,13 @@ namespace NajakBoi.Scripts.Blocks
             block.id = id;
             blockGo.name = $"{block.type}@({block.gridPos.x},{block.gridPos.y})#{block.id}";
             _gridBlocks.Add(block);
+            
+            
         }
         private void InstantiateBlockFromData(BlockSerializer.BlockData blockData, int id)
         {
             if (_blocksDictionary.Count == 0)
+                
             {
                 Debug.LogError("Tile prefabs are not assigned!");
                 return;
