@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿ using NajakBoi.Scripts;
+ using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -164,8 +165,15 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
-            
-            _animator.SetBool("isAiming", isAiming);
+
+            if (_playerController.playerId == GameManager.Instance.playerTurn)
+            {
+                _animator.SetBool("isAiming", isAiming);
+            }
+            else
+            {
+                _animator.SetBool("isAiming", false);
+            }
         }
 
         private void LateUpdate()
