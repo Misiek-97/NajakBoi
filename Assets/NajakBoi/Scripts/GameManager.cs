@@ -104,6 +104,7 @@ namespace NajakBoi.Scripts
             switch (playerTurn)
             {
                 case PlayerId.Player:
+                    playerController = opponent.GetComponent<ThirdPersonController>();
                     playerTurn = PlayerId.Opponent;
                     opponent.gameObject.SetActive(true);
                     player.gameObject.SetActive(true);
@@ -111,6 +112,7 @@ namespace NajakBoi.Scripts
 
                 case PlayerId.Opponent: 
                     playerTurn = PlayerId.Player;
+                    playerController = player.GetComponent<ThirdPersonController>();
                     player.gameObject.SetActive(true);
                     opponent.gameObject.SetActive(true);
                     break;
