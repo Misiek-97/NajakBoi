@@ -21,13 +21,14 @@ namespace NajakBoi.Scripts.Weapons
         }
 
 
-        public void Fire(float force)
+        public void Fire(float force = 0f)
         {
             switch (fireMode)
             {
                 case FireMode.Automatic:
                     break;
                 case FireMode.SemiAuto:
+                    PistolFire();
                     break;
                 case FireMode.Burst:
                     break;
@@ -39,6 +40,36 @@ namespace NajakBoi.Scripts.Weapons
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        private void PistolFire()
+        {
+            var origin = projectileExit.transform.position;
+            var radius = 0.5f;
+            var distance = 100f;
+            var direction = projectileExit.forward;
+            
+            Debug.Log($"Fired Pistol");
+            
+            if (Physics.SphereCast(origin, radius, direction, out RaycastHit hitInfo, distance))
+            {
+                // A collision occurred, and hitInfo now contains information about the hit
+                Debug.Log("Hit object: " + hitInfo.collider.gameObject.name);
+                Debug.DrawRay(origin, direction * hitInfo.distance, Color.red);
+
+                var player = hitInfo.collider.gameObject.GetComponent<PlayerController>();
+                if (player)
+                {
+                    player.GetDamaged(damage);
+                }
+            }
+            else
+            {
+                // No collision
+                Debug.DrawRay(origin, direction * distance, Color.green);
+            }
+            
+            GameManager.Instance.EndTurn();
         }
 
         private void LauncherFire(float force)

@@ -19,11 +19,17 @@ namespace NajakBoi.Scripts.Weapons
         // Update is called once per frame
         void Update()
         {
-            if (gameManager.editMode || playerController.playerId != gameManager.playerTurn || EventSystem.current.IsPointerOverGameObject()) return;
+            if (!GameManager.Instance.CanPlayerTakeAction(playerController.playerId))
+            {
+                playerController.controller.isAiming = false;
+                playerController.chargeBar.SetFillAmount(0f);
+                _force = minForce;
+                return;
+            }
             
             if (Input.GetMouseButton(0))
             {
-                gameManager.playerController.isAiming = true;
+                playerController.controller.isAiming = true;
                 _force = Mathf.Clamp(_force += forceMultiplier * Time.deltaTime, minForce, maxForce);
 
                 playerController.chargeBar.SetFillAmount(_force / maxForce);
