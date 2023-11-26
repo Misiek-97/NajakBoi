@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,20 +9,15 @@ namespace NajakBoi.Scripts.UI.HUD
         public Image fillImage;
         public float fillSpeed = 0.1f;
 
-        private float currentFill = 0f;
+        private float _currentFill = 0f;
 
-   
 
-        void ChargeOverTime()
+        private void Update()
         {
-            // Increase the fill amount over time
-            currentFill += fillSpeed * Time.deltaTime;
-
-            // Ensure the fill amount stays within the range [0, 1]
-            currentFill = Mathf.Clamp01(currentFill);
-
-            // Update the fill amount of the UI Image
-            fillImage.fillAmount = currentFill;
+            if (Camera.main != null)
+            {
+                transform.parent.transform.LookAt(Camera.main.transform);
+            }
         }
 
         // You can call this method with a passed-in float to set the fill amount directly
@@ -29,10 +25,10 @@ namespace NajakBoi.Scripts.UI.HUD
         {
             gameObject.SetActive(true);
             // Ensure the fill amount stays within the range [0, 1]
-            currentFill = Mathf.Clamp01(fillAmount);
+            _currentFill = Mathf.Clamp01(fillAmount);
 
             // Update the fill amount of the UI Image
-            fillImage.fillAmount = currentFill;
+            fillImage.fillAmount = _currentFill;
         }
     }
 }
