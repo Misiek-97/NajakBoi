@@ -165,8 +165,15 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
-            
-            _animator.SetBool("isAiming", isAiming);
+
+            if (_playerController.playerId == GameManager.Instance.playerTurn)
+            {
+                _animator.SetBool("isAiming", isAiming);
+            }
+            else
+            {
+                _animator.SetBool("isAiming", false);
+            }
         }
 
         private void LateUpdate()

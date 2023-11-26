@@ -8,6 +8,7 @@ namespace NajakBoi.Scripts.Weapons
         public Rigidbody rb;
         public float lifetime;
         public float explosionRadius;
+        public float explosionForce;
         public GameObject explosionFx;
 
         private float _currentLifetime;
@@ -29,15 +30,16 @@ namespace NajakBoi.Scripts.Weapons
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
 
-            foreach (Collider collider in colliders)
+            foreach (Collider col in colliders)
             {
                 // Check if the collider has a component that can take damage
-                IDamageable damageable = collider.GetComponent<IDamageable>();
+                IDamageable damageable = col.GetComponent<IDamageable>();
 
                 if (damageable != null)
                 {
                     // Apply damage to the object
                     damageable.GetDamaged(damage);
+                    damageable.ApplyExplosionForce(explosionForce, transform.position, explosionRadius);
                 }
             }
 
