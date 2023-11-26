@@ -52,6 +52,11 @@ namespace NajakBoi.Scripts.Blocks
                 Destroy(gameObject);
         }
 
+        public void ApplyExplosionForce(float force, Vector3 origin, float radius)
+        {
+            //Do nothing for blocks
+        }
+
         private void OnCollisionEnter(Collision collision)
         {
             if (collision.gameObject.CompareTag("Projectile"))

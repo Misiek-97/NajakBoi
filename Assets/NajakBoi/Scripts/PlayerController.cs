@@ -1,3 +1,4 @@
+using System.Collections;
 using NajakBoi.Scripts.UI.HUD;
 using NajakBoi.Scripts.Weapons;
 using StarterAssets;
@@ -78,6 +79,36 @@ namespace NajakBoi.Scripts
                 _isDead = true;
                 GameManager.Instance.PlayerDeath(playerId);
             }
+        }
+
+        /*
+        public void ApplyExplosionForce(float explosionForce, Vector3 origin, float explosionRadius)
+        {
+            var cc = GetComponent<CharacterController>();
+            // Calculate direction from the explosion to the characters
+            var pos = transform.position;
+            var direction = (pos - origin).normalized;
+
+            // Calculate explosion force
+            var distance = Vector3.Distance(origin, pos);
+            var force = Mathf.Clamp01(1f - distance / explosionRadius) * explosionForce;
+
+            // Apply the force to the character controller
+            cc.Move(direction * force + Vector3.up * 0.5f);
+
+        }*/
+        
+        public void ApplyExplosionForce(float explosionForce, Vector3 origin, float explosionRadius)
+        {
+            var cc = GetComponent<CharacterController>();
+            var pos = transform.position;
+            var direction = (pos - origin).normalized;
+            var distance = Vector3.Distance(origin, pos);
+            var force = Mathf.Clamp01(1f - distance / explosionRadius) * explosionForce;
+
+            // Calculate the target position after applying the force
+            var targetPosition = pos + (direction * force + Vector3.up * 0.5f);
+
         }
     }
 }
