@@ -32,6 +32,14 @@ namespace NajakBoi.Scripts.Blocks
             }
         }
 
+        public void RefreshAllBlocks()
+        {
+            foreach (var b in _gridBlocks)
+            {
+                b.render.enabled = b.type != BlockType.Empty;
+            }
+        }
+
         private void Start()
         {
             SetUpBlockDictionary();

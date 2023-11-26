@@ -60,6 +60,9 @@ namespace NajakBoi.Scripts
             hud.SetActive(true);
             editCanvas.SetActive(false);
             
+            playerGrid.RefreshAllBlocks();
+            opponentGrid.RefreshAllBlocks();
+            
             player.gameObject.SetActive(true);
             opponent.gameObject.SetActive(true);
         }

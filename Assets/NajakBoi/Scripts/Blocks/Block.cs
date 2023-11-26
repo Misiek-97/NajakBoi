@@ -1,6 +1,7 @@
 using NajakBoi.Scripts.UI.EditMode;
 using NajakBoi.Scripts.Weapons;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NajakBoi.Scripts.Blocks
 {
@@ -14,7 +15,7 @@ namespace NajakBoi.Scripts.Blocks
         private GameObject _canvas;
 
         private BoxCollider _collider;
-        private MeshRenderer _renderer;
+        public MeshRenderer render;
      
         public Sprite sprite;
         public int id;
@@ -26,8 +27,8 @@ namespace NajakBoi.Scripts.Blocks
 
         void Awake()
         {
-            _renderer = GetComponent<MeshRenderer>();
-            _renderer.material = mat;
+            render = GetComponent<MeshRenderer>();
+            render.material = mat;
 
             _collider = GetComponent<BoxCollider>();
             
@@ -72,10 +73,10 @@ namespace NajakBoi.Scripts.Blocks
             mat = block.mat;
             id = block.id;
             
-            _renderer.material = mat;
+            render.material = mat;
             if (!GameManager.Instance.editMode && type == BlockType.Empty && GameManager.Instance.editMode)
             {
-                _renderer.enabled = false;
+                render.enabled = false;
                 _canvas.SetActive(false);
             }
 
