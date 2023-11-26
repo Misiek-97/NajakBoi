@@ -98,6 +98,9 @@ namespace StarterAssets
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
+        //private int _animIDIsAiming;
+        //private int _animIDWeaponType;
+        //private int _animIDPistolFire;
         
         public bool isAiming;
         private PlayerController _playerController;
@@ -176,6 +179,16 @@ namespace StarterAssets
             }
         }
 
+        public void AnimatePistolFire()
+        {
+            _animator.SetTrigger("PistolFire");
+        }
+
+        public void AnimatorSetWeaponType(int type)
+        {
+            _animator.SetInteger("WeaponType", type);
+        }
+
         private void LateUpdate()
         {
             CameraRotation();
@@ -188,6 +201,10 @@ namespace StarterAssets
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
+            
+           // _animIDIsAiming = Animator.StringToHash("IsAiming");
+           // _animIDWeaponType = Animator.StringToHash("WeaponType");
+           // _animIDPistolFire = Animator.StringToHash("PistolFire");
         }
 
         private void GroundedCheck()
@@ -285,8 +302,17 @@ namespace StarterAssets
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
+                Debug.Log(inputDirection.x);
                 // rotate to face input direction relative to camera position
+                if (inputDirection.x <= 0)
+                    rotation = 275f;
+                
+
+                if (inputDirection.x >= 0)
+                    rotation = 95f;
+                
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
+                
             }
 
 
