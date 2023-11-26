@@ -1,18 +1,33 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Bandage : MonoBehaviour
+namespace NajakBoi.Scripts.HealKits
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Bandage : MonoBehaviour
     {
-        
-    }
+        public float healingAmount = 15f;
+        public int available = 3;
+        public PlayerController player;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void Update()
+        {
+
+            if (Input.GetKeyDown(KeyCode.H))
+            {
+                if (GameManager.Instance.editMode ||
+                    player.playerId != GameManager.Instance.playerTurn ||
+                    available <= 0 || 
+                    player.currentHealth >= player.maxHealth) return;
+
+                UseBandage();
+            }
+
+        }
+
+        void UseBandage()
+        {
+            available--;
+            player.GetHealed(healingAmount);
+            GameManager.Instance.EndTurn();
+        }
     }
 }

@@ -80,24 +80,16 @@ namespace NajakBoi.Scripts
                 GameManager.Instance.PlayerDeath(playerId);
             }
         }
-
-        /*
-        public void ApplyExplosionForce(float explosionForce, Vector3 origin, float explosionRadius)
+        public void GetHealed(float amount)
         {
-            var cc = GetComponent<CharacterController>();
-            // Calculate direction from the explosion to the characters
-            var pos = transform.position;
-            var direction = (pos - origin).normalized;
+            currentHealth += amount;
 
-            // Calculate explosion force
-            var distance = Vector3.Distance(origin, pos);
-            var force = Mathf.Clamp01(1f - distance / explosionRadius) * explosionForce;
+            if (currentHealth > maxHealth)
+                currentHealth = maxHealth;
 
-            // Apply the force to the character controller
-            cc.Move(direction * force + Vector3.up * 0.5f);
+            healthBar.UpdateHealth();
+        }
 
-        }*/
-        
         public void ApplyExplosionForce(float explosionForce, Vector3 origin, float explosionRadius)
         {
             var cc = GetComponent<CharacterController>();

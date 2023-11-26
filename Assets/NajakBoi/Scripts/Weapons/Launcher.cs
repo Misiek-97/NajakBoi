@@ -27,8 +27,6 @@ namespace NajakBoi.Scripts.Weapons
                 _force = Mathf.Clamp(_force += forceMultiplier * Time.deltaTime, minForce, maxForce);
 
                 playerController.chargeBar.SetFillAmount(_force / maxForce);
-
-                Debug.Log(_force);
             }
 
             if (Input.GetMouseButtonUp(0))
