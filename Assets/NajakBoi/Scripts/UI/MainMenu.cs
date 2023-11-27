@@ -21,6 +21,10 @@ namespace NajakBoi.Scripts.UI
         public void StartGame()
         {
             SceneManager.LoadScene("Game");
+        } 
+        public void GoToLab()
+        {
+            SceneManager.LoadScene("TheLab");
         }
 
         public void StartLocalPvE()
