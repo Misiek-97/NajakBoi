@@ -8,8 +8,9 @@ namespace NajakBoi.Scripts.Session
     {
         public static PlaySession Session;
 
-        public static string SavePath => Path.Combine(Application.persistentDataPath, "save.najak");
-        public static string BackupPath => SavePath + ".backup";
+        public static string ResourcesPath => Path.Combine(Application.persistentDataPath, "/Resources.json");
+        public static string PlayerGridPath => Path.Combine(Application.persistentDataPath, "/PlayerBlockGrid.json");
+        public static string OpponentGridPath => Path.Combine(Application.persistentDataPath, "/OpponentBlockGrid.json");
 
         public static volatile bool loaded = false;
 
@@ -19,22 +20,23 @@ namespace NajakBoi.Scripts.Session
         static GlobalSession()
         {
             Session = new PlaySession();
-            if (!Init(SavePath) && !Init(BackupPath))
+            if(!Init(ResourcesPath))
             {
                 Session.Player = new PlayerData();
-                Debug.Log("GLOBAL-SESSION - New play session started");
+                Session.Player.PopulateResourcesDictionary();
+                Debug.Log("GLOBAL-SESSION - New play session started, and Populated Resources");
             }
 
             loaded = true;
         }
 
-        static bool Init(string path)
+        public static bool Init(string path)
         {
             if (File.Exists(path))
             {
                 try
                 {
-                    Session.Player = PlayerData.LoadFromFile(path);
+                    Session.Player.LoadPlayerData();
                     Debug.Log($"GLOBAL-SESSION - Save loaded from {path}");
                     return true;
                 }
@@ -64,10 +66,8 @@ namespace NajakBoi.Scripts.Session
 
             try
             {
-                var path = SavePath;
-                Session.Player.SaveToFile(BackupPath);
-                Session.Player.SaveToFile(path);
-                Debug.Log($"GLOBAL-SESSION - Saved to {path}");
+                Session.Player.SavePlayerData();
+                Debug.Log("GLOBAL-SESSION - Player Data Saved");
             }
             finally
             {
@@ -82,11 +82,14 @@ namespace NajakBoi.Scripts.Session
         {
             lock (lockObject)
             {
-                if (File.Exists(SavePath))
-                    File.Delete(SavePath);
+                if (File.Exists(ResourcesPath))
+                    File.Delete(ResourcesPath);
 
-                if (File.Exists(BackupPath))
-                    File.Delete(BackupPath);
+                if (File.Exists(PlayerGridPath))
+                    File.Delete(PlayerGridPath);
+                
+                if (File.Exists(OpponentGridPath))
+                    File.Delete(OpponentGridPath);
 
                 Session.Player = new PlayerData();
             }
