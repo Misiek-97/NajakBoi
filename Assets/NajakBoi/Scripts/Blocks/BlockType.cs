@@ -6,6 +6,7 @@
         Empty = 0,
         Dirt = 1,
         Stone = 2,
-        Jelly = 3
+        Jelly = 3,
+        MilitaryChest = 4
     }
 }

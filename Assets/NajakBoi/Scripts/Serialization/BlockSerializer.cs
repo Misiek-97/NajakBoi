@@ -58,7 +58,7 @@ namespace NajakBoi.Scripts.Serialization
 
             foreach (var block in blocks)
             {
-                var blockData = new BlockData(block.type, new SerializableVector2(block.gridPos));
+                var blockData = new BlockData(block.type, new SerializableVector2(block.GridPos));
 
                 // Serialize each BlockData individually
                 blockDataList.Add(JsonUtility.ToJson(blockData));

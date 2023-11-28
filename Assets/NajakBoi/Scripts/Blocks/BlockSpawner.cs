@@ -5,6 +5,7 @@ using System.Linq;
 using NajakBoi.Scripts.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using System.Threading.Tasks;
 
 namespace NajakBoi.Scripts.Blocks
 {
@@ -18,44 +19,55 @@ namespace NajakBoi.Scripts.Blocks
         
         private readonly List<Block> _gridBlocks = new (); //Active Tiles in the Grid
         private readonly Dictionary<GameObject, Block> _blocksDictionary = new (); //Available Tiles Dictionary
+        
+        private GameManager _gm => GameManager.Instance;
     
     
         public Vector2 blockSize;
         public Vector2 gridSize = new (5, 5);
 
-        private void SetUpBlockDictionary()
+        private bool SetUpBlockDictionary()
         {
             foreach (var b in blocksList)
             {
                 var block = b.GetComponent<Block>();
                 _blocksDictionary.Add(b, block);
             }
+
+            return true;
         }
 
         public void RefreshAllBlocks()
         {
             foreach (var b in _gridBlocks)
             {
-                b.render.enabled = b.type != BlockType.Empty;
+                b.Renderer.enabled = b.type != BlockType.Empty;
             }
         }
 
-        private void Start()
+        private async void Start()
         {
-            SetUpBlockDictionary();
+            while (!SetUpBlockDictionary())
+                await Task.Delay(10);
 
             if (!isPlayer)
             {
                 playerId = PlayerId.Opponent;
-                
-                var filePath = Application.persistentDataPath + "/OpponentBlockGrid.json";
-                if (File.Exists(filePath))
+                if (GameManager.GameMode == GameMode.Expedition)
                 {
-                    LoadSavedGrid();
+                    CreateGrid(true);
                 }
                 else
                 {
-                    CreateGrid();
+                    var filePath = Application.persistentDataPath + "/OpponentBlockGrid.json";
+                    if (File.Exists(filePath))
+                    {
+                        LoadSavedGrid();
+                    }
+                    else
+                    {
+                        CreateGrid();
+                    }
                 }
             }
             else
@@ -73,6 +85,9 @@ namespace NajakBoi.Scripts.Blocks
                 }
             }
             
+            if (GameManager.GameMode == GameMode.Expedition)
+                GameManager.Instance.StartGame();
+            
         }
 
         private void ClearGrid()
@@ -89,20 +104,32 @@ namespace NajakBoi.Scripts.Blocks
             BlockSerializer.SaveTileDataList(_gridBlocks, playerId);
         }
     
-        private static BlockType GetRandomBlockType()
+        private static BlockType GetRandomBlockType(List<BlockType> excludedTypes = null)
         {
         
             // Get all values from the enum
             var enumValues = Enum.GetValues(typeof(BlockType));
+            var randomIndex = 0;
+            
+            if (excludedTypes != null)
+            {
+                // Convert enum values to a list and exclude the specified type
+                var validValues = enumValues.Cast<BlockType>().Except(excludedTypes).ToList();
+                // Choose a random index from the filtered list
+                randomIndex = Random.Range(0, validValues.Count);
+
+                // Return the corresponding enum value
+                return validValues[randomIndex];
+            }
 
             // Choose a random index
-            var randomIndex = Random.Range(0, enumValues.Length);
+            randomIndex = Random.Range(0, enumValues.Length);
 
             // Return the corresponding enum value
             return (BlockType)enumValues.GetValue(randomIndex);
         }
 
-        private Block SelectBlock(BlockType blockType, bool isRandom = false)
+        private Block SelectBlock(BlockType blockType, bool isRandom = false, List<BlockType> excludedTypes = null)
         {
             // Check if there are tile prefabs in the list
             if (_blocksDictionary.Count == 0)
@@ -112,8 +139,12 @@ namespace NajakBoi.Scripts.Blocks
             }
 
             var type = blockType;
+            
             if (isRandom)
-                type = GetRandomBlockType();
+                type = GetRandomBlockType(excludedTypes);
+            
+            if (excludedTypes is { Count: > 0 } && excludedTypes.Contains(blockType))
+                type = BlockType.Empty;
 
             var block = _blocksDictionary.Values.First(b => b.type == type);
             return block ? block : throw new InvalidOperationException($"Tile of Type {type.ToString()} is not in Tiles Dictionary!");
@@ -168,13 +199,29 @@ namespace NajakBoi.Scripts.Blocks
             var blockGo = Instantiate(blockPrefab, transform);
             blockGo.transform.localPosition = blockPosition;
                 
+            // Set Up Exclusions
+            var excludedTypes = new List<BlockType>();
+            if (gridPos.y == 0)
+            {
+                excludedTypes.Add(BlockType.MilitaryChest);
+            }
+            else
+            {
+                var blockBelow = _gridBlocks.Find(x => x.GridPos == new Vector2(gridPos.x, gridPos.y - 1));
+                if(!blockBelow || blockBelow.type == BlockType.MilitaryChest || blockBelow.type == BlockType.Empty )
+                    excludedTypes.Add(BlockType.MilitaryChest);
+            }
+
+            if (playerId == PlayerId.Player)
+                excludedTypes.Add(BlockType.MilitaryChest);
+
             // Update Tile Parameters and add new tile to the list.
             var block = blockGo.GetComponent<Block>();
-            var blockType = random ? GetRandomBlockType() : type;
-            block.UpdateBlockProperties(SelectBlock(blockType));
-            block.gridPos = gridPos;
-            block.id = id;
-            blockGo.name = $"{block.type}@({block.gridPos.x},{block.gridPos.y})#{block.id}";
+            var blockType = random ? GetRandomBlockType(excludedTypes: excludedTypes) : type;
+            block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes));
+            block.GridPos = gridPos;
+            block.ID = id;
+            blockGo.name = $"{block.type}@({block.GridPos.x},{block.GridPos.y})#{block.ID}";
             _gridBlocks.Add(block);
             
             
@@ -197,12 +244,16 @@ namespace NajakBoi.Scripts.Blocks
             var blockPosition = new Vector3( pos.x * blockSize.x - offsetX, pos.y * blockSize.y - offsetY, 0.0f);
             var blockGo = Instantiate(blockPrefab, transform);
             blockGo.transform.localPosition = blockPosition;
-                
+
+            var excludedTypes = new List<BlockType>();
+            if(playerId == PlayerId.Player)
+                excludedTypes.Add(BlockType.MilitaryChest);
+            
             // Update Tile Parameters and add new tile to the list.
             var blockScript = blockGo.GetComponent<Block>();
-            blockScript.UpdateBlockProperties(SelectBlock(blockData.blockType));
-            blockScript.gridPos = pos;
-            blockScript.id = id;
+            blockScript.UpdateBlockProperties(SelectBlock(blockData.blockType, excludedTypes: excludedTypes));
+            blockScript.GridPos = pos;
+            blockScript.ID = id;
             blockGo.name = $"{blockScript.type}@({pos.x},{pos.y})#{id}";
             _gridBlocks.Add(blockScript);
         }

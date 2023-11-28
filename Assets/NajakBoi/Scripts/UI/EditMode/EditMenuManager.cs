@@ -14,7 +14,7 @@ namespace NajakBoi.Scripts.UI.EditMode
         {
             var sb = new StringBuilder();
             sb.Append(BlockMenu.BlockBeingEdited
-                ? $"Editing: {BlockMenu.BlockBeingEdited.type} @ {BlockMenu.BlockBeingEdited.gridPos}"
+                ? $"Editing: {BlockMenu.BlockBeingEdited.type} @ {BlockMenu.BlockBeingEdited.GridPos}"
                 : "Editing: N/A");
 
 

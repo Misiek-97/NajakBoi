@@ -1,20 +1,42 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using NajakBoi.Scripts.Session;
-using NajakBoi.Scripts.Systems.Economy;
+using NajakBoi.Scripts.Systems.Levelling;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace NajakBoi.Scripts.UI
 {
     public class LabManager : MonoBehaviour
     {
-
         public TextMeshProUGUI resourcesTmp;
+        public TextMeshProUGUI statsTmp;
+        public Toggle startToggle;
+        public List<GameObject> panels;
+        private int nextLevelXp;
+        
         // Start is called before the first frame update
         void Start()
         {
-            DisplayResources();
+            nextLevelXp = ExperienceManager.CalculateExperienceToNextLevel();
+            startToggle.SetIsOnWithoutNotify(true);
+            startToggle.onValueChanged.Invoke(true);
+        }
+
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                var nextLevel = ExperienceManager.GainExperience(100);
+                if (nextLevel != 0)
+                {
+                    nextLevelXp = ExperienceManager.CalculateExperienceToNextLevel();
+                }
+            }
         }
 
         private void DisplayResources()
@@ -31,18 +53,65 @@ namespace NajakBoi.Scripts.UI
             resourcesTmp.text = sb.ToString();
         }
 
-        public void AddCoin()
+        private void DisplayNajakBoi()
         {
-            SessionManager.PlayerData.GainResource(ResourceType.Coins, 1);
-            DisplayResources();
+            var stats = SessionManager.PlayerData.Stats;
+            
+
+            var sb = new StringBuilder();
+            sb.Append("Najak Boi Statistics\r\n");
+            
+            sb.AppendLine("\r\nLevel & Experience");
+            sb.AppendLine($"Level: {stats.Level}");
+            sb.AppendLine($"Experience: {stats.Experience}/{nextLevelXp}");
+
+            sb.AppendLine("\r\nGeneral");
+            sb.AppendLine($"Max Health: {stats.MaxHealth}");
+            sb.AppendLine($"Max Movement: {stats.MaxMovement}");
+            sb.AppendLine($"Max Jump Height: {stats.MaxJumpHeight}");
+            
+            sb.AppendLine("\r\nResistances");
+            sb.AppendLine($"Blast Resistance: {stats.BlastResistance}");
+            sb.AppendLine($"Pierce Resistance: {stats.PierceResistance}");
+            sb.AppendLine($"Fire Resistance: {stats.FireResistance}");
+            sb.AppendLine($"Cold Resistance: {stats.ColdResistance}");
+            sb.AppendLine($"Lightning Resistance: {stats.LightningResistance}");
+            sb.AppendLine($"Poison Resistance: {stats.PoisonResistance}");
+
+            statsTmp.text = sb.ToString();
         }
 
-        // Update is called once per frame
-        void Update()
+        public void DisplayPanelByName(string panelName)
         {
-        
+            DisableAll();
+            var panel = panels.FirstOrDefault(x => x.name.Contains(panelName));
+            if (!panel) throw new InvalidOperationException($"Could not find selected panel {panelName}!");
+            panel.SetActive(true);
+            
+            switch (panelName)
+            {
+                case "NajakBoi": 
+                    DisplayNajakBoi();
+                    break;
+                case "Resources":
+                    DisplayResources();
+                    break;
+                case "Arsenal":
+                    break;
+                case "Upgrade":
+                    break;
+                case "Research":
+                    break;
+                default:
+                    throw new InvalidOperationException($"Panel {panelName} was not found!");
+            }
         }
 
+        private void DisableAll()
+        {
+            foreach(var p in panels)
+                p.SetActive(false);
+        }
         public void GoToMainMenu()
         {
             SceneManager.LoadScene("MainMenu");

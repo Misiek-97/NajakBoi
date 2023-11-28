@@ -1,4 +1,5 @@
 using System;
+using NajakBoi.Scripts.Blocks;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Weapons
@@ -9,6 +10,8 @@ namespace NajakBoi.Scripts.Weapons
         public float fireRate;
         public WeaponType type;
         public FireMode fireMode;
+        public bool useAmmo;
+        public int ammo;
         public GameObject model;
         public GameObject projectilePrefab;
         public Transform projectileExit;
@@ -23,6 +26,14 @@ namespace NajakBoi.Scripts.Weapons
 
         public void Fire(float force = 0f)
         {
+            if (useAmmo && ammo <= 0)
+            {
+                Debug.Log($"No Ammo Left in {gameObject.name}");
+                return;
+            }
+
+            ammo--;
+            
             switch (fireMode)
             {
                 case FireMode.Automatic:
@@ -49,19 +60,18 @@ namespace NajakBoi.Scripts.Weapons
             var distance = 100f;
             var direction = projectileExit.forward;
             
-            Debug.Log($"Fired Pistol");
-            
             if (Physics.SphereCast(origin, radius, direction, out RaycastHit hitInfo, distance))
             {
                 // A collision occurred, and hitInfo now contains information about the hit
-                Debug.Log("Hit object: " + hitInfo.collider.gameObject.name);
                 Debug.DrawRay(origin, direction * hitInfo.distance, Color.red);
 
                 var player = hitInfo.collider.gameObject.GetComponent<PlayerController>();
                 if (player)
-                {
                     player.GetDamaged(damage);
-                }
+
+                var block = hitInfo.collider.gameObject.GetComponent<Block>();
+                if(block)
+                    block.GetDamaged(damage);
             }
             else
             {

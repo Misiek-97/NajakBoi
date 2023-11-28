@@ -1,3 +1,6 @@
+using System.Text;
+using NajakBoi.Scripts.Session;
+using NajakBoi.Scripts.Systems.Levelling;
 using TMPro;
 using UnityEngine;
 
@@ -6,6 +9,7 @@ namespace NajakBoi.Scripts.UI
     public class EndGameScreen : MonoBehaviour
     {
         public TextMeshProUGUI endTextTmp;
+        public TextMeshProUGUI summaryTmp;
 
         // Start is called before the first frame update
         void Awake()
@@ -21,9 +25,35 @@ namespace NajakBoi.Scripts.UI
 
         public void GameEnded(PlayerId looser)
         {
+            var xpGained = looser == PlayerId.Opponent ? 100 : 50;
+            
+            ExperienceManager.GainExperience(xpGained);
+            
+            var sb = new StringBuilder();
+            sb.Append("Summary\r\n");
+            sb.AppendLine($"Level: {SessionManager.PlayerData.Stats.Level}");
+            sb.AppendLine($"Experience: {SessionManager.PlayerData.Stats.Experience} / {ExperienceManager.CalculateExperienceToNextLevel()}");
+            
+            var resources = GameManager.Instance.CalculateEndResources();
+            if (resources.Count > 0)
+            {
+                sb.AppendLine("\r\nResources Gained:");
+                foreach(var r in resources)
+                    sb.AppendLine($"+{r.amount} {r.resourceType}");
+            }
+            
+            summaryTmp.text = sb.ToString();
+            if (GameManager.GameMode == GameMode.Expedition)
+            {
+                endTextTmp.text = looser == PlayerId.Opponent ? "Expedition Successful!" : "Expedition Failed!";
+                endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+            }
+            else
+            {
+                endTextTmp.text = looser == PlayerId.Opponent ? "You Won!" : "You Lost!";
+                endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+            }
             gameObject.SetActive(true);
-            endTextTmp.text = looser == PlayerId.Opponent ? "You Won!" : "You Lost!";
-            endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
         }
     }
 }
