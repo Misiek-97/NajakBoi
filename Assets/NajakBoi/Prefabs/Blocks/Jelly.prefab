@@ -119,17 +119,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 229449589abf7da48b15228938b51124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockMenuPrefab: {fileID: 2561403470868381975, guid: 9a3cb708bc55ed14ab2b974518435670, type: 3}
-  mat: {fileID: 2100000, guid: baca6e382c687be439b59f23eac39474, type: 2}
-  highlightGo: {fileID: 5556595567298547522}
-  healthBar: {fileID: 0}
-  blockCanvasPrefab: {fileID: 4476433331368364450, guid: abbf6c770c511884eafc2577abcd2109, type: 3}
-  sprite: {fileID: 21300000, guid: 6989205f3f41224489c29cbb8ff1618c, type: 3}
-  id: 0
   type: 3
-  gridPos: {x: 0, y: 0}
   maxHealth: 30
   currentHealth: 0
+  mat: {fileID: 2100000, guid: baca6e382c687be439b59f23eac39474, type: 2}
+  mesh: {fileID: 0}
+  lootTable: {fileID: 11400000, guid: 7c4be9fea0695aa4dbc8f2ad35c28898, type: 2}
+  dropDisplayPrefab: {fileID: 4476433331368364450, guid: c70ce3a67e5a0ff468cf4a615195e9da, type: 3}
+  sprite: {fileID: 21300000, guid: 6989205f3f41224489c29cbb8ff1618c, type: 3}
+  blockCanvasPrefab: {fileID: 4476433331368364450, guid: abbf6c770c511884eafc2577abcd2109, type: 3}
+  highlightGo: {fileID: 5556595567298547522}
 --- !u!1001 &8543271483634082755
 PrefabInstance:
   m_ObjectHideFlags: 0

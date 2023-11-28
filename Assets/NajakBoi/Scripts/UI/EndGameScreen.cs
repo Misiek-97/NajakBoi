@@ -1,4 +1,5 @@
 using System.Text;
+using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Levelling;
 using TMPro;
 using UnityEngine;
@@ -30,7 +31,15 @@ namespace NajakBoi.Scripts.UI
             
             var sb = new StringBuilder();
             sb.Append("Summary\r\n");
-            sb.AppendLine($"Experience Gained: {xpGained}");
+            sb.AppendLine($"Level: {SessionManager.PlayerData.Stats.Level}");
+            sb.AppendLine($"Experience: {xpGained} / {ExperienceManager.CalculateExperienceToNextLevel()}");
+            var resources = GameManager.Instance.CalculateEndResources();
+            if (resources.Count > 0)
+            {
+                sb.AppendLine("\r\nResources Gained:");
+                foreach(var r in resources)
+                    sb.AppendLine($"+{r.amount} {r.resourceType}");
+            }
             summaryTmp.text = sb.ToString();
             endTextTmp.text = looser == PlayerId.Opponent ? "You Won!" : "You Lost!";
             endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;

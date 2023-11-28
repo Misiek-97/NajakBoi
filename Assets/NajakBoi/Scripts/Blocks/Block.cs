@@ -1,6 +1,7 @@
 using System;
 using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Economy;
+using NajakBoi.Scripts.UI;
 using NajakBoi.Scripts.UI.EditMode;
 using NajakBoi.Scripts.Weapons;
 using UnityEngine;
@@ -17,6 +18,7 @@ namespace NajakBoi.Scripts.Blocks
         public Material mat;
         public Mesh mesh;
         public LootTable lootTable;
+        public GameObject dropDisplayPrefab;
      
         public Sprite sprite;
         public GameObject blockCanvasPrefab;
@@ -45,26 +47,40 @@ namespace NajakBoi.Scripts.Blocks
 
         public void GetDamaged(float dmg)
         {
+            if (type == BlockType.Empty) return;
+            
             currentHealth -= dmg;
             _healthBar.UpdateHealth();
             _canvas.SetActive(true);
-            if(currentHealth <= 0)
+            if (currentHealth <= 0)
+            {
+                if (lootTable)
+                {
+                    GenerateLoot();
+                }
+                else
+                {
+                    Debug.LogWarning($"No Loot Table set up on {gameObject.name}!");
+                }
+                
                 Destroy(gameObject);
+            }
         }
 
-        private void OnDestroy()
+        private void GenerateLoot()
         {
+            if (lootTable == null) return;
+            Debug.Log($"Generating Loot after destroying {gameObject.name}");
+            var display = Instantiate(dropDisplayPrefab).GetComponent<DropDisplay>();
+            display.gameObject.transform.position = transform.position;
             var loot = lootTable.GenerateLoot();
             foreach (var item in loot)
             {
                 Debug.Log($"{gameObject.name} Dropped {item.Amount} {item.Type}(s)");
                 SessionManager.PlayerData.GainResource(item.Type, item.Amount);
             }
-        }
 
-        private void GenerateLoot()
-        {
-            
+            display.DisplayDrops(loot);
         }
 
         public void ApplyExplosionForce(float force, Vector3 origin, float radius)
@@ -93,6 +109,8 @@ namespace NajakBoi.Scripts.Blocks
             mat = block.mat;
             ID = block.ID;
             mesh = block.mesh;
+            lootTable = block.lootTable;
+            dropDisplayPrefab = block.dropDisplayPrefab;
             
             Renderer.material = mat;
             if (!GameManager.Instance.editMode && type == BlockType.Empty && GameManager.Instance.editMode)

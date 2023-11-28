@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using NajakBoi.Scripts.Blocks;
+using NajakBoi.Scripts.Session;
+using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.UI;
 using NajakBoi.Scripts.UI.EditMode;
 using StarterAssets;
@@ -35,6 +38,8 @@ namespace NajakBoi.Scripts
         public static bool EndingTurn;
         public static GameMode GameMode;
 
+        private Dictionary<ResourceType, Resource> _startResources = new();
+
         private void Awake()
         {
             if (Instance)
@@ -51,9 +56,42 @@ namespace NajakBoi.Scripts
             Instance = null;
         }
 
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape) && GameMode == GameMode.Expedition)
+                endGameScreen.GameEnded(PlayerId.Opponent);
+        }
+
+        private void StoreStartResources()
+        {
+            foreach (var entry in SessionManager.PlayerData.Resources)
+            {
+                _startResources.Add(entry.Key, entry.Value);
+            }
+        }
+        
+        public List<Resource> CalculateEndResources()
+        {
+            var endResources = new List<Resource>();
+            foreach (var entry in SessionManager.PlayerData.Resources)
+            {
+                var gainedAmount = entry.Value.amount - _startResources[entry.Key].amount;
+                if (gainedAmount <= 0) continue;
+                var res = new Resource()
+                {
+                    amount = gainedAmount,
+                    resourceType = entry.Key
+                };
+                endResources.Add(res);
+            }
+
+            return endResources;
+        }
+
 
         private void Start()
         {
+            StoreStartResources();
             playerTurn = PlayerId.Player;
             if (GameMode == GameMode.LocalPvP)
                 EditingStage();
