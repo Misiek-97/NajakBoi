@@ -49,12 +49,9 @@ namespace NajakBoi.Scripts.Weapons
             var distance = 100f;
             var direction = projectileExit.forward;
             
-            Debug.Log($"Fired Pistol");
-            
             if (Physics.SphereCast(origin, radius, direction, out RaycastHit hitInfo, distance))
             {
                 // A collision occurred, and hitInfo now contains information about the hit
-                Debug.Log("Hit object: " + hitInfo.collider.gameObject.name);
                 Debug.DrawRay(origin, direction * hitInfo.distance, Color.red);
 
                 var player = hitInfo.collider.gameObject.GetComponent<PlayerController>();

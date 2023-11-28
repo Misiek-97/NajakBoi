@@ -212,6 +212,9 @@ namespace NajakBoi.Scripts.Blocks
                     excludedTypes.Add(BlockType.MilitaryChest);
             }
 
+            if (playerId == PlayerId.Player)
+                excludedTypes.Add(BlockType.MilitaryChest);
+
             // Update Tile Parameters and add new tile to the list.
             var block = blockGo.GetComponent<Block>();
             var blockType = random ? GetRandomBlockType(excludedTypes: excludedTypes) : type;
