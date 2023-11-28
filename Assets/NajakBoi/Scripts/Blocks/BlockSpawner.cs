@@ -199,10 +199,23 @@ namespace NajakBoi.Scripts.Blocks
             var blockGo = Instantiate(blockPrefab, transform);
             blockGo.transform.localPosition = blockPosition;
                 
+            // Set Up Exclusions
+            var excludedTypes = new List<BlockType>();
+            if (gridPos.y == 0)
+            {
+                excludedTypes.Add(BlockType.MilitaryChest);
+            }
+            else
+            {
+                var blockBelow = _gridBlocks.Find(x => x.GridPos == new Vector2(gridPos.x, gridPos.y - 1));
+                if(!blockBelow || blockBelow.type == BlockType.MilitaryChest || blockBelow.type == BlockType.Empty )
+                    excludedTypes.Add(BlockType.MilitaryChest);
+            }
+
             // Update Tile Parameters and add new tile to the list.
             var block = blockGo.GetComponent<Block>();
-            var blockType = random ? GetRandomBlockType() : type;
-            block.UpdateBlockProperties(SelectBlock(blockType));
+            var blockType = random ? GetRandomBlockType(excludedTypes: excludedTypes) : type;
+            block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes));
             block.GridPos = gridPos;
             block.ID = id;
             blockGo.name = $"{block.type}@({block.GridPos.x},{block.GridPos.y})#{block.ID}";
