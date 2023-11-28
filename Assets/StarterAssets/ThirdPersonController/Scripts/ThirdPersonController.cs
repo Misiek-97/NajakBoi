@@ -281,7 +281,7 @@ namespace StarterAssets
                 _speed = targetSpeed;
             }
 
-            if (_playerController.UseMovement(_speed / 100f))
+            if (_playerController.UseMovement(_speed / 100f) || GameManager.EndingTurn)
             {
                 _input.move = Vector2.zero;
                 _speed = 0f;
@@ -302,7 +302,6 @@ namespace StarterAssets
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
-                Debug.Log(inputDirection.x);
                 // rotate to face input direction relative to camera position
                 if (inputDirection.x <= 0)
                     rotation = 275f;

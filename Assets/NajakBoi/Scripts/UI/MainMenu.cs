@@ -6,18 +6,7 @@ namespace NajakBoi.Scripts.UI
 {
     public class MainMenu : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
-    
+      
         public void StartGame()
         {
             SceneManager.LoadScene("Game");
@@ -29,7 +18,19 @@ namespace NajakBoi.Scripts.UI
 
         public void StartLocalPvE()
         {
-            
+            GameManager.GameMode = GameMode.PvE;
+            StartGame();
+        }   
+        
+        public void StartExpedition()
+        {
+            GameManager.GameMode = GameMode.Expedition;
+            StartGame();
+        } 
+        
+        public void StartLocalPvP()
+        {
+            GameManager.GameMode = GameMode.LocalPvP;
             StartGame();
         }
     

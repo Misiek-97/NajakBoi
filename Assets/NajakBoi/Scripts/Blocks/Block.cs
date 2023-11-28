@@ -1,3 +1,6 @@
+using System;
+using NajakBoi.Scripts.Session;
+using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.UI.EditMode;
 using NajakBoi.Scripts.Weapons;
 using UnityEngine;
@@ -5,32 +8,29 @@ using UnityEngine.Serialization;
 
 namespace NajakBoi.Scripts.Blocks
 {
+    [RequireComponent(typeof(MeshRenderer))]
     public class Block : MonoBehaviour, IDamageable
     {
-        public GameObject blockMenuPrefab;
-        public Material mat;
-        public GameObject highlightGo;
-        public BlockHealthBar healthBar;
-        public GameObject blockCanvasPrefab;
-        private GameObject _canvas;
-
-        private BoxCollider _collider;
-        public MeshRenderer render;
-     
-        public Sprite sprite;
-        public int id;
         public BlockType type;
-        public Vector2 gridPos;
-
         public float maxHealth;
         public float currentHealth;
+        public Material mat;
+        public Mesh mesh;
+        public LootTable lootTable;
+     
+        public Sprite sprite;
+        public GameObject blockCanvasPrefab;
+        public GameObject highlightGo;
+        
+        [NonSerialized]public MeshRenderer Renderer;
+        [NonSerialized]public Vector2 GridPos;
+        [NonSerialized]public int ID;
+        private BlockHealthBar _healthBar;
+        private GameObject _canvas;
 
         void Awake()
         {
-            render = GetComponent<MeshRenderer>();
-            render.material = mat;
-
-            _collider = GetComponent<BoxCollider>();
+            Renderer = GetComponent<MeshRenderer>();
             
             currentHealth = maxHealth;
             if(blockCanvasPrefab)
@@ -38,7 +38,7 @@ namespace NajakBoi.Scripts.Blocks
                 _canvas = Instantiate(blockCanvasPrefab, transform);
                 _canvas.transform.localPosition = new Vector3(0f, 0f, -0.51f);
                 _canvas.SetActive(false);
-                healthBar = _canvas.GetComponent<BlockHealthBar>();                
+                _healthBar = _canvas.GetComponent<BlockHealthBar>();                
             }
         
         }
@@ -46,10 +46,25 @@ namespace NajakBoi.Scripts.Blocks
         public void GetDamaged(float dmg)
         {
             currentHealth -= dmg;
-            healthBar.UpdateHealth();
+            _healthBar.UpdateHealth();
             _canvas.SetActive(true);
             if(currentHealth <= 0)
                 Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            var loot = lootTable.GenerateLoot();
+            foreach (var item in loot)
+            {
+                Debug.Log($"{gameObject.name} Dropped {item.Amount} {item.Type}(s)");
+                SessionManager.PlayerData.GainResource(item.Type, item.Amount);
+            }
+        }
+
+        private void GenerateLoot()
+        {
+            
         }
 
         public void ApplyExplosionForce(float force, Vector3 origin, float radius)
@@ -76,21 +91,25 @@ namespace NajakBoi.Scripts.Blocks
             sprite = block.sprite;
             type = block.type;
             mat = block.mat;
-            id = block.id;
+            ID = block.ID;
+            mesh = block.mesh;
             
-            render.material = mat;
+            Renderer.material = mat;
             if (!GameManager.Instance.editMode && type == BlockType.Empty && GameManager.Instance.editMode)
             {
-                render.enabled = false;
+                Renderer.enabled = false;
                 _canvas.SetActive(false);
             }
 
+            if (mesh)
+                GetComponent<MeshFilter>().mesh = mesh;
+
             currentHealth = maxHealth;
 
-            if (healthBar)
-                healthBar.UpdateHealth();
+            if (_healthBar)
+                _healthBar.UpdateHealth();
 
-            gameObject.name = $"{type}@{gridPos}#{id}";
+            gameObject.name = $"{type}@{GridPos}#{ID}";
             gameObject.layer = type == BlockType.Empty ? LayerMask.NameToLayer("IgnoreCollision") : 0;
         }
 
