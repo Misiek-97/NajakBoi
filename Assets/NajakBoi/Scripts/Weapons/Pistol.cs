@@ -14,7 +14,7 @@ namespace NajakBoi.Scripts.Weapons
                 playerController.controller.isAiming = false;
                 return;
             }
-
+            
             playerController.controller.isAiming = Input.GetMouseButton(1);
             if (playerController.controller.isAiming)
             {

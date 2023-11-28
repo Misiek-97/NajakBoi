@@ -1,4 +1,5 @@
 using System;
+using NajakBoi.Scripts.Blocks;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Weapons
@@ -9,6 +10,8 @@ namespace NajakBoi.Scripts.Weapons
         public float fireRate;
         public WeaponType type;
         public FireMode fireMode;
+        public bool useAmmo;
+        public int ammo;
         public GameObject model;
         public GameObject projectilePrefab;
         public Transform projectileExit;
@@ -23,6 +26,14 @@ namespace NajakBoi.Scripts.Weapons
 
         public void Fire(float force = 0f)
         {
+            if (useAmmo && ammo <= 0)
+            {
+                Debug.Log($"No Ammo Left in {gameObject.name}");
+                return;
+            }
+
+            ammo--;
+            
             switch (fireMode)
             {
                 case FireMode.Automatic:
@@ -56,9 +67,11 @@ namespace NajakBoi.Scripts.Weapons
 
                 var player = hitInfo.collider.gameObject.GetComponent<PlayerController>();
                 if (player)
-                {
                     player.GetDamaged(damage);
-                }
+
+                var block = hitInfo.collider.gameObject.GetComponent<Block>();
+                if(block)
+                    block.GetDamaged(damage);
             }
             else
             {

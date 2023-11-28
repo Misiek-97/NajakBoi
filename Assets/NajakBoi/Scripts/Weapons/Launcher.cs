@@ -26,6 +26,12 @@ namespace NajakBoi.Scripts.Weapons
                 _force = minForce;
                 return;
             }
+
+            if (ammo <= 0)
+            {
+                Debug.Log($"No Ammo Left in {gameObject.name}");
+                return;
+            }
             
             if (Input.GetMouseButton(0))
             {

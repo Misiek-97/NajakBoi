@@ -2,17 +2,19 @@ using System.Collections;
 using NajakBoi.Scripts.UI.HUD;
 using NajakBoi.Scripts.Weapons;
 using StarterAssets;
+using TMPro;
 using UnityEngine;
 
 namespace NajakBoi.Scripts
 {
     public class PlayerController : MonoBehaviour, IDamageable
     {
-
         public PlayerId playerId;
         public HealthBar healthBar;
         public MovementBar movementBar;
         public ChargeBar chargeBar;
+        public WeaponSwitcher weaponSwitcher;
+        public TextMeshProUGUI ammoDisplay;
         public float maxHealth = 100f;
         public float currentHealth;
         public float currentMovement;
@@ -34,6 +36,14 @@ namespace NajakBoi.Scripts
 
             movementBar.player = this;
             movementBar.UpdateMovement();
+
+            weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
+        }
+
+        private void Update()
+        {
+            var currentWeapon = weaponSwitcher.currentWeapon;
+            ammoDisplay.text = $"{currentWeapon.gameObject.name} Ammo: {(!currentWeapon.useAmmo ? "Infinite" : currentWeapon.ammo)}";
         }
 
 

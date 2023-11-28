@@ -72,13 +72,11 @@ namespace NajakBoi.Scripts.Blocks
         private void GenerateLoot()
         {
             if (lootTable == null) return;
-            Debug.Log($"Generating Loot after destroying {gameObject.name}");
             var display = Instantiate(dropDisplayPrefab).GetComponent<DropDisplay>();
             display.gameObject.transform.position = transform.position;
             var loot = lootTable.GenerateLoot();
             foreach (var item in loot)
             {
-                Debug.Log($"{gameObject.name} Dropped {item.Amount} {item.Type}(s)");
                 SessionManager.PlayerData.GainResource(item.Type, item.Amount);
             }
 

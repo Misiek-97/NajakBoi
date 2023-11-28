@@ -81,6 +81,8 @@ MonoBehaviour:
   fireRate: 1
   type: 3
   fireMode: 4
+  useAmmo: 1
+  ammo: 25
   model: {fileID: 0}
   projectilePrefab: {fileID: 38431640591625171, guid: 57e30e586a32b75488b4631d7c65a445, type: 3}
   projectileExit: {fileID: 2486157663291739366}
