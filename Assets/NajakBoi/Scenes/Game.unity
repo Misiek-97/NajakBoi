@@ -1330,6 +1330,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1662496787}
     m_Modifications:
+    - target: {fileID: 1208207480793084077, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 922531171}
+    - target: {fileID: 1208207480793084077, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RestartGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 1208207480793084077, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NajakBoi.Scripts.GameManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     - target: {fileID: 2456337709503957568, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
       propertyPath: m_Name
       value: EndGame-Canvas
@@ -1417,6 +1429,18 @@ PrefabInstance:
     - target: {fileID: 2503106351303621141, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016533953668624362, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 922531171}
+    - target: {fileID: 9016533953668624362, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 9016533953668624362, guid: 99180a3f8f66d244d9abb9413d9503e5, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NajakBoi.Scripts.GameManager, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

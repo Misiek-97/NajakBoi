@@ -32,7 +32,8 @@ namespace NajakBoi.Scripts.UI
             var sb = new StringBuilder();
             sb.Append("Summary\r\n");
             sb.AppendLine($"Level: {SessionManager.PlayerData.Stats.Level}");
-            sb.AppendLine($"Experience: {xpGained} / {ExperienceManager.CalculateExperienceToNextLevel()}");
+            sb.AppendLine($"Experience: {SessionManager.PlayerData.Stats.Experience} / {ExperienceManager.CalculateExperienceToNextLevel()}");
+            
             var resources = GameManager.Instance.CalculateEndResources();
             if (resources.Count > 0)
             {
@@ -40,9 +41,18 @@ namespace NajakBoi.Scripts.UI
                 foreach(var r in resources)
                     sb.AppendLine($"+{r.amount} {r.resourceType}");
             }
+            
             summaryTmp.text = sb.ToString();
-            endTextTmp.text = looser == PlayerId.Opponent ? "You Won!" : "You Lost!";
-            endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+            if (GameManager.GameMode == GameMode.Expedition)
+            {
+                endTextTmp.text = looser == PlayerId.Opponent ? "Expedition Successful!" : "Expedition Failed!";
+                endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+            }
+            else
+            {
+                endTextTmp.text = looser == PlayerId.Opponent ? "You Won!" : "You Lost!";
+                endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+            }
             gameObject.SetActive(true);
         }
     }
