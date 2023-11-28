@@ -19,6 +19,7 @@ namespace NajakBoi.Scripts.Blocks
         public Mesh mesh;
         public LootTable lootTable;
         public GameObject dropDisplayPrefab;
+        public Vector3 offset;
      
         public Sprite sprite;
         public GameObject blockCanvasPrefab;
@@ -28,12 +29,13 @@ namespace NajakBoi.Scripts.Blocks
         [NonSerialized]public Vector2 GridPos;
         [NonSerialized]public int ID;
         private BlockHealthBar _healthBar;
+        private BoxCollider _collider;
         private GameObject _canvas;
 
         void Awake()
         {
             Renderer = GetComponent<MeshRenderer>();
-            
+            _collider = GetComponent<BoxCollider>();
             currentHealth = maxHealth;
             if(blockCanvasPrefab)
             {
@@ -111,6 +113,7 @@ namespace NajakBoi.Scripts.Blocks
             mesh = block.mesh;
             lootTable = block.lootTable;
             dropDisplayPrefab = block.dropDisplayPrefab;
+            offset = block.offset;
             
             Renderer.material = mat;
             if (!GameManager.Instance.editMode && type == BlockType.Empty && GameManager.Instance.editMode)
@@ -120,7 +123,13 @@ namespace NajakBoi.Scripts.Blocks
             }
 
             if (mesh)
+            {
                 GetComponent<MeshFilter>().mesh = mesh;
+                _collider.size = mesh.bounds.size;
+                _collider.center = new Vector3(0f, mesh.bounds.size.y / 2f, 0f);
+            }
+            
+            transform.localPosition += offset;
 
             currentHealth = maxHealth;
 

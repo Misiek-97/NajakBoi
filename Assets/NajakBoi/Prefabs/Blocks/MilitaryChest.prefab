@@ -105,6 +105,7 @@ MonoBehaviour:
   mesh: {fileID: -2953223348696472982, guid: 6e63332daaa508242b4c3cf3ce2d4fe3, type: 3}
   lootTable: {fileID: 11400000, guid: fb82ed99ed2fae84d9ddd7a2eed48cbe, type: 2}
   dropDisplayPrefab: {fileID: 4476433331368364450, guid: c70ce3a67e5a0ff468cf4a615195e9da, type: 3}
+  offset: {x: 0, y: -0.5, z: 0}
   sprite: {fileID: 21300000, guid: e11fdd04095afb44aa2734f72a1d99aa, type: 3}
   blockCanvasPrefab: {fileID: 4476433331368364450, guid: abbf6c770c511884eafc2577abcd2109, type: 3}
   highlightGo: {fileID: 2383329887295036983}
