@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NajakBoi.Scripts.Systems.Economy;
+using NajakBoi.Scripts.Systems.Statistics;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Session
@@ -10,9 +11,91 @@ namespace NajakBoi.Scripts.Session
     {
         public Dictionary<ResourceType, Resource> Resources = new ();
 
-        public int Level;
-        public int Experience;
+        public PlayerStats Stats;
 
+        
+        public void SavePlayerData()
+        {
+            SaveResources();
+            SavePlayerStats();
+        }
+        
+        public void LoadPlayerData()
+        {
+            LoadResources();
+            LoadPlayerStats();
+        }
+
+        #region PlayerStats
+        public void UpdatePlayerStats(PlayerStats newStats)
+        {
+            Stats = newStats;
+            SavePlayerStats();
+        }
+        // Method to serialize the PlayerStats to a JSON file
+        private void SavePlayerStats()
+        {
+            var json = JsonUtility.ToJson(Stats);
+            var filePath = Path.Combine(Application.persistentDataPath, "PlayerStats.json");
+            File.WriteAllText(filePath, json);
+        }
+        
+        // Method to deserialize the PlayerStats from a JSON file
+        private void LoadPlayerStats()
+        {
+            var filePath = Path.Combine(Application.persistentDataPath, "PlayerStats.json");
+            if (File.Exists(filePath))
+            {
+                var json = File.ReadAllText(filePath);
+                var stats = JsonUtility.FromJson<PlayerStats>(json);
+                Stats = stats;
+                return;
+            }
+            
+            PopulatePlayerStats();
+        }
+
+        private void PopulatePlayerStats()
+        {
+            Stats = new PlayerStats()
+            {
+                Level = 1,
+                Experience = 0,
+                MaxHealth = 50f,
+                MaxJumpHeight = 1.2f,
+                MaxMovement = 100f,
+                BlastResistance = 5f,
+                PierceResistance = 5f,
+                ColdResistance = 5f,
+                FireResistance = 5f,
+                LightningResistance = 5f,
+                PoisonResistance = 5f
+            };
+            SavePlayerStats();
+        }
+        #endregion    
+        
+        #region RESOURCES
+
+        // Method used to ADD resource to the player.
+        public void GainResource(ResourceType type, int amount)
+        {
+            var resource = Resources[type];
+            resource.amount += amount;
+            Resources[type] = resource;
+            
+            SaveResources();
+        }
+        
+        // Method used to SUBTRACT resource from the player.
+        public void UseResource(ResourceType type, int amount)
+        {
+            var resource = Resources[type];
+            resource.amount -= amount;
+            Resources[type] = resource;
+            
+            SaveResources();
+        }
         public void PopulateResourcesDictionary()
         {
             foreach(var type in Enum.GetValues(typeof(ResourceType)))
@@ -29,34 +112,6 @@ namespace NajakBoi.Scripts.Session
                 
                 Resources.Add(t, res);
             }
-            
-            SaveResources();
-        }
-
-        public void SavePlayerData()
-        {
-            SaveResources();
-        }
-        
-        public void LoadPlayerData()
-        {
-            LoadResources();
-        }
-
-
-        public void GainResource(ResourceType type, int amount)
-        {
-            var resource = Resources[type];
-            resource.amount += amount;
-            Resources[type] = resource;
-            
-            SaveResources();
-        }
-        public void UseResource(ResourceType type, int amount)
-        {
-            var resource = Resources[type];
-            resource.amount -= amount;
-            Resources[type] = resource;
             
             SaveResources();
         }
@@ -85,7 +140,7 @@ namespace NajakBoi.Scripts.Session
         }
 
         // Wrapper class for serialization of ResourceDictionary
-        [System.Serializable]
+        [Serializable]
         private class SerializableResourceDictionary
         {
             public List<SerializableResource> resourcesList;
@@ -110,7 +165,7 @@ namespace NajakBoi.Scripts.Session
         }
 
         // Wrapper class for serialization of Resource
-        [System.Serializable]
+        [Serializable]
         private class SerializableResource
         {
             public ResourceType resourceType;
@@ -122,57 +177,33 @@ namespace NajakBoi.Scripts.Session
                 resource = res;
             }
         }
-        
-        //Level
-            //Experience
-            //UpgradePoints
-           
-        //PlayerUpgrades
-            //MaxHealth
-            //MaxMovement
-            //JumpHeight
-        
-        //Resistances
-            //Blast
-            //Pierce
-            //Fire
-            //Cold
-            //Lightning
-            //Poison
+     #endregion
+
 
         //Weapons
-            //Pistol
-                //Damage
-                //Rounds
-                //Range
-            //Launcher
-                //Damage
-                //MaxChargeForce
-                //ExplosionRadius
+        //Pistol
+        //Damage
+        //Rounds
+        //Range
+        //Launcher
+        //Damage
+        //MaxChargeForce
+        //ExplosionRadius
 
         //Utilities
-            //Bandage
-                //HealAmount
-                //AvailableUses
-            //MedKit
-                //HealAmount
-                //AdditionalRegen
-                //AvailableUses
-            //Ramen
-                //HealAmount
-                //AdditionalRegen
-                //AdditionalDamage
-                //AvailableUses
-            
-                
-        public void SaveToFile(string fn)
-        {
-            
-        }
+        //Bandage
+        //HealAmount
+        //AvailableUses
+        //MedKit
+        //HealAmount
+        //AdditionalRegen
+        //AvailableUses
+        //Ramen
+        //HealAmount
+        //AdditionalRegen
+        //AdditionalDamage
+        //AvailableUses
 
-        public static PlayerData LoadFromFile(string fn)
-        {
-            return new PlayerData();
-        }
+
     }
 }
