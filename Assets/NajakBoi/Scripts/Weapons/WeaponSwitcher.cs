@@ -23,14 +23,14 @@ namespace NajakBoi.Scripts.Weapons
             {
                 weapons.Add(weapon);
 
-                if (weapon.type != WeaponType.Pistol)
+                if (weapon.weaponType != WeaponType.Pistol)
                 {
                     weapon.gameObject.SetActive(false);
                 }
                 else
                 {
                     currentWeapon = weapon;
-                    _player.controller.AnimatorSetWeaponType((int)currentWeapon.type);
+                    _player.controller.AnimatorSetWeaponType((int)currentWeapon.weaponType);
                 }
             }
         }
@@ -38,10 +38,10 @@ namespace NajakBoi.Scripts.Weapons
         private void SelectWeapon(WeaponType type)
         {
             currentWeapon.gameObject.SetActive(false);
-            var weapon = weapons.First(x => x.type == type);
+            var weapon = weapons.First(x => x.weaponType == type);
             weapon.gameObject.SetActive(true);
             currentWeapon = weapon;
-            _player.controller.AnimatorSetWeaponType((int)currentWeapon.type);
+            _player.controller.AnimatorSetWeaponType((int)currentWeapon.weaponType);
         }
 
         // Update is called once per frame
@@ -49,7 +49,7 @@ namespace NajakBoi.Scripts.Weapons
         {
             if (Input.GetKeyDown(KeyCode.Q) && gm.IsMyTurn(_player.playerId))
             {
-                switch (currentWeapon.type)
+                switch (currentWeapon.weaponType)
                 {
                     case WeaponType.Pistol:
                         SelectWeapon(WeaponType.Launcher);
