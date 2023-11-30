@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.Systems.Statistics;
+using NajakBoi.Scripts.Systems.Upgrading;
 using NajakBoi.Scripts.Weapons;
 using UnityEngine;
 
@@ -16,6 +17,22 @@ namespace NajakBoi.Scripts.Session
 
         public PlayerStats Stats;
 
+        public void AddAllResources()
+        {
+            var newResources = new Dictionary<ResourceType, Resource>();
+            foreach (var res in Resources)
+            {
+                newResources.Add(res.Key, new Resource(){resourceType = res.Key, amount = 1000});
+            }
+
+            Resources = newResources;
+            SaveResources();
+        }  
+        public void ClearAllResources()
+        {
+            Resources = new Dictionary<ResourceType, Resource>();
+            PopulateResourcesDictionary();
+        }
 
         public void SavePlayerData()
         {
@@ -210,10 +227,26 @@ namespace NajakBoi.Scripts.Session
                 var wpn = new WeaponData()
                 {
                     weaponType = t,
-                    damageLevel = 0,
-                    ammoLevel = 0,
-                    forceLevel = 0,
-                    explosionLevel = 0
+                    damageData = new WeaponUpgradeData()
+                    {
+                        upgradeType = UpgradeType.Damage,
+                        level = 0
+                    },
+                    ammoData = new WeaponUpgradeData()
+                    {
+                        upgradeType = UpgradeType.Ammo,
+                        level = 0
+                    },
+                    forceData = new WeaponUpgradeData()
+                    {
+                        upgradeType = UpgradeType.MaxForce,
+                        level = 0
+                    },
+                    explosionData = new WeaponUpgradeData()
+                    {
+                        upgradeType = UpgradeType.ExplosionRadius,
+                        level = 0
+                    },
                 };
 
                 Weapons.Add(t, wpn);
@@ -278,7 +311,7 @@ namespace NajakBoi.Scripts.Session
         {
             public WeaponType weaponType;
             public WeaponData weaponData;
-
+            
             public SerializableWeapon(WeaponType type, WeaponData data)
             {
                 weaponType = type;

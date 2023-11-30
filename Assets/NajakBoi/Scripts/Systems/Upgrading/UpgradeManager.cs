@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using NajakBoi.Scripts.Session;
@@ -18,7 +19,6 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public Button upgradeDamageBtn;
         public Button upgradeExplosionBtn;
         public Button upgradeForceBtn;
-
         public static List<WeaponUpgradeTable> UpgradeTables => SessionManager.Session.wutManager.weaponUpgradeTables;
         
         public void SelectWeaponByName(string weaponName)
@@ -41,17 +41,23 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public void UpgradeAmmo()
         {
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
-            var newAmmoLevel = weapon.ammoLevel + 1;
+            
+            var newData =  new WeaponUpgradeData()
+            {
+                level = weapon.ammoData.level + 1,
+                upgradeType = UpgradeType.Ammo
+            };
+            
             var weaponData = new WeaponData()
             {
                 weaponType = selectedWeapon,
-                ammoLevel = newAmmoLevel,
-                damageLevel = weapon.damageLevel,
-                explosionLevel = weapon.explosionLevel,
-                forceLevel = weapon.forceLevel
+                ammoData = newData,
+                damageData = weapon.damageData,
+                explosionData = weapon.explosionData,
+                forceData = weapon.forceData
             };
             
-            UseResources(newAmmoLevel, selectedWeapon, UpgradeType.Ammo);
+            UseResources(selectedWeapon, newData);
 
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
             LabManager.Instance.DisplayPanelByName("Upgrade");
@@ -60,17 +66,23 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public void UpgradeDamage()
         {
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
-            var newDamageLevel = weapon.damageLevel + 1;
+            
+            var newData =  new WeaponUpgradeData()
+            {
+                level = weapon.damageData.level + 1,
+                upgradeType = UpgradeType.Damage
+            };
+            
             var weaponData = new WeaponData()
             {
                 weaponType = selectedWeapon,
-                ammoLevel = weapon.ammoLevel,
-                damageLevel = newDamageLevel,
-                explosionLevel = weapon.explosionLevel,
-                forceLevel = weapon.forceLevel
+                ammoData = weapon.ammoData,
+                damageData = newData,
+                explosionData = weapon.explosionData,
+                forceData = weapon.forceData
             };
             
-            UseResources(newDamageLevel, selectedWeapon, UpgradeType.Damage);
+            UseResources(selectedWeapon, newData);
 
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
             LabManager.Instance.DisplayPanelByName("Upgrade");
@@ -79,17 +91,23 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public void UpgradeExplosion()
         {
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
-            var newExplosionLevel = weapon.explosionLevel + 1;
+            
+            var newData = new WeaponUpgradeData()
+            {
+                level = weapon.explosionData.level + 1,
+                upgradeType = UpgradeType.ExplosionRadius
+            };
+            
             var weaponData = new WeaponData()
             {
                 weaponType = selectedWeapon,
-                ammoLevel = weapon.ammoLevel,
-                damageLevel = weapon.damageLevel,
-                explosionLevel = newExplosionLevel,
-                forceLevel = weapon.forceLevel
+                ammoData = weapon.ammoData,
+                damageData = weapon.damageData,
+                explosionData = newData,
+                forceData = weapon.forceData
             };
             
-            UseResources(newExplosionLevel, selectedWeapon, UpgradeType.ExplosionRadius);
+            UseResources(selectedWeapon, newData);
 
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
             LabManager.Instance.DisplayPanelByName("Upgrade");
@@ -99,31 +117,45 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         {
             upgradeForceBtn.interactable = false;
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
-            var newForceLevel = weapon.forceLevel + 1;
+            
+            var newData = new WeaponUpgradeData()
+            {
+                level = weapon.forceData.level + 1,
+                upgradeType = UpgradeType.MaxForce
+            };
+            
             var weaponData = new WeaponData()
             {
                 weaponType = selectedWeapon,
-                ammoLevel = weapon.ammoLevel,
-                damageLevel = weapon.damageLevel,
-                explosionLevel = weapon.explosionLevel,
-                forceLevel = newForceLevel
+                ammoData = weapon.ammoData,
+                damageData = weapon.damageData,
+                explosionData = weapon.explosionData,
+                forceData = newData
             };
             
-            UseResources(newForceLevel, selectedWeapon, UpgradeType.MaxForce);
+            UseResources(selectedWeapon, newData);
             
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
             LabManager.Instance.DisplayPanelByName("Upgrade");
             
         }
 
-        private void UseResources(int level, WeaponType wpnType, UpgradeType upType)
+        private void UseResources(WeaponType wpnType, WeaponUpgradeData data)
         {
+            
+            //TODO: Make this look up in WeaponUpgradeTableManager
             var wut = UpgradeTables.Find(x =>
-                x.weaponType == wpnType && x.upgradeType == upType && x.level == level);
+                x.weaponType == wpnType && x.upgradeType == data.upgradeType && x.level == data.level);
 
+            if (!wut)
+            {
+                Debug.LogWarning($"Could not find a WUT for {wpnType} {data.upgradeType} Level {data.level}");
+                return;
+            }
+            
             foreach (var res in wut.requiredResources)
             {
-                Debug.Log($"Used {res.amount} {res.resourceType} to upgrade {wpnType} {upType} to Level {level}.");
+                Debug.Log($"Used {res.amount} {res.resourceType} to upgrade {wpnType} {data.upgradeType} to Level {data.level}.");
                 SessionManager.PlayerData.UseResource(res.resourceType, res.amount);
             }
         }
@@ -143,24 +175,33 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             }
 
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
-            
-            foreach (var wut in UpgradeTables.Where(x => x.weaponType == selectedWeapon))
+            var wutManager = SessionManager.Session.wutManager;
+            foreach (var type in Enum.GetValues(typeof(UpgradeType)))
             {
-                if (wut.upgradeType == UpgradeType.Ammo && wut.level == weapon.ammoLevel + 1)
+                var t = (UpgradeType)type;
+                WeaponUpgradeTable wut;
+                switch (t)
                 {
-                    upgradeAmmoBtn.interactable = wut.CanUpgrade();
-                }
-                
-                if (wut.upgradeType == UpgradeType.Damage && wut.level == weapon.damageLevel + 1)
-                {
-                    upgradeDamageBtn.interactable = wut.CanUpgrade();
+                    case UpgradeType.Ammo:
+                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.Ammo, weapon.ammoData.level + 1);
+                        upgradeAmmoBtn.interactable = wut != null && wut.CanUpgrade();
+                        break;
+                    case UpgradeType.Damage:
+                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.Damage, weapon.damageData.level + 1);
+                        upgradeDamageBtn.interactable = wut != null && wut.CanUpgrade();
+                        break;
+                    case UpgradeType.MaxForce:
+                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.MaxForce, weapon.forceData.level + 1);
+                        upgradeForceBtn.interactable = wut != null && wut.CanUpgrade();
+                        break;
+                    case UpgradeType.ExplosionRadius:
+                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.ExplosionRadius, weapon.explosionData.level + 1);
+                        upgradeExplosionBtn.interactable = wut != null && wut.CanUpgrade();
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"Upgrade Type {t} not defined!");
                 }
             }
-            
-            
-            upgradeExplosionBtn.interactable = false;
-            upgradeForceBtn.interactable = false;
-            
         }
     }
 }

@@ -65,6 +65,17 @@ namespace NajakBoi.Scripts.UI
             }
         }
 
+        public void AddAllResources()
+        {
+            SessionManager.PlayerData.AddAllResources();
+            DisplayResources();
+        } 
+        public void ClearAllResources()
+        {
+            SessionManager.PlayerData.ClearAllResources();
+            DisplayResources();
+        }
+
         private void DisplayResources()
         {
             var resources = SessionManager.PlayerData.Resources;
@@ -90,12 +101,12 @@ namespace NajakBoi.Scripts.UI
                 if (wpn.Key is WeaponType.Rifle or WeaponType.Sniper) continue;
                 
                 sb.AppendLine($"\r\n<b>{wpn.Key} Upgrades</b>");
-                sb.AppendLine($"Damage Level: {wpn.Value.damageLevel}");
+                sb.AppendLine($"Damage Level: {wpn.Value.damageData.level}");
                 
                 if (wpn.Key == WeaponType.Pistol) continue;
-                sb.AppendLine($"Ammo Level: {wpn.Value.ammoLevel}");
-                sb.AppendLine($"Force Level: {wpn.Value.forceLevel}");
-                sb.AppendLine($"Explosion Level: {wpn.Value.explosionLevel}");
+                sb.AppendLine($"Ammo Level: {wpn.Value.ammoData.level}");
+                sb.AppendLine($"Force Level: {wpn.Value.forceData.level}");
+                sb.AppendLine($"Explosion Level: {wpn.Value.explosionData.level}");
             }
 
             upgradesTmp.text = sb.ToString();
