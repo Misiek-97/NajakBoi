@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Levelling;
+using NajakBoi.Scripts.Systems.Upgrading;
 using NajakBoi.Scripts.Weapons;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace NajakBoi.Scripts.UI
         public Toggle startToggle;
         public List<GameObject> panels;
         private int nextLevelXp;
+        private UpgradeManager _upgradeManager;
 
         public static LabManager Instance;
 
@@ -45,6 +47,7 @@ namespace NajakBoi.Scripts.UI
         // Start is called before the first frame update
         void Start()
         {
+            _upgradeManager = GetComponent<UpgradeManager>();
             nextLevelXp = ExperienceManager.CalculateExperienceToNextLevel();
             startToggle.SetIsOnWithoutNotify(true);
             startToggle.onValueChanged.Invoke(true);
@@ -96,8 +99,8 @@ namespace NajakBoi.Scripts.UI
             }
 
             upgradesTmp.text = sb.ToString();
-
-        }
+            _upgradeManager.ValidateUpgradeButtons();
+        }   
 
         private void DisplayNajakBoi()
         {

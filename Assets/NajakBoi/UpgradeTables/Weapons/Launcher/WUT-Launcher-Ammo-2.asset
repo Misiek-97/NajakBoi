@@ -18,6 +18,6 @@ MonoBehaviour:
   requiredPlayerLevel: 3
   requiredResources:
   - resourceType: 0
-    amount: 20
+    amount: 30
   - resourceType: 10
     amount: 12

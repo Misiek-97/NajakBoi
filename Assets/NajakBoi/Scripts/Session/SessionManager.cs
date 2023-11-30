@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using NajakBoi.Scripts.Systems.Upgrading;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Session
@@ -11,6 +12,8 @@ namespace NajakBoi.Scripts.Session
         public static string ResourcesPath => Path.Combine(Application.persistentDataPath, "Resources.json");
 
         public static SessionManager Session;
+
+        public WeaponUpgradeTableManager wutManager;
         
 
         private void Awake()
@@ -38,6 +41,8 @@ namespace NajakBoi.Scripts.Session
 
         private void Start()
         {
+            wutManager = GetComponent<WeaponUpgradeTableManager>();
+            
             if (File.Exists(ResourcesPath))
             {
                 PlayerData = new PlayerData();
@@ -55,6 +60,7 @@ namespace NajakBoi.Scripts.Session
             {
                 NewSession();
             }
+
         }
 
         public void Save()

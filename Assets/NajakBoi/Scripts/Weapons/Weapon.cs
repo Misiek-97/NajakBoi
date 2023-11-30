@@ -1,6 +1,10 @@
 using System;
+using System.Linq;
 using NajakBoi.Scripts.Blocks;
+using NajakBoi.Scripts.Session;
+using NajakBoi.Scripts.Systems.Upgrading;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace NajakBoi.Scripts.Weapons
 {
@@ -8,7 +12,7 @@ namespace NajakBoi.Scripts.Weapons
     {
         public int damage;
         public float fireRate;
-        public WeaponType type;
+        [FormerlySerializedAs("type")] public WeaponType weaponType;
         public FireMode fireMode;
         public bool useAmmo;
         public int ammo;
@@ -80,6 +84,20 @@ namespace NajakBoi.Scripts.Weapons
             }
             
             GameManager.Instance.EndTurn();
+        }
+
+        private WeaponUpgradeTable GetUpgrade(UpgradeType upType)
+        {
+            var wpn = SessionManager.PlayerData.Weapons[weaponType];
+            var wutList = SessionManager.Session.wutManager.weaponUpgradeTables;
+            var sortedWutList = wutList.Where(x => x.upgradeType == upType && x.weaponType == weaponType).ToList();
+
+            foreach (var wut in sortedWutList)
+            {
+                //TODO: Add WeaponUpgradeData to WeaponData   
+            }
+
+            return null;
         }
 
         private void LauncherFire(float force)

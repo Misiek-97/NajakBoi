@@ -4015,11 +4015,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedTmp: {fileID: 6384235516285634400}
-  selectedWeapon: 0
+  selectedWeapon: -1
   upgradeAmmoBtn: {fileID: 9011379406221621603}
   upgradeDamageBtn: {fileID: 340714700145273480}
   upgradeExplosionBtn: {fileID: 8720105124838062675}
   upgradeForceBtn: {fileID: 1466964598214507872}
+  upgradeTables:
+  - {fileID: 11400000, guid: c2548d559690fe14c878ff7ebb79d7fb, type: 2}
+  - {fileID: 11400000, guid: 5cbbab8c78846a84ea3a626940540f23, type: 2}
+  - {fileID: 11400000, guid: 453edb557594a274a9662e9957c104dd, type: 2}
+  - {fileID: 11400000, guid: 1b8832c5244f17c4ca1b549bc078a7e3, type: 2}
+  - {fileID: 11400000, guid: afa14fd86b71ca94b82496cfdca7d086, type: 2}
+  - {fileID: 11400000, guid: c1a3f33b273466941b355543397103f2, type: 2}
+  - {fileID: 11400000, guid: da0ed1e40c98b4243b6d75b8e931c5af, type: 2}
+  - {fileID: 11400000, guid: 84aa14f3cf5c51447aa94d523e7d098a, type: 2}
 --- !u!1 &6604285133865737192
 GameObject:
   m_ObjectHideFlags: 0

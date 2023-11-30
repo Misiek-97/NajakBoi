@@ -205,15 +205,15 @@ namespace NajakBoi.Scripts.Session
             {
                 var t = (WeaponType)type;
 
-                if (Weapons.ContainsKey(t)) continue;
+                if (Weapons.ContainsKey(t) || t == WeaponType.None) continue;
 
                 var wpn = new WeaponData()
                 {
                     weaponType = t,
-                    damageLevel = 1,
-                    ammoLevel = 1,
-                    forceLevel = 1,
-                    explosionLevel = 1
+                    damageLevel = 0,
+                    ammoLevel = 0,
+                    forceLevel = 0,
+                    explosionLevel = 0
                 };
 
                 Weapons.Add(t, wpn);
