@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Levelling;
+using NajakBoi.Scripts.Weapons;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -15,10 +16,32 @@ namespace NajakBoi.Scripts.UI
     {
         public TextMeshProUGUI resourcesTmp;
         public TextMeshProUGUI statsTmp;
+        public TextMeshProUGUI upgradesTmp;
         public Toggle startToggle;
         public List<GameObject> panels;
         private int nextLevelXp;
-        
+
+        public static LabManager Instance;
+
+        private void Awake()
+        {
+            if (Instance && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Instance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (Instance && Instance == this)
+            {
+                Instance = null;
+            }
+        }
+
         // Start is called before the first frame update
         void Start()
         {
@@ -44,7 +67,7 @@ namespace NajakBoi.Scripts.UI
             var resources = SessionManager.PlayerData.Resources;
 
             var sb = new StringBuilder();
-            sb.Append("RESOURCES\r\n");
+            sb.Append("Resources\r\n");
             foreach (var r in resources)
             {
                 sb.AppendLine($"{r.Key.ToString()}: {r.Value.amount}");
@@ -53,10 +76,32 @@ namespace NajakBoi.Scripts.UI
             resourcesTmp.text = sb.ToString();
         }
 
+        private void DisplayUpgrades()
+        {
+            var weapons = SessionManager.PlayerData.Weapons;
+
+            var sb = new StringBuilder();
+            sb.Append("Weapons\r\n");
+            foreach(var wpn in weapons)
+            {
+                if (wpn.Key is WeaponType.Rifle or WeaponType.Sniper) continue;
+                
+                sb.AppendLine($"\r\n<b>{wpn.Key} Upgrades</b>");
+                sb.AppendLine($"Damage Level: {wpn.Value.damageLevel}");
+                
+                if (wpn.Key == WeaponType.Pistol) continue;
+                sb.AppendLine($"Ammo Level: {wpn.Value.ammoLevel}");
+                sb.AppendLine($"Force Level: {wpn.Value.forceLevel}");
+                sb.AppendLine($"Explosion Level: {wpn.Value.explosionLevel}");
+            }
+
+            upgradesTmp.text = sb.ToString();
+
+        }
+
         private void DisplayNajakBoi()
         {
             var stats = SessionManager.PlayerData.Stats;
-            
 
             var sb = new StringBuilder();
             sb.Append("Najak Boi Statistics\r\n");
@@ -99,6 +144,7 @@ namespace NajakBoi.Scripts.UI
                 case "Arsenal":
                     break;
                 case "Upgrade":
+                    DisplayUpgrades();
                     break;
                 case "Research":
                     break;
