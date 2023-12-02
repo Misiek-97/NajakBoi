@@ -519,7 +519,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1b4bf321c0226c42a61c138dcfab21c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapons: []
+  weapons:
+  - {fileID: 0}
+  - {fileID: 0}
   currentWeapon: {fileID: 0}
 --- !u!1 &1630634675618116357
 GameObject:
@@ -1010,6 +1012,8 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   movementBar: {fileID: 0}
   chargeBar: {fileID: 6030182941975247003}
+  weaponSwitcher: {fileID: 0}
+  ammoDisplay: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
   currentMovement: 0

@@ -11,7 +11,11 @@ namespace NajakBoi.Scripts.Systems.Upgrading
     {
         public List<WeaponUpgradeTable> weaponUpgradeTables = new List<WeaponUpgradeTable>();
         public string searchFolder = "Assets/NajakBoi/UpgradeTables"; // Specify your folder path
-    
+
+        private void Awake()
+        {
+            PopulateWeaponUpgradeTables();
+        }
         [ContextMenu("Populate Weapon Upgrade Tables")]
         public void PopulateWeaponUpgradeTables()
         {

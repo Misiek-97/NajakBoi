@@ -1,11 +1,10 @@
-using System.Collections;
 using NajakBoi.Scripts.UI.HUD;
 using NajakBoi.Scripts.Weapons;
 using StarterAssets;
 using TMPro;
 using UnityEngine;
 
-namespace NajakBoi.Scripts
+namespace NajakBoi.Scripts.Player
 {
     public class PlayerController : MonoBehaviour, IDamageable
     {

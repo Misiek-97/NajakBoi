@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NajakBoi.Scripts.Player;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Weapons

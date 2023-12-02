@@ -27,3 +27,4 @@ MonoBehaviour:
     amount: 15
   - resourceType: 13
     amount: 3
+  value: 2.3

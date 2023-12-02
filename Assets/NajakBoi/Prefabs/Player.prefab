@@ -2131,6 +2131,8 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   movementBar: {fileID: 0}
   chargeBar: {fileID: 7179508010722823508}
+  weaponSwitcher: {fileID: 3654381633313855338}
+  ammoDisplay: {fileID: 0}
   maxHealth: 100
   currentHealth: 0
   currentMovement: 0

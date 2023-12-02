@@ -77,9 +77,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d0049859e6c1874eb36e89e3409957c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  damage: 10
+  minForce: 1
+  maxForce: 20
+  explosionRadius: 0.5
   fireRate: 1
-  type: 3
+  weaponType: 3
   fireMode: 4
   useAmmo: 1
   ammo: 25
@@ -87,8 +90,6 @@ MonoBehaviour:
   projectilePrefab: {fileID: 38431640591625171, guid: 57e30e586a32b75488b4631d7c65a445, type: 3}
   projectileExit: {fileID: 2486157663291739366}
   playerController: {fileID: 0}
-  minForce: 1
-  maxForce: 20
   forceMultiplier: 10
 --- !u!1001 &2313454335781213046
 PrefabInstance:

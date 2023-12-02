@@ -1,4 +1,5 @@
 ﻿ using NajakBoi.Scripts;
+ using NajakBoi.Scripts.Player;
  using NajakBoi.Scripts.Session;
  using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
@@ -187,6 +188,12 @@ namespace StarterAssets
 
         public void AnimatorSetWeaponType(int type)
         {
+            if (!_animator)
+            {
+                //TODO Fix this
+                Debug.LogWarning($"No animator on {gameObject.name}");
+                return;
+            }
             _animator.SetInteger("WeaponType", type);
         }
 

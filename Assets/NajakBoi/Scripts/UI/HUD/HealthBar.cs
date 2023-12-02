@@ -1,3 +1,5 @@
+using NajakBoi.Scripts.Player;
+
 namespace NajakBoi.Scripts.UI.HUD
 {
     public class HealthBar : Bar
