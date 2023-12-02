@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using NajakBoi.Scripts.Systems.Upgrading;
-using NajakBoi.Scripts.Weapons;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Session
@@ -83,6 +82,7 @@ namespace NajakBoi.Scripts.Session
                 Save();
             }
         }
+        
 
     }
 }

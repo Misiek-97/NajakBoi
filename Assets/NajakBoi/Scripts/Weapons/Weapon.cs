@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using NajakBoi.Scripts.Blocks;
+using NajakBoi.Scripts.Player;
 using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Upgrading;
 using UnityEngine;
@@ -10,9 +11,12 @@ namespace NajakBoi.Scripts.Weapons
 {
     public class Weapon : MonoBehaviour
     {
-        public int damage;
+        public float damage;
+        public float minForce;
+        public float maxForce;
+        public float explosionRadius;
         public float fireRate;
-        [FormerlySerializedAs("type")] public WeaponType weaponType;
+        public WeaponType weaponType;
         public FireMode fireMode;
         public bool useAmmo;
         public int ammo;
@@ -25,6 +29,40 @@ namespace NajakBoi.Scripts.Weapons
         private void Awake()
         {
             playerController = GetComponentInParent<PlayerController>();
+            GetWeaponUpgrades();
+        }
+
+        private void GetWeaponUpgrades()
+        {
+            var wutManager = SessionManager.Session.wutManager;
+            var weapon = SessionManager.PlayerData.Weapons[weaponType];
+            var ammoWut = wutManager.GetWutFor(weaponType, UpgradeType.Ammo, weapon.ammoData.level);
+            if (ammoWut)
+            {
+                Debug.Log($"Set {weaponType} Ammo to {(int)ammoWut.value}");
+                ammo = (int)ammoWut.value;
+            }
+            
+            var damageWut = wutManager.GetWutFor(weaponType, UpgradeType.Damage, weapon.damageData.level);
+            if (damageWut)
+            {
+                damage *= damageWut.value;
+                Debug.Log($"Set {weaponType} Damage to {damage}");
+            }
+            
+            var forceWut = wutManager.GetWutFor(weaponType, UpgradeType.MaxForce, weapon.forceData.level);
+            if (forceWut)
+            {
+                maxForce *= forceWut.value;
+                Debug.Log($"Set {weaponType} MaxForce to {maxForce}");
+            }
+
+            var explosionWut = wutManager.GetWutFor(weaponType, UpgradeType.ExplosionRadius, weapon.explosionData.level);
+            if (explosionWut)
+            {
+                explosionRadius *= explosionWut.value;
+                Debug.Log($"Set {weaponType} Explosion Radius to {explosionRadius}");
+            }
         }
 
 
@@ -129,6 +167,8 @@ namespace NajakBoi.Scripts.Weapons
             var instance = Instantiate(projectilePrefab);
             var projectile = instance.GetComponent<Projectile>();
             var col = instance.GetComponent<Collider>();
+            projectile.explosionRadius = explosionRadius;
+            projectile.damage = damage;
 
             Physics.IgnoreCollision(col, playerController.GetComponent<Collider>());
             

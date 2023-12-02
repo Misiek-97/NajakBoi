@@ -21,3 +21,4 @@ MonoBehaviour:
     amount: 30
   - resourceType: 10
     amount: 12
+  value: 20

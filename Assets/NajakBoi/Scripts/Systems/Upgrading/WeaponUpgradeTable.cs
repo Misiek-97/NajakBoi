@@ -20,11 +20,9 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public int requiredPlayerLevel;
         public Resource[] requiredResources;
 
-        [NonSerialized] public int NewAmmo;
-        [NonSerialized] public float DamageMultiplier;
-        [NonSerialized] public float MaxForceMultiplier;
-        [NonSerialized] public float ExplosionRadiusMultiplier;
-
+        [Header("Grants")] 
+        public float value;
+        
         public bool CanUpgrade()
         {
             var playerData = SessionManager.PlayerData;
@@ -56,27 +54,6 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             {
                 wut.SetName();
             }
-            
-            if (wut.upgradeType == UpgradeType.Ammo)
-            {
-                wut.NewAmmo = EditorGUILayout.IntField("New Ammo", wut.NewAmmo);
-            }
-            
-            if (wut.upgradeType == UpgradeType.Damage)
-            {
-                wut.DamageMultiplier = EditorGUILayout.FloatField("Damage Multiplier", wut.DamageMultiplier);
-            }
-            
-            if (wut.upgradeType == UpgradeType.MaxForce)
-            {
-                wut.MaxForceMultiplier = EditorGUILayout.FloatField("Max Force Multiplier", wut.MaxForceMultiplier);
-            }
-            
-            if (wut.upgradeType == UpgradeType.ExplosionRadius)
-            {
-                wut.ExplosionRadiusMultiplier = EditorGUILayout.FloatField("Explosion Radius Multiplier", wut.ExplosionRadiusMultiplier);
-            }
-            
         }
     }
 #endif

@@ -1,3 +1,4 @@
+using NajakBoi.Scripts.Player;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.HealKits

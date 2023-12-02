@@ -5,9 +5,6 @@ namespace NajakBoi.Scripts.Weapons
 {
     public class Launcher : Weapon
     {
-        public float minForce;
-        public float maxForce;
-
         public float forceMultiplier;
         private float _force;
 

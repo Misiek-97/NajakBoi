@@ -507,6 +507,10 @@ PrefabInstance:
       value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4643569239372924877, guid: e2559d2753603b54f9f1f90e8c42f82a, type: 3}
+      propertyPath: weaponSwitcher
+      value: 
+      objectReference: {fileID: 499839880}
+    - target: {fileID: 4643569239372924877, guid: e2559d2753603b54f9f1f90e8c42f82a, type: 3}
       propertyPath: currentMovement
       value: 100
       objectReference: {fileID: 0}
@@ -535,6 +539,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e2559d2753603b54f9f1f90e8c42f82a, type: 3}
+--- !u!114 &499839880 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3654381633313855338, guid: e2559d2753603b54f9f1f90e8c42f82a, type: 3}
+  m_PrefabInstance: {fileID: 499839879}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1b4bf321c0226c42a61c138dcfab21c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &508666355 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 999414609610856598, guid: 943eaa669f27c3c45a0d3368967963b3, type: 3}
