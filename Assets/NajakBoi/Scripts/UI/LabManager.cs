@@ -89,30 +89,7 @@ namespace NajakBoi.Scripts.UI
 
             resourcesTmp.text = sb.ToString();
         }
-
-        private void DisplayUpgrades()
-        {
-            var weapons = SessionManager.PlayerData.Weapons;
-
-            var sb = new StringBuilder();
-            sb.Append("Weapons\r\n");
-            foreach(var wpn in weapons)
-            {
-                if (wpn.Key is WeaponType.Rifle or WeaponType.Sniper) continue;
-                
-                sb.AppendLine($"\r\n<b>{wpn.Key} Upgrades</b>");
-                sb.AppendLine($"Damage Level: {wpn.Value.damageData.level}");
-                
-                if (wpn.Key == WeaponType.Pistol) continue;
-                sb.AppendLine($"Ammo Level: {wpn.Value.ammoData.level}");
-                sb.AppendLine($"Force Level: {wpn.Value.forceData.level}");
-                sb.AppendLine($"Explosion Level: {wpn.Value.explosionData.level}");
-            }
-
-            upgradesTmp.text = sb.ToString();
-            _upgradeManager.ValidateUpgradeButtons();
-        }   
-
+      
         private void DisplayNajakBoi()
         {
             var stats = SessionManager.PlayerData.Stats;
@@ -158,7 +135,7 @@ namespace NajakBoi.Scripts.UI
                 case "Arsenal":
                     break;
                 case "Upgrade":
-                    DisplayUpgrades();
+                    _upgradeManager.ValidateUpgradeButton();
                     break;
                 case "Research":
                     break;
