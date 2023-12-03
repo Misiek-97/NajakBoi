@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.UI;
 using NajakBoi.Scripts.Weapons;
@@ -12,33 +13,173 @@ namespace NajakBoi.Scripts.Systems.Upgrading
 {
     public class UpgradeManager : MonoBehaviour
     {
-        public TextMeshProUGUI selectedTmp;
+        public TextMeshProUGUI weaponInfoTmp;
+        public TextMeshProUGUI requirementsInfoTmp;
         public WeaponType selectedWeapon;
+        public UpgradeType selectedUpgrade;
 
+        public Button upgradeBtn;
         public Button upgradeAmmoBtn;
         public Button upgradeDamageBtn;
-        public Button upgradeExplosionBtn;
         public Button upgradeForceBtn;
+        public Button upgradeExplosionBtn;
         public static List<WeaponUpgradeTable> UpgradeTables => SessionManager.Session.wutManager.weaponUpgradeTables;
-        
-        public void SelectWeaponByName(string weaponName)
+
+
+        private void Awake()
         {
-            switch (weaponName)
-            {
-                case "Pistol":
-                    selectedWeapon = WeaponType.Pistol;
-                    selectedTmp.text = "Upgrading: Pistol";
-                    break;
-                case "Launcher":
-                    selectedWeapon = WeaponType.Launcher;
-                    selectedTmp.text = "Upgrading: Launcher";
-                    break;
-            }
-            
-            ValidateUpgradeButtons();
+            ValidateUpgradeButton();
         }
 
-        public void UpgradeAmmo()
+        public void SelectWeaponByName(string weaponName)
+        {
+            selectedWeapon = (WeaponType)Enum.Parse(typeof(WeaponType), weaponName);
+            var wpn = SessionManager.PlayerData.Weapons[selectedWeapon];
+            var sb = new StringBuilder();
+            sb.AppendLine($"<b>{weaponName}</b>");
+            sb.AppendLine($"\r\nAmmo Level: {wpn.ammoData.level}");
+            sb.AppendLine($"\r\nDamage Level: {wpn.damageData.level}");
+            sb.AppendLine($"\r\nForce Level: {wpn.forceData.level}");
+            sb.AppendLine($"\r\nExplosion Level: {wpn.explosionData.level}");
+            weaponInfoTmp.text = sb.ToString();
+            
+            foreach (var type in Enum.GetValues(typeof(UpgradeType)))
+            {
+                var upType = (UpgradeType)type;
+                switch (upType)
+                {
+                    case UpgradeType.None:
+                        break;
+                    case UpgradeType.Ammo:
+                        upgradeAmmoBtn.interactable =
+                                SessionManager.Session.wutManager.GetWutFor(selectedWeapon, upType,
+                                    wpn.ammoData.level + 1) != null;
+                        break;
+                    case UpgradeType.Damage:
+                        upgradeDamageBtn.interactable =
+                            SessionManager.Session.wutManager.GetWutFor(selectedWeapon, upType,
+                                wpn.damageData.level + 1) != null;
+                        break;
+                    case UpgradeType.MaxForce:
+                        upgradeForceBtn.interactable =
+                            SessionManager.Session.wutManager.GetWutFor(selectedWeapon, upType,
+                                wpn.forceData.level + 1) != null;
+                        break;
+                    case UpgradeType.ExplosionRadius:
+                        upgradeExplosionBtn.interactable =
+                            SessionManager.Session.wutManager.GetWutFor(selectedWeapon, upType,
+                                wpn.explosionData.level + 1) != null;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException($"Upgrade type {upType} not defined!");
+                }
+            }
+            
+        }
+
+        public void SelectUpgradeByName(string upgradeName)
+        {
+            if (selectedWeapon == WeaponType.None)
+            {
+                upgradeBtn.interactable = false;
+                weaponInfoTmp.text = "Select a Weapon to Upgrade!";
+                return;
+            }
+            
+            selectedUpgrade = (UpgradeType)Enum.Parse(typeof(UpgradeType), upgradeName);
+            var wpn = SessionManager.PlayerData.Weapons[selectedWeapon];
+            WeaponUpgradeTable wut = selectedUpgrade switch
+            {
+                UpgradeType.Ammo => SessionManager.Session.wutManager.GetWutFor(selectedWeapon, selectedUpgrade,
+                    wpn.ammoData.level + 1),
+                UpgradeType.Damage => SessionManager.Session.wutManager.GetWutFor(selectedWeapon, selectedUpgrade,
+                    wpn.damageData.level + 1),
+                UpgradeType.MaxForce => SessionManager.Session.wutManager.GetWutFor(selectedWeapon, selectedUpgrade,
+                    wpn.forceData.level + 1),
+                UpgradeType.ExplosionRadius => SessionManager.Session.wutManager.GetWutFor(selectedWeapon,
+                    selectedUpgrade, wpn.explosionData.level + 1),
+                _ => throw new ArgumentOutOfRangeException($"Upgrade of type {selectedUpgrade} is not set up!")
+            };
+
+            if (!wut)
+            {
+                switch (selectedUpgrade)
+                {
+                    case UpgradeType.None:
+                        upgradeAmmoBtn.interactable = false;
+                        upgradeDamageBtn.interactable = false;
+                        upgradeForceBtn.interactable = false;
+                        upgradeExplosionBtn.interactable = false;
+                        break;
+                    case UpgradeType.Ammo:
+                        upgradeAmmoBtn.interactable = false;
+                        break;
+                    case UpgradeType.Damage:
+                        upgradeDamageBtn.interactable = false;
+                        break;
+                    case UpgradeType.MaxForce:
+                        upgradeForceBtn.interactable = false;
+                        break;
+                    case UpgradeType.ExplosionRadius:
+                        upgradeExplosionBtn.interactable = false;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                upgradeBtn.interactable = false;
+                requirementsInfoTmp.text = "Upgrade Not Available";
+                return;
+            }
+            
+            var resources = SessionManager.PlayerData.Resources;
+            var sb = new StringBuilder();
+            sb.AppendLine($"<b>Upgrade {selectedUpgrade} to Level {wut.level} Requirements</b>\r\n");
+            sb.AppendLine($"Player Level: {wut.requiredPlayerLevel}\r\n");
+            foreach (var res in wut.requiredResources)
+            {
+                sb.AppendLine($"{res.resourceType}: {res.amount} / {resources[res.resourceType].amount}\r\n");
+            }
+
+            requirementsInfoTmp.text = sb.ToString();
+            
+            ValidateUpgradeButton();
+        }
+        
+        
+
+        public void UpgradeClicked()
+        {
+            upgradeBtn.interactable = false;
+            switch (selectedUpgrade)
+            {
+                case UpgradeType.None:
+                    break;
+                case UpgradeType.Ammo:
+                    UpgradeAmmo();
+                    break;
+                case UpgradeType.Damage:
+                    UpgradeDamage();
+                    break;
+                case UpgradeType.MaxForce:
+                    UpgradeForce();
+                    break;
+                case UpgradeType.ExplosionRadius:
+                    UpgradeExplosion();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"Upgrade for {selectedUpgrade} is not set up!");
+            }
+            SelectUpgradeByName(selectedUpgrade.ToString());
+        }
+
+        private void UpdateUpgradeStatus()
+        {
+            SelectUpgradeByName(selectedUpgrade.ToString());
+            SelectWeaponByName(selectedWeapon.ToString());
+            ValidateUpgradeButton();
+        }
+
+        private void UpgradeAmmo()
         {
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
             
@@ -60,10 +201,10 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             UseResources(selectedWeapon, newData);
 
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
-            LabManager.Instance.DisplayPanelByName("Upgrade");
+            UpdateUpgradeStatus();
         }
-        
-        public void UpgradeDamage()
+
+        private void UpgradeDamage()
         {
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
             
@@ -85,10 +226,10 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             UseResources(selectedWeapon, newData);
 
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
-            LabManager.Instance.DisplayPanelByName("Upgrade");
+            UpdateUpgradeStatus();
         }
-        
-        public void UpgradeExplosion()
+
+        private void UpgradeExplosion()
         {
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
             
@@ -110,12 +251,11 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             UseResources(selectedWeapon, newData);
 
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
-            LabManager.Instance.DisplayPanelByName("Upgrade");
+            UpdateUpgradeStatus();
         }
-        
-        public void UpgradeForce()
+
+        private void UpgradeForce()
         {
-            upgradeForceBtn.interactable = false;
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
             
             var newData = new WeaponUpgradeData()
@@ -136,8 +276,7 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             UseResources(selectedWeapon, newData);
             
             SessionManager.PlayerData.UpgradeWeapon(selectedWeapon, weaponData);
-            LabManager.Instance.DisplayPanelByName("Upgrade");
-            
+            UpdateUpgradeStatus();
         }
 
         private void UseResources(WeaponType wpnType, WeaponUpgradeData data)
@@ -159,49 +298,47 @@ namespace NajakBoi.Scripts.Systems.Upgrading
                 SessionManager.PlayerData.UseResource(res.resourceType, res.amount);
             }
         }
-        
-        
 
-        public void ValidateUpgradeButtons()
+
+
+        public void ValidateUpgradeButton()
         {
             if (selectedWeapon == WeaponType.None)
             {
-                selectedTmp.text = "Select a Weapon to Upgrade";
-                upgradeDamageBtn.interactable = false;
-                upgradeAmmoBtn.interactable = false;
-                upgradeExplosionBtn.interactable = false;
-                upgradeForceBtn.interactable = false;
+                weaponInfoTmp.text = "Select a Weapon to view stats.";
+                upgradeBtn.interactable = false;
                 return;
             }
 
             var weapon = SessionManager.PlayerData.Weapons[selectedWeapon];
             var wutManager = SessionManager.Session.wutManager;
-            foreach (var type in Enum.GetValues(typeof(UpgradeType)))
+            WeaponUpgradeTable wut;
+            switch (selectedUpgrade)
             {
-                var t = (UpgradeType)type;
-                WeaponUpgradeTable wut;
-                switch (t)
-                {
-                    case UpgradeType.Ammo:
-                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.Ammo, weapon.ammoData.level + 1);
-                        upgradeAmmoBtn.interactable = wut != null && wut.CanUpgrade();
-                        break;
-                    case UpgradeType.Damage:
-                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.Damage, weapon.damageData.level + 1);
-                        upgradeDamageBtn.interactable = wut != null && wut.CanUpgrade();
-                        break;
-                    case UpgradeType.MaxForce:
-                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.MaxForce, weapon.forceData.level + 1);
-                        upgradeForceBtn.interactable = wut != null && wut.CanUpgrade();
-                        break;
-                    case UpgradeType.ExplosionRadius:
-                        wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.ExplosionRadius, weapon.explosionData.level + 1);
-                        upgradeExplosionBtn.interactable = wut != null && wut.CanUpgrade();
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException($"Upgrade Type {t} not defined!");
-                }
+                case UpgradeType.None:
+                    upgradeBtn.interactable = false;
+                    break;
+                case UpgradeType.Ammo:
+                    wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.Ammo, weapon.ammoData.level + 1);
+                    upgradeBtn.interactable = wut != null && wut.CanUpgrade();
+                    break;
+                case UpgradeType.Damage:
+                    wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.Damage, weapon.damageData.level + 1);
+                    upgradeBtn.interactable = wut != null && wut.CanUpgrade();
+                    break;
+                case UpgradeType.MaxForce:
+                    wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.MaxForce, weapon.forceData.level + 1);
+                    upgradeBtn.interactable = wut != null && wut.CanUpgrade();
+                    break;
+                case UpgradeType.ExplosionRadius:
+                    wut = wutManager.GetWutFor(selectedWeapon, UpgradeType.ExplosionRadius,
+                        weapon.explosionData.level + 1);
+                    upgradeBtn.interactable = wut != null && wut.CanUpgrade();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException($"Upgrade Type {selectedUpgrade} not defined!");
             }
+
         }
     }
 }
