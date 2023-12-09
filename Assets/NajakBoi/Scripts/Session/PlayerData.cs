@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NajakBoi.Scripts.Systems.Building;
 using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.Systems.Statistics;
 using NajakBoi.Scripts.Systems.Upgrading;
@@ -15,7 +16,8 @@ namespace NajakBoi.Scripts.Session
 
         public Dictionary<WeaponType, WeaponData> Weapons = new();
 
-        public PlayerStats Stats;
+        public PlayerStats PlayerStats;
+        public BuildingStats BuildingStats;
 
         public void AddAllResources()
         {
@@ -39,6 +41,7 @@ namespace NajakBoi.Scripts.Session
             SaveResources();
             SavePlayerStats();
             SaveWeapons();
+            SaveBuildingStats();
         }
 
         public void LoadPlayerData()
@@ -46,20 +49,21 @@ namespace NajakBoi.Scripts.Session
             LoadResources();
             LoadPlayerStats();
             LoadWeapons();
+            LoadBuildingStats();
         }
 
         #region PlayerStats
 
         public void UpdatePlayerStats(PlayerStats newStats)
         {
-            Stats = newStats;
+            PlayerStats = newStats;
             SavePlayerStats();
         }
 
         // Method to serialize the PlayerStats to a JSON file
         private void SavePlayerStats()
         {
-            var json = JsonUtility.ToJson(Stats);
+            var json = JsonUtility.ToJson(PlayerStats);
             var filePath = Path.Combine(Application.persistentDataPath, "PlayerStats.json");
             File.WriteAllText(filePath, json);
         }
@@ -72,7 +76,7 @@ namespace NajakBoi.Scripts.Session
             {
                 var json = File.ReadAllText(filePath);
                 var stats = JsonUtility.FromJson<PlayerStats>(json);
-                Stats = stats;
+                PlayerStats = stats;
                 return;
             }
 
@@ -81,7 +85,7 @@ namespace NajakBoi.Scripts.Session
 
         private void PopulatePlayerStats()
         {
-            Stats = new PlayerStats()
+            PlayerStats = new PlayerStats()
             {
                 Level = 1,
                 Experience = 0,
@@ -317,6 +321,50 @@ namespace NajakBoi.Scripts.Session
                 weaponType = type;
                 weaponData = data;
             }
+        }
+
+        #endregion
+        
+        #region BuildingStats
+
+        public void UpdateBuildingStats(BuildingStats newStats)
+        {
+            BuildingStats = newStats;
+            SaveBuildingStats();
+        }
+
+        // Method to serialize the BuildingStats to a JSON file
+        private void SaveBuildingStats()
+        {
+            var json = JsonUtility.ToJson(PlayerStats);
+            var filePath = Path.Combine(Application.persistentDataPath, "BuildingStats.json");
+            File.WriteAllText(filePath, json);
+        }
+
+        // Method to deserialize the BuildingStats from a JSON file
+        private void LoadBuildingStats()
+        {
+            var filePath = Path.Combine(Application.persistentDataPath, "BuildingStats.json");
+            if (File.Exists(filePath))
+            {
+                var json = File.ReadAllText(filePath);
+                var stats = JsonUtility.FromJson<BuildingStats>(json);
+                BuildingStats = stats;
+                return;
+            }
+
+            PopulateBuildingStats();
+        }
+
+        private void PopulateBuildingStats()
+        {
+            BuildingStats = new BuildingStats()
+            {
+                maxWeight = 10,
+                maxBuildX = 5,
+                maxBuildY = 1
+            };
+            SaveBuildingStats();
         }
 
         #endregion

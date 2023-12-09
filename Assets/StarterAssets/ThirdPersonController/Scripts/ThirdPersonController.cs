@@ -145,7 +145,7 @@ namespace StarterAssets
         {
             Physics.IgnoreLayerCollision(gameObject.layer,  LayerMask.NameToLayer("IgnoreCollision"));
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            JumpHeight = SessionManager.PlayerData.Stats.MaxJumpHeight;
+            JumpHeight = SessionManager.PlayerData.PlayerStats.MaxJumpHeight;
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();

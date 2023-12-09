@@ -26,7 +26,7 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public bool CanUpgrade()
         {
             var playerData = SessionManager.PlayerData;
-            return requiredPlayerLevel <= playerData.Stats.Level && requiredResources.All(reqRes =>
+            return requiredPlayerLevel <= playerData.PlayerStats.Level && requiredResources.All(reqRes =>
                 reqRes.amount <= playerData.Resources[reqRes.resourceType].amount);
         }
 
