@@ -14,6 +14,9 @@ namespace NajakBoi.Scripts.Session
         public static SessionManager Session;
 
         public WeaponUpgradeTableManager wutManager;
+
+        public const int MaxBuildX = 15;
+        public const int MaxBuildY = 10;
         
 
         private void Awake()

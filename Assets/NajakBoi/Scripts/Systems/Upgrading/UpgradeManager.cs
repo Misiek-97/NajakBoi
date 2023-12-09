@@ -23,24 +23,35 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         public Button upgradeDamageBtn;
         public Button upgradeForceBtn;
         public Button upgradeExplosionBtn;
+        
+        public Button upgradeBuildXBtn;
+        public Button upgradeBuildYBtn;
         public static List<WeaponUpgradeTable> UpgradeTables => SessionManager.Session.wutManager.weaponUpgradeTables;
 
 
         private void Awake()
         {
             ValidateUpgradeButton();
+            ValidateUpgradeBuildButtons();
         }
 
         public void UpgradeBuildX()
         {
             SessionManager.PlayerData.BuildingStats.maxBuildX++;
+            ValidateUpgradeBuildButtons();
 
         } 
         
         public void UpgradeBuildY()
         {
             SessionManager.PlayerData.BuildingStats.maxBuildY++;
+            ValidateUpgradeBuildButtons();
+        }
 
+        private void ValidateUpgradeBuildButtons()
+        {
+            upgradeBuildXBtn.interactable = SessionManager.PlayerData.BuildingStats.maxBuildX < SessionManager.MaxBuildX;
+            upgradeBuildYBtn.interactable = SessionManager.PlayerData.BuildingStats.maxBuildY < SessionManager.MaxBuildY;
         }
 
         public void SelectWeaponByName(string weaponName)

@@ -4829,6 +4829,8 @@ MonoBehaviour:
   upgradeDamageBtn: {fileID: 340714700145273480}
   upgradeForceBtn: {fileID: 1466964598214507872}
   upgradeExplosionBtn: {fileID: 8720105124838062675}
+  upgradeBuildXBtn: {fileID: 4621701085997250236}
+  upgradeBuildYBtn: {fileID: 1125054229215503687}
 --- !u!1 &6604285133865737192
 GameObject:
   m_ObjectHideFlags: 0
