@@ -8,14 +8,14 @@ namespace NajakBoi.Scripts.Systems.Levelling
         // Assuming these are public for inspection, you might want to encapsulate them
         private static int CurrentLevel
         {
-            get => SessionManager.PlayerData.Stats.Level;
-            set => SessionManager.PlayerData.Stats.Level = value;
+            get => SessionManager.PlayerData.PlayerStats.Level;
+            set => SessionManager.PlayerData.PlayerStats.Level = value;
         }
 
         private static int CurrentExperience
         {
-            get => SessionManager.PlayerData.Stats.Experience;
-            set => SessionManager.PlayerData.Stats.Experience = value;
+            get => SessionManager.PlayerData.PlayerStats.Experience;
+            set => SessionManager.PlayerData.PlayerStats.Experience = value;
         }
 
         private static int _experienceToNextLevel = 100;
@@ -37,7 +37,7 @@ namespace NajakBoi.Scripts.Systems.Levelling
         {
             CurrentLevel++;
             CurrentExperience -= _experienceToNextLevel;
-            Debug.Log($"Level Up! Current Level: {CurrentLevel}, Current Saved Level: {SessionManager.PlayerData.Stats.Level} {SessionManager.PlayerData.Stats.Experience}");
+            Debug.Log($"Level Up! Current Level: {CurrentLevel}, Current Saved Level: {SessionManager.PlayerData.PlayerStats.Level} {SessionManager.PlayerData.PlayerStats.Experience}");
             SessionManager.PlayerData.SavePlayerData();
             return CalculateExperienceToNextLevel(); // Calculate new experience requirement for the next level
         }

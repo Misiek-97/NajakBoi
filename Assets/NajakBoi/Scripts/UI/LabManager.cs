@@ -92,7 +92,7 @@ namespace NajakBoi.Scripts.UI
       
         private void DisplayNajakBoi()
         {
-            var stats = SessionManager.PlayerData.Stats;
+            var stats = SessionManager.PlayerData.PlayerStats;
 
             var sb = new StringBuilder();
             sb.Append("Najak Boi Statistics\r\n");

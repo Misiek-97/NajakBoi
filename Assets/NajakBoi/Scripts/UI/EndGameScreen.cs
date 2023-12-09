@@ -31,8 +31,8 @@ namespace NajakBoi.Scripts.UI
             
             var sb = new StringBuilder();
             sb.Append("Summary\r\n");
-            sb.AppendLine($"Level: {SessionManager.PlayerData.Stats.Level}");
-            sb.AppendLine($"Experience: {SessionManager.PlayerData.Stats.Experience} / {ExperienceManager.CalculateExperienceToNextLevel()}");
+            sb.AppendLine($"Level: {SessionManager.PlayerData.PlayerStats.Level}");
+            sb.AppendLine($"Experience: {SessionManager.PlayerData.PlayerStats.Experience} / {ExperienceManager.CalculateExperienceToNextLevel()}");
             
             var resources = GameManager.Instance.CalculateEndResources();
             if (resources.Count > 0)

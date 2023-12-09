@@ -6,6 +6,7 @@ using NajakBoi.Scripts.Serialization;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Threading.Tasks;
+using NajakBoi.Scripts.Session;
 
 namespace NajakBoi.Scripts.Blocks
 {
@@ -75,13 +76,10 @@ namespace NajakBoi.Scripts.Blocks
                 playerId = PlayerId.Player;
                 
                 var filePath = Application.persistentDataPath + "/PlayerBlockGrid.json";
+                CreateGrid();
                 if (File.Exists(filePath))
                 {
                     LoadSavedGrid();
-                }
-                else
-                {
-                    CreateGrid();
                 }
             }
             
@@ -154,7 +152,6 @@ namespace NajakBoi.Scripts.Blocks
         // Load grid from a save
         public void LoadSavedGrid()
         {
-            ClearGrid();
             var blockDataList = BlockSerializer.LoadBlockDataList(playerId);
 
             var id = 0;
@@ -171,7 +168,13 @@ namespace NajakBoi.Scripts.Blocks
             ClearGrid();
         
             var id = 0;
-        
+
+            if (playerId == PlayerId.Player)
+            {
+                gridSize.x = SessionManager.PlayerData.BuildingStats.maxBuildX;
+                gridSize.y = SessionManager.PlayerData.BuildingStats.maxBuildY;
+            }
+            
             for (var x = 0; x < gridSize.x; x++)
             {
                 for (var y = 0; y < gridSize.y; y++)
@@ -229,7 +232,6 @@ namespace NajakBoi.Scripts.Blocks
         private void InstantiateBlockFromData(BlockSerializer.BlockData blockData, int id)
         {
             if (_blocksDictionary.Count == 0)
-                
             {
                 Debug.LogError("Tile prefabs are not assigned!");
                 return;
@@ -239,7 +241,16 @@ namespace NajakBoi.Scripts.Blocks
             var offsetX = (gridSize.x - 1) * blockSize.x / 2;
             var offsetY = (gridSize.y - 1) * blockSize.y / 2;
             var pos = blockData.gridPos.ToVector2();
-        
+            
+            // Remove existing block
+            var current = _gridBlocks.Find(x => x.GridPos == pos);
+            if (current)
+            {
+                Debug.Log($"Removing {current.type} at {current.GridPos}");
+                _gridBlocks.Remove(current);
+                Destroy(current.gameObject);
+            }
+
             // Calculate the position of block based on its index and tileSize and instantiate the block prefab at the calculated position
             var blockPosition = new Vector3( pos.x * blockSize.x - offsetX, pos.y * blockSize.y - offsetY, 0.0f);
             var blockGo = Instantiate(blockPrefab, transform);
@@ -257,7 +268,5 @@ namespace NajakBoi.Scripts.Blocks
             blockGo.name = $"{blockScript.type}@({pos.x},{pos.y})#{id}";
             _gridBlocks.Add(blockScript);
         }
-    
-
     }
 }
