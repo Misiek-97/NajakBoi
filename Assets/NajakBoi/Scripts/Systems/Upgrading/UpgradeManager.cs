@@ -31,6 +31,18 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             ValidateUpgradeButton();
         }
 
+        public void UpgradeBuildX()
+        {
+            SessionManager.PlayerData.BuildingStats.maxBuildX++;
+
+        } 
+        
+        public void UpgradeBuildY()
+        {
+            SessionManager.PlayerData.BuildingStats.maxBuildY++;
+
+        }
+
         public void SelectWeaponByName(string weaponName)
         {
             selectedWeapon = (WeaponType)Enum.Parse(typeof(WeaponType), weaponName);

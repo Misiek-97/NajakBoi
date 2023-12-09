@@ -336,7 +336,7 @@ namespace NajakBoi.Scripts.Session
         // Method to serialize the BuildingStats to a JSON file
         private void SaveBuildingStats()
         {
-            var json = JsonUtility.ToJson(PlayerStats);
+            var json = JsonUtility.ToJson(BuildingStats);
             var filePath = Path.Combine(Application.persistentDataPath, "BuildingStats.json");
             File.WriteAllText(filePath, json);
         }
