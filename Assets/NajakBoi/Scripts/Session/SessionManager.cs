@@ -17,6 +17,7 @@ namespace NajakBoi.Scripts.Session
 
         public const int MaxBuildX = 15;
         public const int MaxBuildY = 10;
+        public const int MaxBuildWeight = 200;
         
 
         private void Awake()

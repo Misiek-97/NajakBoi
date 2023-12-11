@@ -26,6 +26,7 @@ namespace NajakBoi.Scripts.Systems.Upgrading
         
         public Button upgradeBuildXBtn;
         public Button upgradeBuildYBtn;
+        public Button upgradeMaxWeightBtn;
         public static List<WeaponUpgradeTable> UpgradeTables => SessionManager.Session.wutManager.weaponUpgradeTables;
 
 
@@ -47,11 +48,18 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             SessionManager.PlayerData.BuildingStats.maxBuildY++;
             ValidateUpgradeBuildButtons();
         }
+        
+        public void UpgradeWeight()
+        {
+            SessionManager.PlayerData.BuildingStats.maxWeight += 10;
+            ValidateUpgradeBuildButtons();
+        }
 
         private void ValidateUpgradeBuildButtons()
         {
             upgradeBuildXBtn.interactable = SessionManager.PlayerData.BuildingStats.maxBuildX < SessionManager.MaxBuildX;
             upgradeBuildYBtn.interactable = SessionManager.PlayerData.BuildingStats.maxBuildY < SessionManager.MaxBuildY;
+            upgradeMaxWeightBtn.interactable = SessionManager.PlayerData.BuildingStats.maxWeight < SessionManager.MaxBuildWeight;
         }
 
         public void SelectWeaponByName(string weaponName)
