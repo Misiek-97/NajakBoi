@@ -44,28 +44,11 @@ namespace NajakBoi.Scripts.Session
         private void Start()
         {
             wutManager = GetComponent<WeaponUpgradeTableManager>();
-            
-            if (File.Exists(ResourcesPath))
-            {
-                PlayerData = new PlayerData();
-                try
-                {
-                    PlayerData.LoadPlayerData();
-                }
-                catch (Exception ex)
-                {
-                    Debug.Log($"Save corrupt at {ResourcesPath}!");
-                    Debug.LogError(ex);
-                }
-            }
-            else
-            {
-                NewSession();
-            }
-
+            PlayerData = new PlayerData();
+            PlayerData.LoadPlayerData();
         }
 
-        public void Save()
+        public static void Save()
         {
             PlayerData.SavePlayerData();
         }
@@ -82,6 +65,7 @@ namespace NajakBoi.Scripts.Session
             if (_lastSave < DateTime.Now.AddMinutes(-1))
             {
                 _lastSave = DateTime.Now;
+                Debug.Log($"AUTOSAVE {DateTime.Now}");
                 Save();
             }
         }

@@ -93,6 +93,10 @@ namespace NajakBoi.Scripts.Systems.Upgrading
                             SessionManager.Session.wutManager.GetWutFor(selectedWeapon, upType,
                                 wpn.explosionData.level + 1) != null;
                         break;
+                    case UpgradeType.MaxBuildWeight:
+                    case UpgradeType.MaxBuildY:
+                    case UpgradeType.MaxBuildX:
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException($"Upgrade type {upType} not defined!");
                 }
