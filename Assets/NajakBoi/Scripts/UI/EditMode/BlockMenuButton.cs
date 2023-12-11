@@ -25,8 +25,14 @@ namespace NajakBoi.Scripts.UI.EditMode
         {
             if (block.type == BlockType.Empty)
                 return;
-            
-            _button.interactable = block.weight + EditMenuManager.Instance.currentWeight <= EditMenuManager.Instance.maxWeight;
+            if (GameManager.Instance.playerTurn == PlayerId.Player)
+            {
+                _button.interactable =  block.weight + EditMenuManager.Instance.currentWeight <= EditMenuManager.Instance.maxWeight;
+            }
+            else
+            {
+                _button.interactable = true;
+            }
         }
 
         public void Clicked()
