@@ -126,9 +126,12 @@ MonoBehaviour:
   mesh: {fileID: 0}
   lootTable: {fileID: 11400000, guid: 7c4be9fea0695aa4dbc8f2ad35c28898, type: 2}
   dropDisplayPrefab: {fileID: 4476433331368364450, guid: c70ce3a67e5a0ff468cf4a615195e9da, type: 3}
+  offset: {x: 0, y: 0, z: 0}
+  weight: 1
   sprite: {fileID: 21300000, guid: e11fdd04095afb44aa2734f72a1d99aa, type: 3}
   blockCanvasPrefab: {fileID: 4476433331368364450, guid: abbf6c770c511884eafc2577abcd2109, type: 3}
   highlightGo: {fileID: 2383329887295036983}
+  isSpawn: 0
 --- !u!1001 &1909662563028054710
 PrefabInstance:
   m_ObjectHideFlags: 0
