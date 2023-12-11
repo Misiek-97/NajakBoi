@@ -2,12 +2,14 @@ using System;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace NajakBoi.Scripts.UI.EditMode
 {
     public class EditMenuManager : MonoBehaviour
     {
         public TextMeshProUGUI placementInfoTmp;
+        public static bool SetSpawn;
        
         // Update is called once per frame
         void Update()
@@ -28,7 +30,34 @@ namespace NajakBoi.Scripts.UI.EditMode
 
         public void EndEditTurn()
         {
-            GameManager.Instance.EndEdit();
+            if (GameManager.Instance.playerTurn == PlayerId.Player)
+            {
+                if (GameManager.Instance.playerGrid.HasSpawnSet())
+                {
+                    GameManager.Instance.EndEdit();
+                }
+                else
+                {
+                    placementInfoTmp.text = "You must set the spawn point before ending edit turn!";
+                }
+            }
+            else
+            {
+                if (GameManager.Instance.opponentGrid.HasSpawnSet())
+                {
+
+                    GameManager.Instance.EndEdit();
+                }
+                else
+                {
+                    placementInfoTmp.text = "You must set the spawn point before ending edit turn!";
+                }
+            }
+        }
+
+        public void ToggleSetSpawn()
+        {
+            SetSpawn = !SetSpawn;
         }
 
         public void StartEditTurn(PlayerId playerId)

@@ -32,10 +32,15 @@ namespace NajakBoi.Scripts.Blocks
         private BoxCollider _collider;
         private GameObject _canvas;
 
+        public bool isSpawn;
+
+        private BlockSpawner _blockSpawner;
+
         void Awake()
         {
             Renderer = GetComponent<MeshRenderer>();
             _collider = GetComponent<BoxCollider>();
+            _blockSpawner = GetComponentInParent<BlockSpawner>();
             currentHealth = maxHealth;
             if(blockCanvasPrefab)
             {
@@ -101,7 +106,7 @@ namespace NajakBoi.Scripts.Blocks
         
         //EDIT MODE
  
-        public void UpdateBlockProperties(Block block)
+        public void UpdateBlockProperties(Block block, bool spawn)
         {
             maxHealth = block.maxHealth;
             sprite = block.sprite;
@@ -112,9 +117,10 @@ namespace NajakBoi.Scripts.Blocks
             lootTable = block.lootTable;
             dropDisplayPrefab = block.dropDisplayPrefab;
             offset = block.offset;
+            isSpawn = spawn;
             
             Renderer.material = mat;
-            if (!GameManager.Instance.editMode && type == BlockType.Empty && GameManager.Instance.editMode)
+            if (!GameManager.Instance.editMode && type == BlockType.Empty)
             {
                 Renderer.enabled = false;
                 _canvas.SetActive(false);
@@ -143,8 +149,54 @@ namespace NajakBoi.Scripts.Blocks
             if (!GameManager.Instance.editMode) return;
             
             BlockMenu.BlockBeingEdited = this;
-            if(BlockMenu.Instance.blockToPlace)
-                UpdateBlockProperties(BlockMenu.Instance.blockToPlace);
+
+            if (EditMenuManager.SetSpawn)
+            {
+                if (type != BlockType.Empty)
+                {
+                    var blockAbove = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y + 1));
+                    var blockAbove2 = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y + 2));
+
+                    if ((blockAbove == null || blockAbove.type == BlockType.Empty) &&
+                        (blockAbove2 == null || blockAbove2.type == BlockType.Empty))
+                    {
+                        var prevSpawn = _blockSpawner.GridBlocks.FindAll(x => x.isSpawn);
+                        foreach (var b in prevSpawn)
+                        {
+                            b.isSpawn = false;
+                            Debug.Log($"{b.type} at {b.GridPos} removed as spawn.");
+                        }
+                        
+                        Debug.Log($"{type} at {GridPos} set as spawn.");
+                        isSpawn = true;
+                        EditMenuManager.SetSpawn = false;
+                        _blockSpawner.SaveGrid();
+                    }
+                }
+                return;
+            }
+            
+            if (BlockMenu.Instance.blockToPlace)
+            {
+                if (BlockMenu.Instance.blockToPlace.type != BlockType.Empty)
+                {
+                    var blockBelow = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y - 1));
+                    var blockBelow2 = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y - 2));
+                    if (blockBelow && blockBelow.isSpawn)
+                    {
+                        Debug.Log("Can't place as block below is spawn!");
+                        return;
+                    }
+                    
+                    if(blockBelow2 && blockBelow2.isSpawn)
+                    {
+                        Debug.Log("Can't place as block below 2 is spawn!");
+                        return;
+                    }
+                }
+
+                UpdateBlockProperties(BlockMenu.Instance.blockToPlace, false);
+            }
         }
 
         private void OnMouseEnter()

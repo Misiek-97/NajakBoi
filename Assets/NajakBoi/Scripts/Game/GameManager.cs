@@ -109,7 +109,9 @@ namespace NajakBoi.Scripts
             
             playerGrid.RefreshAllBlocks();
             opponentGrid.RefreshAllBlocks();
-            
+
+            var playerSpawnPoint = playerGrid.GridBlocks.Find(x => x.isSpawn).transform.position;
+            player.transform.position = playerSpawnPoint + new Vector3(0, 0.5f, 0);
             player.gameObject.SetActive(true);
             
             if (GameMode == GameMode.Expedition)
@@ -119,6 +121,8 @@ namespace NajakBoi.Scripts
                 return;
             }
             
+            var opponentSpawnPoint = opponentGrid.GridBlocks.Find(x => x.isSpawn).transform.position;
+            opponent.transform.position = opponentSpawnPoint + new Vector3(0, 0.5f, 0);
             opponent.gameObject.SetActive(true);
         }
 

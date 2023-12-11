@@ -15,12 +15,14 @@ namespace NajakBoi.Scripts.Serialization
         {
             public BlockType blockType;
             public SerializableVector2 gridPos;
+            public bool isSpawn;
 
             // Constructor for creating a tile data
-            public BlockData(BlockType type, SerializableVector2 position)
+            public BlockData(BlockType type, SerializableVector2 position, bool spawn)
             {
                 blockType = type;
                 gridPos = position;
+                isSpawn = spawn;
             }
         }
     
@@ -58,7 +60,7 @@ namespace NajakBoi.Scripts.Serialization
 
             foreach (var block in blocks)
             {
-                var blockData = new BlockData(block.type, new SerializableVector2(block.GridPos));
+                var blockData = new BlockData(block.type, new SerializableVector2(block.GridPos), block.isSpawn);
 
                 // Serialize each BlockData individually
                 blockDataList.Add(JsonUtility.ToJson(blockData));

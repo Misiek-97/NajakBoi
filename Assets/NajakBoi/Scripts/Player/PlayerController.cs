@@ -42,7 +42,8 @@ namespace NajakBoi.Scripts.Player
         private void Update()
         {
             var currentWeapon = weaponSwitcher.currentWeapon;
-            ammoDisplay.text = $"{currentWeapon.gameObject.name} Ammo: {(!currentWeapon.useAmmo ? "Infinite" : currentWeapon.ammo)}";
+            if(currentWeapon)
+                ammoDisplay.text = $"{currentWeapon.gameObject.name} Ammo: {(!currentWeapon.useAmmo ? "Infinite" : currentWeapon.ammo)}";
         }
 
 

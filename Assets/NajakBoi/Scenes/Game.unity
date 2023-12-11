@@ -850,7 +850,7 @@ MonoBehaviour:
   - {fileID: 3374531465851579597, guid: b16878d6bdaa0cc46a757206c9d6dca1, type: 3}
   - {fileID: 6341195471887980542, guid: 617eae5a3ae40c4489c0fe7a7256e9fd, type: 3}
   isPlayer: 0
-  playerId: 0
+  playerId: 1
   blockSize: {x: 1, y: 1}
   gridSize: {x: 10, y: 5}
 --- !u!224 &908908524 stripped
