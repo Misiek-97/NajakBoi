@@ -18,12 +18,9 @@ namespace NajakBoi.Scripts.Blocks
 
         public PlayerId playerId;
         
-        private readonly List<Block> _gridBlocks = new (); //Active Tiles in the Grid
+        public readonly List<Block> GridBlocks = new (); //Active Tiles in the Grid
         private readonly Dictionary<GameObject, Block> _blocksDictionary = new (); //Available Tiles Dictionary
         
-        private GameManager _gm => GameManager.Instance;
-    
-    
         public Vector2 blockSize;
         public Vector2 gridSize = new (5, 5);
 
@@ -40,7 +37,7 @@ namespace NajakBoi.Scripts.Blocks
 
         public void RefreshAllBlocks()
         {
-            foreach (var b in _gridBlocks)
+            foreach (var b in GridBlocks)
             {
                 b.Renderer.enabled = b.type != BlockType.Empty;
             }
@@ -81,25 +78,26 @@ namespace NajakBoi.Scripts.Blocks
                 {
                     LoadSavedGrid();
                 }
+                
+                if (GameManager.GameMode == GameMode.Expedition)
+                    GameManager.Instance.StartGame();
             }
             
-            if (GameManager.GameMode == GameMode.Expedition)
-                GameManager.Instance.StartGame();
             
         }
 
         private void ClearGrid()
         {
-            foreach (var t in _gridBlocks)
+            foreach (var t in GridBlocks)
             {
                 Destroy(t.gameObject);
             }
-            _gridBlocks.Clear();
+            GridBlocks.Clear();
         }
 
         public void SaveGrid()
         {
-            BlockSerializer.SaveTileDataList(_gridBlocks, playerId);
+            BlockSerializer.SaveTileDataList(GridBlocks, playerId);
         }
     
         private static BlockType GetRandomBlockType(List<BlockType> excludedTypes = null)
@@ -210,7 +208,7 @@ namespace NajakBoi.Scripts.Blocks
             }
             else
             {
-                var blockBelow = _gridBlocks.Find(x => x.GridPos == new Vector2(gridPos.x, gridPos.y - 1));
+                var blockBelow = GridBlocks.Find(x => x.GridPos == new Vector2(gridPos.x, gridPos.y - 1));
                 if(!blockBelow || blockBelow.type == BlockType.MilitaryChest || blockBelow.type == BlockType.Empty )
                     excludedTypes.Add(BlockType.MilitaryChest);
             }
@@ -221,11 +219,11 @@ namespace NajakBoi.Scripts.Blocks
             // Update Tile Parameters and add new tile to the list.
             var block = blockGo.GetComponent<Block>();
             var blockType = random ? GetRandomBlockType(excludedTypes: excludedTypes) : type;
-            block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes));
+            block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes), false);
             block.GridPos = gridPos;
             block.ID = id;
             blockGo.name = $"{block.type}@({block.GridPos.x},{block.GridPos.y})#{block.ID}";
-            _gridBlocks.Add(block);
+            GridBlocks.Add(block);
             
             
         }
@@ -243,11 +241,10 @@ namespace NajakBoi.Scripts.Blocks
             var pos = blockData.gridPos.ToVector2();
             
             // Remove existing block
-            var current = _gridBlocks.Find(x => x.GridPos == pos);
+            var current = GridBlocks.Find(x => x.GridPos == pos);
             if (current)
             {
-                Debug.Log($"Removing {current.type} at {current.GridPos}");
-                _gridBlocks.Remove(current);
+                GridBlocks.Remove(current);
                 Destroy(current.gameObject);
             }
 
@@ -262,11 +259,17 @@ namespace NajakBoi.Scripts.Blocks
             
             // Update Tile Parameters and add new tile to the list.
             var blockScript = blockGo.GetComponent<Block>();
-            blockScript.UpdateBlockProperties(SelectBlock(blockData.blockType, excludedTypes: excludedTypes));
+            blockScript.UpdateBlockProperties(SelectBlock(blockData.blockType, excludedTypes: excludedTypes), blockData.isSpawn);
             blockScript.GridPos = pos;
             blockScript.ID = id;
             blockGo.name = $"{blockScript.type}@({pos.x},{pos.y})#{id}";
-            _gridBlocks.Add(blockScript);
+            GridBlocks.Add(blockScript);
+        }
+
+        public bool HasSpawnSet()
+        {
+            var spawn = GridBlocks.Find(x => x.isSpawn);
+            return spawn != null;
         }
     }
 }
