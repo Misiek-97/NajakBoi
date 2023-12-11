@@ -167,11 +167,19 @@ namespace NajakBoi.Scripts.Blocks
                             Debug.Log($"{b.type} at {b.GridPos} removed as spawn.");
                         }
                         
-                        Debug.Log($"{type} at {GridPos} set as spawn.");
+                        EditMenuManager.Instance.UpdateInfoText($"{type} at {GridPos} set as spawn.");
                         isSpawn = true;
                         EditMenuManager.SetSpawn = false;
                         _blockSpawner.SaveGrid();
                     }
+                    else
+                    {
+                        EditMenuManager.Instance.UpdateInfoText($"Unable to set spawn here! Make sure there are none or 2 empty blocks above {type} at {GridPos} to set spawn.");
+                    }
+                }
+                else
+                {
+                    EditMenuManager.Instance.UpdateInfoText($"Unable to set spawn on an empty block!");
                 }
                 return;
             }
@@ -184,13 +192,13 @@ namespace NajakBoi.Scripts.Blocks
                     var blockBelow2 = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y - 2));
                     if (blockBelow && blockBelow.isSpawn)
                     {
-                        Debug.Log("Can't place as block below is spawn!");
+                        EditMenuManager.Instance.UpdateInfoText($"Can't place {BlockMenu.Instance.blockToPlace.type} here, as block below is reserved for spawn!");
                         return;
                     }
                     
                     if(blockBelow2 && blockBelow2.isSpawn)
                     {
-                        Debug.Log("Can't place as block below 2 is spawn!");
+                        EditMenuManager.Instance.UpdateInfoText($"Can't place {BlockMenu.Instance.blockToPlace.type} here, as blocks below are reserved for spawn!");
                         return;
                     }
                 }
