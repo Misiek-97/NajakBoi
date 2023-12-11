@@ -38,7 +38,7 @@ namespace NajakBoi.Scripts.Systems.Levelling
             CurrentLevel++;
             CurrentExperience -= _experienceToNextLevel;
             Debug.Log($"Level Up! Current Level: {CurrentLevel}, Current Saved Level: {SessionManager.PlayerData.PlayerStats.Level} {SessionManager.PlayerData.PlayerStats.Experience}");
-            SessionManager.PlayerData.SavePlayerData();
+            SessionManager.Save();
             return CalculateExperienceToNextLevel(); // Calculate new experience requirement for the next level
         }
 

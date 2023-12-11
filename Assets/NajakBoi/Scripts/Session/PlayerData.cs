@@ -80,6 +80,7 @@ namespace NajakBoi.Scripts.Session
                 return;
             }
 
+            Debug.Log("NO SAVE FILE FOR PLAYER STATS FOUND - GENERATING");
             PopulatePlayerStats();
         }
 
@@ -165,7 +166,7 @@ namespace NajakBoi.Scripts.Session
                 Resources = serializableResourceDictionary.ResourcesToDictionary();
                 return;
             }
-
+            Debug.Log("NO SAVE FILE FOR RESOURCES FOUND - GENERATING");
             PopulateResourcesDictionary();
         }
 
@@ -279,6 +280,7 @@ namespace NajakBoi.Scripts.Session
                 return;
             }
 
+            Debug.Log("NO SAVE FILE FOR WEAPONS FOUND - GENERATING");
             PopulateWeaponsDictionary();
         }
 
@@ -353,6 +355,7 @@ namespace NajakBoi.Scripts.Session
                 return;
             }
 
+            Debug.Log("NO SAVE FILE FOR BUILDING STATS FOUND - GENERATING");
             PopulateBuildingStats();
         }
 
