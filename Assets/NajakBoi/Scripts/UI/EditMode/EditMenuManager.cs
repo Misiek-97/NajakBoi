@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using NajakBoi.Scripts.Session;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,8 +12,15 @@ namespace NajakBoi.Scripts.UI.EditMode
     {
         public TextMeshProUGUI placementInfoTmp;
         public TextMeshProUGUI infoTmp;
-        public static bool SetSpawn;
+        public TextMeshProUGUI weightTmp;
+        public TextMeshProUGUI blockInfoTmp;
 
+        public Button randomizeBtn;
+
+        public int currentWeight;
+        public int maxWeight;
+        
+        public static bool SetSpawn;
         public static EditMenuManager Instance;
 
         private void Awake()
@@ -26,6 +34,7 @@ namespace NajakBoi.Scripts.UI.EditMode
             
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            maxWeight = SessionManager.PlayerData.BuildingStats.maxWeight;
         }
 
 
@@ -34,6 +43,11 @@ namespace NajakBoi.Scripts.UI.EditMode
             if (Instance != this) return;
             
             Instance = null;
+        }
+
+        private void Start()
+        {
+            UpdateWeightText();
         }
 
 
@@ -62,6 +76,26 @@ namespace NajakBoi.Scripts.UI.EditMode
         public void UpdateInfoText(string text)
         {
             infoTmp.text = text;
+        } 
+        public void UpdateWeightText()
+        {
+            currentWeight = GameManager.Instance.playerGrid.GetTotalWeight();
+            weightTmp.text = $"Blocks Weight: {currentWeight} / {maxWeight}";
+        }
+        public void UpdateBlockInfoText()
+        {
+            var sb = new StringBuilder();
+            var block = BlockMenu.Instance.blockToPlace;
+            if (block == null)
+            {
+                blockInfoTmp.text = "Select a block for more information.";
+                return;
+            }
+            sb.Append($"Type: {block.type}");
+            sb.Append($"\r\nHitPoints: {block.maxHealth}");
+            sb.Append($"\r\nWeight: {block.weight}");
+            
+            blockInfoTmp.text = sb.ToString();
         }
 
         public void EndEditTurn()
@@ -97,9 +131,31 @@ namespace NajakBoi.Scripts.UI.EditMode
             SetSpawn = !SetSpawn;
         }
 
+        public void RandomizeGrid()
+        {
+            if (GameManager.Instance.playerTurn == PlayerId.Player)
+            {
+                GameManager.Instance.playerGrid.CreateGrid(true);
+                UpdateWeightText();
+            }
+            else
+            {
+                GameManager.Instance.opponentGrid.CreateGrid(true);
+            }
+        }
+
         public void StartEditTurn(PlayerId playerId)
         {
             SetAnchoringFor(playerId);
+            UpdateBlockInfoText();
+            if (playerId == PlayerId.Player)
+            {
+               UpdateWeightText();
+            }
+            else
+            {
+                weightTmp.text = "";
+            }
         }
 
         private void SetAnchoringFor(PlayerId playerId)

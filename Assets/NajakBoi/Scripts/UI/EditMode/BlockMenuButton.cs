@@ -1,3 +1,4 @@
+using System;
 using NajakBoi.Scripts.Blocks;
 using TMPro;
 using Unity.VisualScripting;
@@ -11,16 +12,27 @@ namespace NajakBoi.Scripts.UI.EditMode
         [DoNotSerialize]public Block block;
         public Image image;
         public TextMeshProUGUI nameTmp;
+        private Button _button;
 
         public void SetUpButton()
         {
             image.sprite = block.sprite;
             nameTmp.text = block.type.ToString();
+            _button = GetComponentInChildren<Button>();
+        }
+
+        private void Update()
+        {
+            if (block.type == BlockType.Empty)
+                return;
+            
+            _button.interactable = block.weight + EditMenuManager.Instance.currentWeight <= EditMenuManager.Instance.maxWeight;
         }
 
         public void Clicked()
         {
             BlockMenu.Instance.blockToPlace = block;
+            EditMenuManager.Instance.UpdateBlockInfoText();
         }
     }
 }

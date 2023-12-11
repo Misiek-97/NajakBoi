@@ -219,6 +219,14 @@ namespace NajakBoi.Scripts.Blocks
             // Update Tile Parameters and add new tile to the list.
             var block = blockGo.GetComponent<Block>();
             var blockType = random ? GetRandomBlockType(excludedTypes: excludedTypes) : type;
+            /*
+            if (random && playerId == PlayerId.Player)
+            {
+                if (GetTotalWeight() + SelectBlock(blockType).weight >
+                    SessionManager.PlayerData.BuildingStats.maxWeight)
+                    blockType = BlockType.Empty;
+            }
+            */
             block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes), false);
             block.GridPos = gridPos;
             block.ID = id;
@@ -270,6 +278,11 @@ namespace NajakBoi.Scripts.Blocks
         {
             var spawn = GridBlocks.Find(x => x.isSpawn);
             return spawn != null;
+        }
+
+        public int GetTotalWeight()
+        {
+            return GridBlocks.Sum(b => b.weight);
         }
     }
 }

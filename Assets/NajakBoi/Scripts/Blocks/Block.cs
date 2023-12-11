@@ -20,6 +20,8 @@ namespace NajakBoi.Scripts.Blocks
         public LootTable lootTable;
         public GameObject dropDisplayPrefab;
         public Vector3 offset;
+        public int weight;
+        
      
         public Sprite sprite;
         public GameObject blockCanvasPrefab;
@@ -117,6 +119,7 @@ namespace NajakBoi.Scripts.Blocks
             lootTable = block.lootTable;
             dropDisplayPrefab = block.dropDisplayPrefab;
             offset = block.offset;
+            weight = block.weight;
             isSpawn = spawn;
             
             Renderer.material = mat;
@@ -183,27 +186,47 @@ namespace NajakBoi.Scripts.Blocks
                 }
                 return;
             }
-            
-            if (BlockMenu.Instance.blockToPlace)
+
+            var blockMenu = BlockMenu.Instance;
+            var editMenu = EditMenuManager.Instance;
+            var btp = blockMenu.blockToPlace;
+            if (btp)
             {
-                if (BlockMenu.Instance.blockToPlace.type != BlockType.Empty)
+                if (btp.type != BlockType.Empty)
                 {
+                    if (btp.weight + editMenu.currentWeight > editMenu.maxWeight)
+                    {
+                        editMenu.UpdateInfoText($"Can't place {btp.type} because it exceeds maximum block weight!");
+                        blockMenu.blockToPlace = null;
+                        return;
+                    }
+                    
                     var blockBelow = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y - 1));
                     var blockBelow2 = _blockSpawner.GridBlocks.Find(x => x.GridPos == new Vector2(GridPos.x, GridPos.y - 2));
                     if (blockBelow && blockBelow.isSpawn)
                     {
-                        EditMenuManager.Instance.UpdateInfoText($"Can't place {BlockMenu.Instance.blockToPlace.type} here, as block below is reserved for spawn!");
+                        editMenu.UpdateInfoText($"Can't place {btp.type} here, as block below is reserved for spawn!");
                         return;
                     }
                     
                     if(blockBelow2 && blockBelow2.isSpawn)
                     {
-                        EditMenuManager.Instance.UpdateInfoText($"Can't place {BlockMenu.Instance.blockToPlace.type} here, as blocks below are reserved for spawn!");
+                        editMenu.UpdateInfoText($"Can't place {btp.type} here, as blocks below are reserved for spawn!");
+                        return;
+                    }
+                }
+                else
+                {
+                    if (isSpawn)
+                    {
+                        editMenu.UpdateInfoText("This block is used as spawn point and can't be made empty!");
                         return;
                     }
                 }
 
-                UpdateBlockProperties(BlockMenu.Instance.blockToPlace, false);
+                UpdateBlockProperties(btp, false);
+                editMenu.UpdateInfoText($"Successfully placed {btp.type} at {GridPos}.");
+                editMenu.UpdateWeightText();
             }
         }
 
