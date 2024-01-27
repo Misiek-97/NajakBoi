@@ -7,6 +7,10 @@
         Dirt = 1,
         Stone = 2,
         Jelly = 3,
-        MilitaryChest = 4
+        MilitaryChest = 4,
+
+
+        //Layered
+        ReinforcedConcrete = 100,
     }
 }

@@ -26,7 +26,7 @@ namespace NajakBoi.Scripts.Weapons
         public PlayerController playerController;
         public GameManager gameManager => GameManager.Instance;
 
-        private void Awake()
+        private void Start()
         {
             playerController = GetComponentInParent<PlayerController>();
             GetWeaponUpgrades();

@@ -34,6 +34,8 @@ namespace NajakBoi.Scripts.Blocks
         private BoxCollider _collider;
         private GameObject _canvas;
 
+        private LayeredBlock _layerdBlock;
+
         public bool isSpawn;
 
         private BlockSpawner _blockSpawner;
@@ -63,7 +65,13 @@ namespace NajakBoi.Scripts.Blocks
             _canvas.SetActive(true);
             if (currentHealth <= 0)
             {
-                if (lootTable)
+                TryGetComponent(out LayeredBlock lb);
+
+                if (lb != null && lb.currentLayer < lb.layers)
+                {
+                    lb.GetNextLayer();
+                }
+                else if (lootTable)
                 {
                     GenerateLoot();
                 }
@@ -71,7 +79,7 @@ namespace NajakBoi.Scripts.Blocks
                 {
                     Debug.LogWarning($"No Loot Table set up on {gameObject.name}!");
                 }
-                
+
                 Destroy(gameObject);
             }
         }
