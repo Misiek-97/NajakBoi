@@ -48,6 +48,8 @@ namespace NajakBoi.Scripts.Blocks
             while (!SetUpBlockDictionary())
                 await Task.Delay(10);
 
+            CreateGrid(true);
+            return;
             if (!isPlayer)
             {
                 playerId = PlayerId.Opponent;
@@ -169,8 +171,8 @@ namespace NajakBoi.Scripts.Blocks
 
             if (playerId == PlayerId.Player)
             {
-                gridSize.x = SessionManager.PlayerData.BuildingStats.maxBuildX;
-                gridSize.y = SessionManager.PlayerData.BuildingStats.maxBuildY;
+              //  gridSize.x = SessionManager.PlayerData.BuildingStats.maxBuildX;
+               // gridSize.y = SessionManager.PlayerData.BuildingStats.maxBuildY;
             }
             
             for (var x = 0; x < gridSize.x; x++)
@@ -222,9 +224,8 @@ namespace NajakBoi.Scripts.Blocks
             
             if (random && playerId == PlayerId.Player)
             {
-                if (GetTotalWeight() + SelectBlock(blockType).weight >
-                    SessionManager.PlayerData.BuildingStats.maxWeight)
-                    blockType = BlockType.Empty;
+               // if (GetTotalWeight() + SelectBlock(blockType).weight > SessionManager.PlayerData.BuildingStats.maxWeight)
+                    //blockType = BlockType.Empty;
             }
             
             block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes), false);

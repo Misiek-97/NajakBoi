@@ -5,20 +5,19 @@ namespace NajakBoi.Scripts.Blocks
 {
     public class BlockHealthBar : Bar
     {
-        private Block _block;
+        public Block block;
         private Canvas _canvas;
 
         private void Awake()
         {
             _canvas = GetComponent<Canvas>();
             _canvas.worldCamera = Camera.main;
-            _block = GetComponentInParent<Block>();
         }
 
         public void UpdateHealth()
         {
-            amount = _block.currentHealth;
-            maxAmount = _block.maxHealth;
+            amount = block.CurrentHealth;
+            maxAmount = block.maxHealth;
         }
     }
 }

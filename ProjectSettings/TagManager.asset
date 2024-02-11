@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Interactible
+  - Block
+  - CinemachineTarget
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -19,7 +22,7 @@ TagManager:
   - Player
   - InspectObject
   - PostProcessing
-  - 
+  - IgnoreCollision
   - 
   - 
   - 
