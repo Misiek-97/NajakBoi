@@ -16,6 +16,7 @@ namespace NajakBoi.Scripts.Weapons
         private void Start()
         {
             Physics.IgnoreLayerCollision(gameObject.layer,  LayerMask.NameToLayer("IgnoreCollision"));
+            GameManager.Instance.cameraFollow.target = transform;
         }
 
         private void Update()

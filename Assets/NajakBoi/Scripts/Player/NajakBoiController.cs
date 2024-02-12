@@ -1,6 +1,5 @@
 using NajakBoi.Scripts.UI.HUD;
 using NajakBoi.Scripts.Weapons;
-using StarterAssets;
 using SupanthaPaul;
 using TMPro;
 using UnityEngine;
@@ -21,6 +20,7 @@ namespace NajakBoi.Scripts.Player
         public float maxMovement = 100f;
 
         public PlayerController controller;
+        public Launcher launcher;
 
         private bool _isDead;
 
@@ -31,6 +31,7 @@ namespace NajakBoi.Scripts.Player
 
             healthBar.najakBoi = this;
             healthBar.UpdateHealth();
+            launcher = GetComponentInChildren<Launcher>();
 
             currentMovement = maxMovement;
 
@@ -42,6 +43,7 @@ namespace NajakBoi.Scripts.Player
 
         private void Update()
         {
+            ammoDisplay.text = $"{launcher.gameObject.name} Ammo: {(!launcher.useAmmo ? "Infinite" : launcher.ammo)}";
             if (weaponSwitcher)
             {
                 var currentWeapon = weaponSwitcher.currentWeapon;

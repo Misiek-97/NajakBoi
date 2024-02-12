@@ -1576,7 +1576,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1361386580}
     - target: {fileID: 1208207480793084077, guid: 99180a3f8f66d244d9abb9413d9503e5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1701,7 +1701,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1361386580}
     - target: {fileID: 9016533953668624362, guid: 99180a3f8f66d244d9abb9413d9503e5,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
@@ -1975,22 +1975,22 @@ PrefabInstance:
     - target: {fileID: 2644038771920387516, guid: 87bf8c1bb82c18141b66b97e913ccc1e,
         type: 3}
       propertyPath: maxCamerabounds.y
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2644038771920387516, guid: 87bf8c1bb82c18141b66b97e913ccc1e,
         type: 3}
       propertyPath: maxCamerabounds.z
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 2644038771920387516, guid: 87bf8c1bb82c18141b66b97e913ccc1e,
         type: 3}
       propertyPath: minCamerabounds.y
-      value: -20
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 2644038771920387516, guid: 87bf8c1bb82c18141b66b97e913ccc1e,
         type: 3}
       propertyPath: minCamerabounds.z
-      value: -20
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 2644038771920387518, guid: 87bf8c1bb82c18141b66b97e913ccc1e,
         type: 3}

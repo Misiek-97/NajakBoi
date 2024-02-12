@@ -209,7 +209,7 @@ namespace NajakBoi.Scripts
             editCanvas.SetActive(editMode);
 
             if (!editMode)
-                SceneManager.LoadScene("Game");
+                SceneManager.LoadScene("Game-2D");
         }
 
         public void PlayerDeath(PlayerId playerId)
@@ -221,7 +221,7 @@ namespace NajakBoi.Scripts
         public void RestartGame()
         {
             playerTurn = PlayerId.Player1;
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Game-2D");
         }
         public void MainMenu()
         {
