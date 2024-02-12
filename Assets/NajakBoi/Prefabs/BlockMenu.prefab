@@ -349,11 +349,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blocks:
-  - {fileID: 3816686177785424246, guid: 66d9f599d4b54084a902f9c9387d5d31, type: 3}
-  - {fileID: 2616029442711559426, guid: a007f5a3ac0168f4aa256f99aad569da, type: 3}
-  - {fileID: 5962245528644100510, guid: b16878d6bdaa0cc46a757206c9d6dca1, type: 3}
-  - {fileID: 8463492662520406600, guid: 3ceaa5046f72504459017f96890f9afe, type: 3}
-  blockBtnPrefab: {fileID: 3390489218156865043, guid: 2d632f518ea423149b64bbf29a35902c, type: 3}
+  - {fileID: 4885223511298118911, guid: 623cde51dcb295b42bc99b76211baf90, type: 3}
+  - {fileID: 6556452163538725152, guid: 1d687806c5dc1f44aae0e29ec6ba6eae, type: 3}
+  - {fileID: 4394890309227666772, guid: 727beb3ee6dc362458ddddd5c0072d4f, type: 3}
+  - {fileID: 2393125762408693940, guid: 772953fa8d4d6cf4d90908c2d2dce586, type: 3}
+  blockBtnPrefab: {fileID: 3390489218156865043, guid: 2d632f518ea423149b64bbf29a35902c,
+    type: 3}
+  blockToPlace: {fileID: 0}
   content: {fileID: 7201244761565946763}
 --- !u!1 &3406512142609994498
 GameObject:

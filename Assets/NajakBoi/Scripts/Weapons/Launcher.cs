@@ -16,10 +16,9 @@ namespace NajakBoi.Scripts.Weapons
         // Update is called once per frame
         void Update()
         {
-            if (!GameManager.Instance.CanPlayerTakeAction(playerController.playerId))
+            if (!GameManager.Instance.CanPlayerTakeAction(najakBoiController.playerId))
             {
-                playerController.controller.isAiming = false;
-                playerController.chargeBar.SetFillAmount(0f);
+                najakBoiController.chargeBar.SetFillAmount(0f);
                 _force = minForce;
                 return;
             }
@@ -32,10 +31,9 @@ namespace NajakBoi.Scripts.Weapons
             
             if (Input.GetMouseButton(0))
             {
-                playerController.controller.isAiming = true;
                 _force = Mathf.Clamp(_force += forceMultiplier * Time.deltaTime, minForce, maxForce);
 
-                playerController.chargeBar.SetFillAmount(_force / maxForce);
+                najakBoiController.chargeBar.SetFillAmount(_force / maxForce);
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -43,8 +41,8 @@ namespace NajakBoi.Scripts.Weapons
                 Fire(_force);
                 _force = minForce;
 
-                playerController.chargeBar.SetFillAmount(_force);
-                playerController.chargeBar.gameObject.SetActive(false);
+                najakBoiController.chargeBar.SetFillAmount(_force);
+                najakBoiController.chargeBar.gameObject.SetActive(false);
             }
         }
     }

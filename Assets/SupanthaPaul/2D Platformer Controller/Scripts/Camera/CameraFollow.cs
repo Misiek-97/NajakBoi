@@ -6,8 +6,7 @@ namespace SupanthaPaul
 {
 	public class CameraFollow : MonoBehaviour
 	{
-	    [SerializeField]
-		private Transform target;
+		public Transform target;
 		[SerializeField]
 		private float smoothSpeed = 0.125f;
 		public Vector3 offset;

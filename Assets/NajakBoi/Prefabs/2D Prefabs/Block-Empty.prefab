@@ -11,8 +11,29 @@ PrefabInstance:
     - target: {fileID: 1590975723287012356, guid: 31098f391ba6ea540a10d3aed32cff1f,
         type: 3}
       propertyPath: m_Name
-      value: BlockPrefab
+      value: Block-Empty
       objectReference: {fileID: 0}
+    - target: {fileID: 4593236783884623283, guid: 31098f391ba6ea540a10d3aed32cff1f,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593236783884623283, guid: 31098f391ba6ea540a10d3aed32cff1f,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4593236783884623283, guid: 31098f391ba6ea540a10d3aed32cff1f,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5309254067667094329, guid: 31098f391ba6ea540a10d3aed32cff1f,
+        type: 3}
+      propertyPath: sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8767968a0d5f6ad41a7ccf085ee88dc7,
+        type: 3}
     - target: {fileID: 9059918314186334642, guid: 31098f391ba6ea540a10d3aed32cff1f,
         type: 3}
       propertyPath: m_LocalPosition.x

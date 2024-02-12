@@ -81,7 +81,7 @@ namespace NajakBoi.Scripts.Blocks
             //Do nothing for blocks
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnCollisionEnter2D(Collision2D collision)
         {
             if (collision.gameObject.CompareTag("Projectile"))
             {
@@ -104,10 +104,12 @@ namespace NajakBoi.Scripts.Blocks
             offset = block.offset;
             weight = block.weight;
             isSpawn = spawn;
+            Renderer.sprite = block.sprite;
             
-            if (/*!GameManager.Instance.editMode &&*/ type == BlockType.Empty)
+            if (!GameManager.Instance.editMode && type == BlockType.Empty)
             {
                 Renderer.enabled = false;
+                _collider.enabled = false;
                 canvas.SetActive(false);
             }
 
@@ -120,7 +122,7 @@ namespace NajakBoi.Scripts.Blocks
                 healthBar.UpdateHealth();
 
             gameObject.name = $"{type}@{GridPos}#{ID}";
-            gameObject.layer = type == BlockType.Empty ? LayerMask.NameToLayer("IgnoreCollision") : 0;
+            gameObject.layer = type == BlockType.Empty ? LayerMask.NameToLayer("IgnoreCollision") : LayerMask.NameToLayer("Ground");
         }
 
         private void OnMouseDown()
@@ -208,15 +210,13 @@ namespace NajakBoi.Scripts.Blocks
 
         private void OnMouseEnter()
         {
-            //if (!GameManager.Instance.editMode) return;
-            
+            if (!GameManager.Instance.editMode) return;
             highlightGo.SetActive(true);
         }
         
         private void OnMouseExit()
         {
-            //if (!GameManager.Instance.editMode) return;
-            
+            if (!GameManager.Instance.editMode) return;
             highlightGo.SetActive(false);
         }
     }

@@ -10,7 +10,7 @@ namespace NajakBoi.Scripts.Blocks
 
         private void Awake()
         {
-            _canvas = GetComponent<Canvas>();
+            _canvas = GetComponentInParent<Canvas>();
             _canvas.worldCamera = Camera.main;
         }
 

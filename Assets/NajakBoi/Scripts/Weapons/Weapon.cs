@@ -20,15 +20,14 @@ namespace NajakBoi.Scripts.Weapons
         public FireMode fireMode;
         public bool useAmmo;
         public int ammo;
-        public GameObject model;
         public GameObject projectilePrefab;
         public Transform projectileExit;
-        public PlayerController playerController;
+        [FormerlySerializedAs("playerController")] public NajakBoiController najakBoiController;
         public GameManager gameManager => GameManager.Instance;
 
         private void Awake()
         {
-            playerController = GetComponentInParent<PlayerController>();
+            najakBoiController = GetComponentInParent<NajakBoiController>();
             GetWeaponUpgrades();
         }
 
@@ -107,7 +106,7 @@ namespace NajakBoi.Scripts.Weapons
                 // A collision occurred, and hitInfo now contains information about the hit
                 Debug.DrawRay(origin, direction * hitInfo.distance, Color.red);
 
-                var player = hitInfo.collider.gameObject.GetComponent<PlayerController>();
+                var player = hitInfo.collider.gameObject.GetComponent<NajakBoiController>();
                 if (player)
                     player.GetDamaged(damage);
 
@@ -166,19 +165,19 @@ namespace NajakBoi.Scripts.Weapons
             // Create a new projectile at pExit position
             var instance = Instantiate(projectilePrefab);
             var projectile = instance.GetComponent<Projectile>();
-            var col = instance.GetComponent<Collider>();
+            var col = instance.GetComponent<Collider2D>();
             projectile.explosionRadius = explosionRadius;
             projectile.damage = damage;
 
-            Physics.IgnoreCollision(col, playerController.GetComponent<Collider>());
+            Physics2D.IgnoreCollision(col, najakBoiController.GetComponent<Collider2D>());
             
             //Ensure Projectile and Direction is at 0z
             direction = new Vector3(direction.x, direction.y, 0f);
             instance.transform.position = new Vector3(pExit.x, pExit.y, 0.0f);
 
             // Apply force to the Rigidbody in the calculated direction
-            projectile.rb.AddForce(direction * force, ForceMode.Impulse);
-            GameManager.Instance.playerController.isAiming = false;
+            projectile.rb.AddForce(direction * force, ForceMode2D.Impulse);
+           // GameManager.Instance.playerController.isAiming = false;
             GameManager.Instance.EndTurn();
         }
     }

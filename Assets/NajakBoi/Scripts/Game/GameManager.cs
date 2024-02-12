@@ -7,7 +7,7 @@ using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.UI;
 using NajakBoi.Scripts.UI.EditMode;
-using StarterAssets;
+using SupanthaPaul;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -21,16 +21,15 @@ namespace NajakBoi.Scripts
         public GameObject hud;
         public TextMeshProUGUI turnInfoTmp;
         public EditMenuManager editMenu;
-        public CameraManager cameraManager;
+        public CameraFollow cameraFollow;
 
-        public PlayerController player;
-        public PlayerController opponent;
+        public NajakBoiController player1;
+        public NajakBoiController player2;
 
-        public BlockSpawner playerGrid;
-        public BlockSpawner opponentGrid;
+        public BlockSpawner player1Grid;
+        public BlockSpawner player2Grid;
 
         public PlayerId playerTurn;
-        public ThirdPersonController playerController;
         public bool editMode;
 
         public GameObject editCanvas;
@@ -49,6 +48,8 @@ namespace NajakBoi.Scripts
                 Destroy(gameObject);
                 return;
             }
+            
+            
         
             Instance = this;
         }
@@ -60,7 +61,7 @@ namespace NajakBoi.Scripts
         private void Update()
         {
             if(Input.GetKeyDown(KeyCode.Escape) && GameMode == GameMode.Expedition)
-                endGameScreen.GameEnded(PlayerId.Opponent);
+                endGameScreen.GameEnded(PlayerId.Player2);
         }
 
         private void StoreStartResources()
@@ -93,45 +94,49 @@ namespace NajakBoi.Scripts
         private void Start()
         {
             StoreStartResources();
-            playerTurn = PlayerId.Player;
+            playerTurn = PlayerId.Player1;
             if (GameMode == GameMode.LocalPvP)
                 EditingStage();
         }
 
         public void StartGame()
         {
-            playerTurn = PlayerId.Player;
+            playerTurn = PlayerId.Player1;
             turnInfoTmp.text = $"{playerTurn.ToString()}'s Turn";
             editMode = false;
             
             hud.SetActive(true);
             editCanvas.SetActive(false);
             
-            playerGrid.RefreshAllBlocks();
-            opponentGrid.RefreshAllBlocks();
+            player1Grid.RefreshAllBlocks();
+            player2Grid.RefreshAllBlocks();
 
-            var playerSpawnPoint = playerGrid.GridBlocks.Find(x => x.isSpawn).transform.position;
-            player.transform.position = playerSpawnPoint + new Vector3(0, 0.5f, 0);
-            player.gameObject.SetActive(true);
+            var player1SpawnPoint = player1Grid.GridBlocks.Find(x => x.isSpawn).transform.position;
+            player1.transform.position = player1SpawnPoint + new Vector3(0, 1f, 0);
+            player1.controller.enabled = true;
+            player1.gameObject.SetActive(true);
+
+            var player2SpawnPoint = player2Grid.GridBlocks.Find(x => x.isSpawn).transform.position;
+            player2.transform.position = player2SpawnPoint + new Vector3(0, 1f, 0);
+            player2.controller.enabled = false;
+            player2.gameObject.SetActive(true);
             
             if (GameMode == GameMode.Expedition)
             {
-                opponent.healthBar.gameObject.SetActive(false);
-                opponent.movementBar.gameObject.SetActive(false);
-                return;
+                player2.healthBar.gameObject.SetActive(false);
+                player2.movementBar.gameObject.SetActive(false);
             }
             
-            var opponentSpawnPoint = opponentGrid.GridBlocks.Find(x => x.isSpawn).transform.position;
-            opponent.transform.position = opponentSpawnPoint + new Vector3(0, 0.5f, 0);
-            opponent.gameObject.SetActive(true);
         }
 
         public bool IsMyTurn(PlayerId playerId) => playerId == playerTurn;
 
         private void EditingStage()
         {
+            player1.gameObject.SetActive(false);
+            player2.gameObject.SetActive(false);
             turnInfoTmp.text = $"Editing Stage {playerTurn.ToString()}'s Turn";
-            playerTurn = PlayerId.Player;
+            playerTurn = PlayerId.Player1;
             editMode = true;
             hud.SetActive(false);
             editMenu.gameObject.SetActive(true);
@@ -142,15 +147,15 @@ namespace NajakBoi.Scripts
         {
             switch (playerTurn)
             {
-                case PlayerId.Player:
-                    playerTurn = PlayerId.Opponent;
+                case PlayerId.Player1:
+                    playerTurn = PlayerId.Player2;
                     editMenu.StartEditTurn(playerTurn);
-                    playerGrid.SaveGrid();
+                    player1Grid.SaveGrid();
                     turnInfoTmp.text = $"Editing Stage {playerTurn.ToString()}'s Turn";
                     break;
-                case PlayerId.Opponent:
-                    playerTurn = PlayerId.Player;
-                    opponentGrid.SaveGrid();
+                case PlayerId.Player2:
+                    playerTurn = PlayerId.Player1;
+                    player2Grid.SaveGrid();
                     StartGame();
                     break;
                 default:
@@ -163,28 +168,26 @@ namespace NajakBoi.Scripts
             EndingTurn = true;
             turnInfoTmp.text = $"Ending {playerTurn.ToString()}'s Turn";
             yield return new WaitForSeconds(2f);
-            player.gameObject.SetActive(false);
-            opponent.gameObject.SetActive(false);
 
             switch (playerTurn)
             {
-                case PlayerId.Player:
-                    playerController = opponent.GetComponent<ThirdPersonController>();
-                    playerTurn = PlayerId.Opponent;
-                    opponent.gameObject.SetActive(true);
-                    player.gameObject.SetActive(true);
+                case PlayerId.Player1:
+                    playerTurn = PlayerId.Player2;
+                    player2.controller.enabled = true;
+                    player1.controller.enabled = false;
+                    cameraFollow.target = player2.transform;
                     break; 
 
-                case PlayerId.Opponent: 
-                    playerTurn = PlayerId.Player;
-                    playerController = player.GetComponent<ThirdPersonController>();
-                    player.gameObject.SetActive(true);
-                    opponent.gameObject.SetActive(true);
+                case PlayerId.Player2: 
+                    playerTurn = PlayerId.Player1;
+                    player2.controller.enabled = false;
+                    player1.controller.enabled = true;
+                    cameraFollow.target = player1.transform;
                     break;
             }
 
-            player.currentMovement = player.maxMovement;
-            opponent.currentMovement = opponent.maxMovement;
+            player1.currentMovement = player1.maxMovement;
+            player2.currentMovement = player2.maxMovement;
             turnInfoTmp.text = $"{playerTurn.ToString()}'s Turn";
             EndingTurn = false;
         }
@@ -217,7 +220,7 @@ namespace NajakBoi.Scripts
 
         public void RestartGame()
         {
-            playerTurn = PlayerId.Player;
+            playerTurn = PlayerId.Player1;
             SceneManager.LoadScene("Game");
         }
         public void MainMenu()
