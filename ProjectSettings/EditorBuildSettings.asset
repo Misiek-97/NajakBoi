@@ -9,12 +9,9 @@ EditorBuildSettings:
     path: Assets/NajakBoi/Scenes/MainMenu.unity
     guid: bbbf27169226b6147ab48c01c19f3dd6
   - enabled: 1
-    path: Assets/NajakBoi/Scenes/Game.unity
-    guid: bdb0f26d2c9fbb145af3a98548bcbf35
-  - enabled: 1
-    path: Assets/NajakBoi/Scenes/Editor.unity
-    guid: 5838d791c6ac882488fafb19d322e60d
-  - enabled: 1
     path: Assets/NajakBoi/Scenes/TheLab.unity
     guid: b23fb8188d27c9140a4dbf01f7f05922
+  - enabled: 1
+    path: Assets/NajakBoi/Scenes/Game-2D.unity
+    guid: 2d8d442a90c247a478923e712de3a589
   m_configObjects: {}

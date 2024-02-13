@@ -4,14 +4,14 @@ namespace NajakBoi.Scripts.UI.HUD
 {
     public class HealthBar : Bar
     {
-        public PlayerController player;
+        public NajakBoiController najakBoi;
 
 
         public void UpdateHealth()
         {
-            if (!player) return;
-            amount = player.currentHealth;
-            maxAmount = player.maxHealth;
+            if (!najakBoi) return;
+            amount = najakBoi.currentHealth;
+            maxAmount = najakBoi.maxHealth;
         }
 
     }

@@ -35,29 +35,21 @@ namespace NajakBoi.Scripts.Blocks
             return true;
         }
 
-        public void RefreshAllBlocks()
-        {
-            foreach (var b in GridBlocks)
-            {
-                b.Renderer.enabled = b.type != BlockType.Empty;
-            }
-        }
-
-        private async void Start()
+        public async void Start()
         {
             while (!SetUpBlockDictionary())
                 await Task.Delay(10);
 
             if (!isPlayer)
             {
-                playerId = PlayerId.Opponent;
+                playerId = PlayerId.Player2;
                 if (GameManager.GameMode == GameMode.Expedition)
                 {
                     CreateGrid(true);
                 }
                 else
                 {
-                    var filePath = Application.persistentDataPath + "/OpponentBlockGrid.json";
+                    var filePath = Application.persistentDataPath + "/Player2BlockGrid.json";
                     if (File.Exists(filePath))
                     {
                         LoadSavedGrid();
@@ -70,9 +62,9 @@ namespace NajakBoi.Scripts.Blocks
             }
             else
             {
-                playerId = PlayerId.Player;
+                playerId = PlayerId.Player1;
                 
-                var filePath = Application.persistentDataPath + "/PlayerBlockGrid.json";
+                var filePath = Application.persistentDataPath + "/Player1BlockGrid.json";
                 CreateGrid();
                 if (File.Exists(filePath))
                 {
@@ -82,8 +74,6 @@ namespace NajakBoi.Scripts.Blocks
                 if (GameManager.GameMode == GameMode.Expedition)
                     GameManager.Instance.StartGame();
             }
-            
-            
         }
 
         private void ClearGrid()
@@ -167,7 +157,7 @@ namespace NajakBoi.Scripts.Blocks
         
             var id = 0;
 
-            if (playerId == PlayerId.Player)
+            if (playerId == PlayerId.Player1)
             {
                 gridSize.x = SessionManager.PlayerData.BuildingStats.maxBuildX;
                 gridSize.y = SessionManager.PlayerData.BuildingStats.maxBuildY;
@@ -213,17 +203,16 @@ namespace NajakBoi.Scripts.Blocks
                     excludedTypes.Add(BlockType.MilitaryChest);
             }
 
-            if (playerId == PlayerId.Player || (playerId == PlayerId.Opponent && GameManager.GameMode != GameMode.Expedition))
+            if (playerId == PlayerId.Player1 || (playerId == PlayerId.Player2 && GameManager.GameMode != GameMode.Expedition))
                 excludedTypes.Add(BlockType.MilitaryChest);
 
             // Update Tile Parameters and add new tile to the list.
             var block = blockGo.GetComponent<Block>();
             var blockType = random ? GetRandomBlockType(excludedTypes: excludedTypes) : type;
             
-            if (random && playerId == PlayerId.Player)
+            if (random && playerId == PlayerId.Player1)
             {
-                if (GetTotalWeight() + SelectBlock(blockType).weight >
-                    SessionManager.PlayerData.BuildingStats.maxWeight)
+                if (GetTotalWeight() + SelectBlock(blockType).weight > SessionManager.PlayerData.BuildingStats.maxWeight)
                     blockType = BlockType.Empty;
             }
             
@@ -262,7 +251,7 @@ namespace NajakBoi.Scripts.Blocks
             blockGo.transform.localPosition = blockPosition;
 
             var excludedTypes = new List<BlockType>();
-            if(playerId == PlayerId.Player)
+            if(playerId == PlayerId.Player1)
                 excludedTypes.Add(BlockType.MilitaryChest);
             
             // Update Tile Parameters and add new tile to the list.
@@ -272,6 +261,18 @@ namespace NajakBoi.Scripts.Blocks
             blockScript.ID = id;
             blockGo.name = $"{blockScript.type}@({pos.x},{pos.y})#{id}";
             GridBlocks.Add(blockScript);
+        }
+
+        public void DisableAllEmpties()
+        {
+            foreach (var b in GridBlocks)
+            {
+                if (b.type != BlockType.Empty) continue;
+                b.gameObject.layer = LayerMask.NameToLayer("IgnoreCollision");
+                b.Renderer.enabled = false;
+                b.canvas.SetActive(false);
+                b.BoxCollider.enabled = false;
+            }
         }
 
         public bool HasSpawnSet()

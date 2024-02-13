@@ -9,7 +9,7 @@ namespace NajakBoi.Scripts.UI
       
         public void StartGame()
         {
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Game-2D");
         } 
         public void GoToLab()
         {

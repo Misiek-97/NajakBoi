@@ -72,8 +72,8 @@ namespace NajakBoi.Scripts.Serialization
             // Specify the default file path for saving and loading
             var filePath = playerId switch
             {
-                PlayerId.Player => Application.persistentDataPath + "/PlayerBlockGrid.json",
-                PlayerId.Opponent => Application.persistentDataPath + "/OpponentBlockGrid.json",
+                PlayerId.Player1 => Application.persistentDataPath + "/Player1BlockGrid.json",
+                PlayerId.Player2 => Application.persistentDataPath + "/Player2BlockGrid.json",
                 _ => ""
             };
 
@@ -87,8 +87,8 @@ namespace NajakBoi.Scripts.Serialization
         {
             var filePath = playerId switch
             {
-                PlayerId.Player => Application.persistentDataPath + "/PlayerBlockGrid.json",
-                PlayerId.Opponent => Application.persistentDataPath + "/OpponentBlockGrid.json",
+                PlayerId.Player1 => Application.persistentDataPath + "/Player1BlockGrid.json",
+                PlayerId.Player2 => Application.persistentDataPath + "/Player2BlockGrid.json",
                 _ => ""
             };
 

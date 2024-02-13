@@ -1,12 +1,12 @@
 using NajakBoi.Scripts.UI.HUD;
 using NajakBoi.Scripts.Weapons;
-using StarterAssets;
+using SupanthaPaul;
 using TMPro;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Player
 {
-    public class PlayerController : MonoBehaviour, IDamageable
+    public class NajakBoiController : MonoBehaviour, IDamageable
     {
         public PlayerId playerId;
         public HealthBar healthBar;
@@ -19,7 +19,8 @@ namespace NajakBoi.Scripts.Player
         public float currentMovement;
         public float maxMovement = 100f;
 
-        public ThirdPersonController controller;
+        public PlayerController controller;
+        public Launcher launcher;
 
         private bool _isDead;
 
@@ -28,12 +29,13 @@ namespace NajakBoi.Scripts.Player
         {
             currentHealth = maxHealth;
 
-            healthBar.player = this;
+            healthBar.najakBoi = this;
             healthBar.UpdateHealth();
+            launcher = GetComponentInChildren<Launcher>();
 
             currentMovement = maxMovement;
 
-            movementBar.player = this;
+            movementBar.najakBoi = this;
             movementBar.UpdateMovement();
 
             weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
@@ -41,13 +43,17 @@ namespace NajakBoi.Scripts.Player
 
         private void Update()
         {
-            var currentWeapon = weaponSwitcher.currentWeapon;
-            if(currentWeapon)
-                ammoDisplay.text = $"{currentWeapon.gameObject.name} Ammo: {(!currentWeapon.useAmmo ? "Infinite" : currentWeapon.ammo)}";
+            ammoDisplay.text = $"{launcher.gameObject.name} Ammo: {(!launcher.useAmmo ? "Infinite" : launcher.ammo)}";
+            if (weaponSwitcher)
+            {
+                var currentWeapon = weaponSwitcher.currentWeapon;
+                if(currentWeapon)
+                    ammoDisplay.text = $"{currentWeapon.gameObject.name} Ammo: {(!currentWeapon.useAmmo ? "Infinite" : currentWeapon.ammo)}";
+            }
         }
 
 
-        private void OnCollisionEnter(Collision other)
+        private void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.CompareTag("Projectile"))
             {
@@ -57,7 +63,7 @@ namespace NajakBoi.Scripts.Player
             }
         } 
     
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter2D(Collider2D other)
         {
             if (other.gameObject.CompareTag("DeathZone"))
             {
@@ -102,14 +108,14 @@ namespace NajakBoi.Scripts.Player
 
         public void ApplyExplosionForce(float explosionForce, Vector3 origin, float explosionRadius)
         {
-            var cc = GetComponent<CharacterController>();
+            var rb = GetComponent<Rigidbody2D>();
             var pos = transform.position;
             var direction = (pos - origin).normalized;
             var distance = Vector3.Distance(origin, pos);
             var force = Mathf.Clamp01(1f - distance / explosionRadius) * explosionForce;
 
-            // Calculate the target position after applying the force
-            var targetPosition = pos + (direction * force + Vector3.up * 0.5f);
+            Debug.Log($"Apply {force} * {direction} - (1f - {distance} / {explosionRadius} * {explosionForce}");
+            rb.AddForce(force * direction, ForceMode2D.Impulse);
 
         }
     }

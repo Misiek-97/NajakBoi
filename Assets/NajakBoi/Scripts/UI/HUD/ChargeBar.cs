@@ -11,15 +11,6 @@ namespace NajakBoi.Scripts.UI.HUD
 
         private float _currentFill = 0f;
 
-
-        private void Update()
-        {
-            if (Camera.main != null)
-            {
-                transform.parent.transform.LookAt(Camera.main.transform);
-            }
-        }
-
         // You can call this method with a passed-in float to set the fill amount directly
         public void SetFillAmount(float fillAmount)
         {

@@ -14,12 +14,12 @@ namespace NajakBoi.Scripts.Weapons
         public Weapon currentWeapon;
         
         public GameManager gm => GameManager.Instance;
-        private PlayerController _player;
+        private NajakBoiController _najakBoi;
         
         // Start is called before the first frame update
         void Start()
         {
-            _player = GetComponentInParent<PlayerController>();
+            _najakBoi = GetComponentInParent<NajakBoiController>();
             foreach (var weapon in transform.GetComponentsInChildren<Weapon>())
             {
                 weapons.Add(weapon);
@@ -31,7 +31,6 @@ namespace NajakBoi.Scripts.Weapons
                 else
                 {
                     currentWeapon = weapon;
-                    _player.controller.AnimatorSetWeaponType((int)currentWeapon.weaponType);
                 }
             }
         }
@@ -42,13 +41,12 @@ namespace NajakBoi.Scripts.Weapons
             var weapon = weapons.First(x => x.weaponType == type);
             weapon.gameObject.SetActive(true);
             currentWeapon = weapon;
-            _player.controller.AnimatorSetWeaponType((int)currentWeapon.weaponType);
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Q) && gm.IsMyTurn(_player.playerId))
+            if (Input.GetKeyDown(KeyCode.Q) && gm.IsMyTurn(_najakBoi.playerId))
             {
                 switch (currentWeapon.weaponType)
                 {

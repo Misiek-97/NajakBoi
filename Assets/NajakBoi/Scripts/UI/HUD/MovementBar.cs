@@ -1,16 +1,17 @@
 using NajakBoi.Scripts.Player;
+using UnityEngine.Serialization;
 
 namespace NajakBoi.Scripts.UI.HUD
 {
     public class MovementBar : Bar
     {
-        public PlayerController player;
+        [FormerlySerializedAs("player")] public NajakBoiController najakBoi;
 
         public void UpdateMovement()
         {
-            if (!player) return;
-            amount = player.currentMovement;
-            maxAmount = player.maxMovement;
+            if (!najakBoi) return;
+            amount = najakBoi.currentMovement;
+            maxAmount = najakBoi.maxMovement;
         }
     }
 }

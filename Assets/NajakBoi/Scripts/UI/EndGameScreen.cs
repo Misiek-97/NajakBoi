@@ -25,7 +25,7 @@ namespace NajakBoi.Scripts.UI
 
         public void GameEnded(PlayerId looser)
         {
-            var xpGained = looser == PlayerId.Opponent ? 100 : 50;
+            var xpGained = looser == PlayerId.Player2 ? 100 : 50;
             
             ExperienceManager.GainExperience(xpGained);
             
@@ -45,13 +45,13 @@ namespace NajakBoi.Scripts.UI
             summaryTmp.text = sb.ToString();
             if (GameManager.GameMode == GameMode.Expedition)
             {
-                endTextTmp.text = looser == PlayerId.Opponent ? "Expedition Successful!" : "Expedition Failed!";
-                endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+                endTextTmp.text = looser == PlayerId.Player2 ? "Expedition Successful!" : "Expedition Failed!";
+                endTextTmp.color = looser == PlayerId.Player2 ? Color.green : Color.red;
             }
             else
             {
-                endTextTmp.text = looser == PlayerId.Opponent ? "You Won!" : "You Lost!";
-                endTextTmp.color = looser == PlayerId.Opponent ? Color.green : Color.red;
+                endTextTmp.text = looser == PlayerId.Player2 ? "You Won!" : "You Lost!";
+                endTextTmp.color = looser == PlayerId.Player2 ? Color.green : Color.red;
             }
             gameObject.SetActive(true);
         }

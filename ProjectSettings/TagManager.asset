@@ -4,10 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Projectile
-  - DeathZone
-  - CinemachineTarget
+  - Interactible
   - Block
+  - CinemachineTarget
+  - Projectile
   layers:
   - Default
   - TransparentFX
@@ -15,14 +15,14 @@ TagManager:
   - 
   - Water
   - UI
+  - 
+  - 
+  - Ground
+  - Enemy
   - Player
+  - InspectObject
+  - PostProcessing
   - IgnoreCollision
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
   - 
   - 
   - 
@@ -44,4 +44,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: New Layer
+    uniqueID: 1802038029
     locked: 0

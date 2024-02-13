@@ -3,8 +3,6 @@ using System.Text;
 using NajakBoi.Scripts.Session;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 namespace NajakBoi.Scripts.UI.EditMode
 {
@@ -14,8 +12,6 @@ namespace NajakBoi.Scripts.UI.EditMode
         public TextMeshProUGUI infoTmp;
         public TextMeshProUGUI weightTmp;
         public TextMeshProUGUI blockInfoTmp;
-
-        public Button randomizeBtn;
 
         public int currentWeight;
         public int maxWeight;
@@ -79,7 +75,7 @@ namespace NajakBoi.Scripts.UI.EditMode
         } 
         public void UpdateWeightText()
         {
-            currentWeight = GameManager.Instance.playerGrid.GetTotalWeight();
+            currentWeight = GameManager.Instance.player1Grid.GetTotalWeight();
             weightTmp.text = $"Blocks Weight: {currentWeight} / {maxWeight}";
         }
         public void UpdateBlockInfoText()
@@ -100,9 +96,9 @@ namespace NajakBoi.Scripts.UI.EditMode
 
         public void EndEditTurn()
         {
-            if (GameManager.Instance.playerTurn == PlayerId.Player)
+            if (GameManager.Instance.playerTurn == PlayerId.Player1)
             {
-                if (GameManager.Instance.playerGrid.HasSpawnSet())
+                if (GameManager.Instance.player1Grid.HasSpawnSet())
                 {
                     GameManager.Instance.EndEdit();
                     infoTmp.text = "";
@@ -114,7 +110,7 @@ namespace NajakBoi.Scripts.UI.EditMode
             }
             else
             {
-                if (GameManager.Instance.opponentGrid.HasSpawnSet())
+                if (GameManager.Instance.player2Grid.HasSpawnSet())
                 {
                     GameManager.Instance.EndEdit();
                     infoTmp.text = "";
@@ -133,14 +129,14 @@ namespace NajakBoi.Scripts.UI.EditMode
 
         public void RandomizeGrid()
         {
-            if (GameManager.Instance.playerTurn == PlayerId.Player)
+            if (GameManager.Instance.playerTurn == PlayerId.Player1)
             {
-                GameManager.Instance.playerGrid.CreateGrid(true);
+                GameManager.Instance.player1Grid.CreateGrid(true);
                 UpdateWeightText();
             }
             else
             {
-                GameManager.Instance.opponentGrid.CreateGrid(true);
+                GameManager.Instance.player2Grid.CreateGrid(true);
             }
         }
 
@@ -148,7 +144,7 @@ namespace NajakBoi.Scripts.UI.EditMode
         {
             SetAnchoringFor(playerId);
             UpdateBlockInfoText();
-            if (playerId == PlayerId.Player)
+            if (playerId == PlayerId.Player1)
             {
                UpdateWeightText();
             }
@@ -163,13 +159,13 @@ namespace NajakBoi.Scripts.UI.EditMode
             var rt = GetComponent<RectTransform>();
             switch (playerId)
             {
-                case PlayerId.Player:
+                case PlayerId.Player1:
                     rt.anchorMin = new Vector2(1f, 1f);
                     rt.anchorMax = new Vector2(1f, 1f);
                     rt.pivot = new Vector2(1f, 1f);
                     rt.anchoredPosition = Vector3.zero;
                     break;
-                case PlayerId.Opponent:
+                case PlayerId.Player2:
                     rt.anchorMin = new Vector2(0f, 1f);
                     rt.anchorMax = new Vector2(0f, 1f);
                     rt.pivot = new Vector2(0f, 1f);

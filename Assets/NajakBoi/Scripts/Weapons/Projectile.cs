@@ -5,7 +5,7 @@ namespace NajakBoi.Scripts.Weapons
     public class Projectile : MonoBehaviour
     {
         public float damage;
-        public Rigidbody rb;
+        public Rigidbody2D rb;
         public float lifetime;
         public float explosionRadius;
         public float explosionForce;
@@ -16,6 +16,7 @@ namespace NajakBoi.Scripts.Weapons
         private void Start()
         {
             Physics.IgnoreLayerCollision(gameObject.layer,  LayerMask.NameToLayer("IgnoreCollision"));
+            GameManager.Instance.cameraFollow.target = transform;
         }
 
         private void Update()
@@ -28,9 +29,9 @@ namespace NajakBoi.Scripts.Weapons
 
         private void Explosion()
         {
-            Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, explosionRadius);
 
-            foreach (Collider col in colliders)
+            foreach (Collider2D col in colliders)
             {
                 // Check if the collider has a component that can take damage
                 IDamageable damageable = col.GetComponent<IDamageable>();

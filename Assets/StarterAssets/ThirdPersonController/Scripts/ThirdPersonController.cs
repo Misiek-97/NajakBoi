@@ -105,7 +105,7 @@ namespace StarterAssets
         //private int _animIDPistolFire;
         
         public bool isAiming;
-        private PlayerController _playerController;
+        private NajakBoiController _najakBoiController;
 
 #if ENABLE_INPUT_SYSTEM 
         private PlayerInput _playerInput;
@@ -149,7 +149,7 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-            _playerController = GetComponent<PlayerController>(); 
+            _najakBoiController = GetComponent<NajakBoiController>(); 
 #if ENABLE_INPUT_SYSTEM 
             _playerInput = GetComponent<PlayerInput>();
 #else
@@ -171,7 +171,7 @@ namespace StarterAssets
             GroundedCheck();
             Move();
 
-            if (_playerController.playerId == GameManager.Instance.playerTurn)
+            if (_najakBoiController.playerId == GameManager.Instance.playerTurn)
             {
                 _animator.SetBool("isAiming", isAiming);
             }
@@ -289,7 +289,7 @@ namespace StarterAssets
                 _speed = targetSpeed;
             }
 
-            if (_playerController.UseMovement(_speed / 100f) || GameManager.EndingTurn)
+            if (_najakBoiController.UseMovement(_speed / 100f) || GameManager.EndingTurn)
             {
                 _input.move = Vector2.zero;
                 _speed = 0f;
