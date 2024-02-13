@@ -35,15 +35,7 @@ namespace NajakBoi.Scripts.Blocks
             return true;
         }
 
-        public void RefreshAllBlocks()
-        {
-            foreach (var b in GridBlocks)
-            {
-                b.Renderer.enabled = b.type != BlockType.Empty;
-            }
-        }
-
-        private async void Start()
+        public async void Start()
         {
             while (!SetUpBlockDictionary())
                 await Task.Delay(10);
@@ -167,8 +159,8 @@ namespace NajakBoi.Scripts.Blocks
 
             if (playerId == PlayerId.Player1)
             {
-              //  gridSize.x = SessionManager.PlayerData.BuildingStats.maxBuildX;
-               // gridSize.y = SessionManager.PlayerData.BuildingStats.maxBuildY;
+                gridSize.x = SessionManager.PlayerData.BuildingStats.maxBuildX;
+                gridSize.y = SessionManager.PlayerData.BuildingStats.maxBuildY;
             }
             
             for (var x = 0; x < gridSize.x; x++)
@@ -220,8 +212,8 @@ namespace NajakBoi.Scripts.Blocks
             
             if (random && playerId == PlayerId.Player1)
             {
-               // if (GetTotalWeight() + SelectBlock(blockType).weight > SessionManager.PlayerData.BuildingStats.maxWeight)
-                    //blockType = BlockType.Empty;
+                if (GetTotalWeight() + SelectBlock(blockType).weight > SessionManager.PlayerData.BuildingStats.maxWeight)
+                    blockType = BlockType.Empty;
             }
             
             block.UpdateBlockProperties(SelectBlock(blockType, excludedTypes: excludedTypes), false);
@@ -269,6 +261,18 @@ namespace NajakBoi.Scripts.Blocks
             blockScript.ID = id;
             blockGo.name = $"{blockScript.type}@({pos.x},{pos.y})#{id}";
             GridBlocks.Add(blockScript);
+        }
+
+        public void DisableAllEmpties()
+        {
+            foreach (var b in GridBlocks)
+            {
+                if (b.type != BlockType.Empty) continue;
+                b.gameObject.layer = LayerMask.NameToLayer("IgnoreCollision");
+                b.Renderer.enabled = false;
+                b.canvas.SetActive(false);
+                b.BoxCollider.enabled = false;
+            }
         }
 
         public bool HasSpawnSet()

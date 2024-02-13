@@ -96,7 +96,9 @@ namespace NajakBoi.Scripts
             StoreStartResources();
             playerTurn = PlayerId.Player1;
             if (GameMode == GameMode.LocalPvP)
+            {
                 EditingStage();
+            }
         }
 
         public void StartGame()
@@ -108,8 +110,8 @@ namespace NajakBoi.Scripts
             hud.SetActive(true);
             editCanvas.SetActive(false);
             
-            player1Grid.RefreshAllBlocks();
-            player2Grid.RefreshAllBlocks();
+            player1Grid.DisableAllEmpties();
+            player2Grid.DisableAllEmpties();
 
             var player1SpawnPoint = player1Grid.GridBlocks.Find(x => x.isSpawn).transform.position;
             player1.transform.position = player1SpawnPoint + new Vector3(0, 1f, 0);

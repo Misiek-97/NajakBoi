@@ -23,7 +23,7 @@ namespace NajakBoi.Scripts.Blocks
         public BlockHealthBar healthBar;
         public GameObject canvas;
      
-        private BoxCollider2D _collider;
+        [NonSerialized] public BoxCollider2D BoxCollider;
         
         [NonSerialized]public float CurrentHealth;
         [NonSerialized]public SpriteRenderer Renderer;
@@ -37,7 +37,7 @@ namespace NajakBoi.Scripts.Blocks
         void Awake()
         {
             Renderer = GetComponent<SpriteRenderer>();
-            _collider = GetComponent<BoxCollider2D>();
+            BoxCollider = GetComponent<BoxCollider2D>();
             _blockSpawner = GetComponentInParent<BlockSpawner>();
             healthBar.block = this;
             CurrentHealth = maxHealth;
@@ -105,15 +105,7 @@ namespace NajakBoi.Scripts.Blocks
             weight = block.weight;
             isSpawn = spawn;
             Renderer.sprite = block.sprite;
-            
-            if (!GameManager.Instance.editMode && type == BlockType.Empty)
-            {
-                Renderer.enabled = false;
-                _collider.enabled = false;
-                canvas.SetActive(false);
-            }
 
-            
             transform.localPosition += offset;
 
             CurrentHealth = maxHealth;
@@ -122,9 +114,11 @@ namespace NajakBoi.Scripts.Blocks
                 healthBar.UpdateHealth();
 
             gameObject.name = $"{type}@{GridPos}#{ID}";
-            gameObject.layer = type == BlockType.Empty ? LayerMask.NameToLayer("IgnoreCollision") : LayerMask.NameToLayer("Ground");
+            gameObject.layer = LayerMask.NameToLayer("Ground");
         }
-
+        
+        
+        
         private void OnMouseDown()
         {
             if (!GameManager.Instance.editMode) return;
