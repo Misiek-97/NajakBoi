@@ -21,6 +21,12 @@ namespace NajakBoi.Scripts.UI
             GameManager.GameMode = GameMode.PvE;
             StartGame();
         }   
+        public void StartMultiplayer()
+        {
+            GameManager.GameMode = GameMode.OnlinePvP;
+            
+            SceneManager.LoadScene("Game-Multiplayer");
+        }   
         
         public void StartExpedition()
         {
