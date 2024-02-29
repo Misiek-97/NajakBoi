@@ -3,7 +3,9 @@ using System.Linq;
 using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.Weapons;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Systems.Upgrading
@@ -29,7 +31,7 @@ namespace NajakBoi.Scripts.Systems.Upgrading
             return requiredPlayerLevel <= playerData.PlayerStats.Level && requiredResources.All(reqRes =>
                 reqRes.amount <= playerData.Resources[reqRes.resourceType].amount);
         }
-
+#if UNITY_EDITOR
         public void SetName()
         {
             var assetPath = AssetDatabase.GetAssetPath(this);
@@ -37,6 +39,7 @@ namespace NajakBoi.Scripts.Systems.Upgrading
 
             AssetDatabase.RenameAsset(assetPath, newName);
         }
+#endif
     }
 
 

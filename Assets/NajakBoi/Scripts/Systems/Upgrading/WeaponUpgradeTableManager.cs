@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using NajakBoi.Scripts.Weapons;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Systems.Upgrading
@@ -14,8 +16,20 @@ namespace NajakBoi.Scripts.Systems.Upgrading
 
         private void Awake()
         {
-            PopulateWeaponUpgradeTables();
+           // PopulateWeaponUpgradeTables();
         }
+        
+        [CanBeNull]
+        public WeaponUpgradeTable GetWutFor(WeaponType wpnType, UpgradeType upType, int level)
+        {
+            var wut = weaponUpgradeTables.Find(x =>
+                x.weaponType == wpnType && x.upgradeType == upType && x.level == level);
+            return wut;
+        }
+        
+        
+       
+#if UNITY_EDITOR
         [ContextMenu("Populate Weapon Upgrade Tables")]
         public void PopulateWeaponUpgradeTables()
         {
@@ -35,17 +49,6 @@ namespace NajakBoi.Scripts.Systems.Upgrading
 
             Debug.Log("Weapon Upgrade Tables populated. Count: " + weaponUpgradeTables.Count);
         }
-        
-        [CanBeNull]
-        public WeaponUpgradeTable GetWutFor(WeaponType wpnType, UpgradeType upType, int level)
-        {
-            var wut = weaponUpgradeTables.Find(x =>
-                x.weaponType == wpnType && x.upgradeType == upType && x.level == level);
-            return wut;
-        }
-        
-
-#if UNITY_EDITOR
         [CustomEditor(typeof(WeaponUpgradeTableManager))]
         public class WeaponUpgradeTableManagerEditor : Editor
         {
@@ -66,3 +69,4 @@ namespace NajakBoi.Scripts.Systems.Upgrading
 #endif
     }
 }
+
