@@ -7,15 +7,18 @@ using NajakBoi.Scripts.Session;
 using NajakBoi.Scripts.Systems.Economy;
 using NajakBoi.Scripts.UI;
 using NajakBoi.Scripts.UI.EditMode;
+using NajakBoi.Scripts.UI.HUD;
 using SupanthaPaul;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 namespace NajakBoi.Scripts
 {
-    public class GameManager : MonoBehaviour
+    public class GameManager : NetworkBehaviour
     {
         public EndGameScreen endGameScreen;
         public GameObject hud;
@@ -23,13 +26,20 @@ namespace NajakBoi.Scripts
         public EditMenuManager editMenu;
         public CameraFollow cameraFollow;
 
+        [Header("Player 1")]
         public NajakBoiController player1;
-        public NajakBoiController player2;
-
         public BlockSpawner player1Grid;
+        public HealthBar player1HealthBar;
+        public MovementBar player1MovementBar;
+        public TextMeshProUGUI player1AmmoDisplay;
+        
+        [Header("Player 2")]
+        public NajakBoiController player2;
         public BlockSpawner player2Grid;
+        public HealthBar player2HealthBar;
+        public MovementBar player2MovementBar;
+        public TextMeshProUGUI player2AmmoDisplay;
 
-        public PlayerId playerTurn;
         public bool editMode;
 
         public GameObject editCanvas;
@@ -39,6 +49,15 @@ namespace NajakBoi.Scripts
         public static GameMode GameMode;
 
         private Dictionary<ResourceType, Resource> _startResources = new();
+
+        public NetworkVariable<PlayerId> playerTurn = new NetworkVariable<PlayerId>(PlayerId.Player1, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+
+        public override void OnNetworkSpawn()
+        {
+            
+            playerTurn.OnValueChanged += ServerChangeTurn;
+        }
 
         private void Awake()
         {
@@ -58,10 +77,19 @@ namespace NajakBoi.Scripts
             Instance = null;
         }
 
+        private void ServerChangeTurn(PlayerId previousValue, PlayerId newValue)
+        {
+            if (newValue == playerTurn.Value) return;
+            turnInfoTmp.text = $"NETWORK {playerTurn.Value.ToString()}'s Turn";
+            EndTurn();
+        }
+
         private void Update()
         {
             if(Input.GetKeyDown(KeyCode.Escape) && GameMode == GameMode.Expedition)
                 endGameScreen.GameEnded(PlayerId.Player2);
+            
+            Debug.Log($"NETWORK PLAYER TURN {playerTurn.Value}");
         }
 
         private void StoreStartResources()
@@ -94,17 +122,17 @@ namespace NajakBoi.Scripts
         private void Start()
         {
             StoreStartResources();
-            playerTurn = PlayerId.Player1;
+            playerTurn.Value = PlayerId.Player1;
             if (GameMode == GameMode.LocalPvP)
             {
-                EditingStage();
+                //EditingStage();
             }
         }
 
         public void StartGame()
         {
-            playerTurn = PlayerId.Player1;
-            turnInfoTmp.text = $"{playerTurn.ToString()}'s Turn";
+            playerTurn.Value = PlayerId.Player1;
+            turnInfoTmp.text = $"{playerTurn.Value.ToString()}'s Turn";
             editMode = false;
             
             hud.SetActive(true);
@@ -131,32 +159,35 @@ namespace NajakBoi.Scripts
             
         }
 
-        public bool IsMyTurn(PlayerId playerId) => playerId == playerTurn;
+        public bool IsMyTurn(PlayerId playerId) => playerId == playerTurn.Value;
 
         private void EditingStage()
         {
             player1.gameObject.SetActive(false);
             player2.gameObject.SetActive(false);
-            turnInfoTmp.text = $"Editing Stage {playerTurn.ToString()}'s Turn";
-            playerTurn = PlayerId.Player1;
+            turnInfoTmp.text = $"Editing Stage {playerTurn.Value.ToString()}'s Turn";
+            playerTurn.Value = PlayerId.Player1;
             editMode = true;
             hud.SetActive(false);
             editMenu.gameObject.SetActive(true);
-            editMenu.StartEditTurn(playerTurn);
+            editMenu.StartEditTurn(playerTurn.Value);
         }
 
         public void EndEdit()
         {
-            switch (playerTurn)
+            
+            StartGame();
+            return;
+            switch (playerTurn.Value)
             {
                 case PlayerId.Player1:
-                    playerTurn = PlayerId.Player2;
-                    editMenu.StartEditTurn(playerTurn);
+                    playerTurn.Value = PlayerId.Player2;
+                    editMenu.StartEditTurn(playerTurn.Value);
                     player1Grid.SaveGrid();
-                    turnInfoTmp.text = $"Editing Stage {playerTurn.ToString()}'s Turn";
+                    turnInfoTmp.text = $"Editing Stage {playerTurn.Value.ToString()}'s Turn";
                     break;
                 case PlayerId.Player2:
-                    playerTurn = PlayerId.Player1;
+                    playerTurn.Value = PlayerId.Player1;
                     player2Grid.SaveGrid();
                     StartGame();
                     break;
@@ -168,20 +199,20 @@ namespace NajakBoi.Scripts
         private IEnumerator EndTurnDelayed()
         {
             EndingTurn = true;
-            turnInfoTmp.text = $"Ending {playerTurn.ToString()}'s Turn";
+            turnInfoTmp.text = $"Ending {playerTurn.Value.ToString()}'s Turn";
             yield return new WaitForSeconds(2f);
 
-            switch (playerTurn)
+            switch (playerTurn.Value)
             {
                 case PlayerId.Player1:
-                    playerTurn = PlayerId.Player2;
+                    playerTurn.Value = PlayerId.Player2;
                     player2.controller.enabled = true;
                     player1.controller.enabled = false;
                     cameraFollow.target = player2.transform;
                     break; 
 
                 case PlayerId.Player2: 
-                    playerTurn = PlayerId.Player1;
+                    playerTurn.Value = PlayerId.Player1;
                     player2.controller.enabled = false;
                     player1.controller.enabled = true;
                     cameraFollow.target = player1.transform;
@@ -190,7 +221,7 @@ namespace NajakBoi.Scripts
 
             player1.currentMovement = player1.maxMovement;
             player2.currentMovement = player2.maxMovement;
-            turnInfoTmp.text = $"{playerTurn.ToString()}'s Turn";
+            turnInfoTmp.text = $"{playerTurn.Value.ToString()}'s Turn";
             EndingTurn = false;
         }
 
@@ -222,7 +253,7 @@ namespace NajakBoi.Scripts
 
         public void RestartGame()
         {
-            playerTurn = PlayerId.Player1;
+            playerTurn.Value = PlayerId.Player1;
             SceneManager.LoadScene("Game-2D");
         }
         public void MainMenu()

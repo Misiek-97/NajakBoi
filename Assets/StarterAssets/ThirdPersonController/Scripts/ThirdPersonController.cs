@@ -171,7 +171,7 @@ namespace StarterAssets
             GroundedCheck();
             Move();
 
-            if (_najakBoiController.playerId == GameManager.Instance.playerTurn)
+            if (_najakBoiController.playerId == GameManager.Instance.playerTurn.Value)
             {
                 _animator.SetBool("isAiming", isAiming);
             }

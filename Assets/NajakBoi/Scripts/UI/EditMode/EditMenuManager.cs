@@ -96,7 +96,7 @@ namespace NajakBoi.Scripts.UI.EditMode
 
         public void EndEditTurn()
         {
-            if (GameManager.Instance.playerTurn == PlayerId.Player1)
+            if (GameManager.Instance.playerTurn.Value == PlayerId.Player1)
             {
                 if (GameManager.Instance.player1Grid.HasSpawnSet())
                 {
@@ -129,7 +129,7 @@ namespace NajakBoi.Scripts.UI.EditMode
 
         public void RandomizeGrid()
         {
-            if (GameManager.Instance.playerTurn == PlayerId.Player1)
+            if (GameManager.Instance.playerTurn.Value == PlayerId.Player1)
             {
                 GameManager.Instance.player1Grid.CreateGrid(true);
                 UpdateWeightText();

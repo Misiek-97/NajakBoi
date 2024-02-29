@@ -281,6 +281,11 @@ namespace NajakBoi.Scripts.Blocks
             return spawn != null;
         }
 
+        public Vector3 GetSpawnPos()
+        {
+            return GridBlocks.Find(x => x.isSpawn).transform.position;
+        }
+
         public int GetTotalWeight()
         {
             return GridBlocks.Sum(b => b.weight);

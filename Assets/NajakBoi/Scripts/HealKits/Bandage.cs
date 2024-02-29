@@ -16,7 +16,7 @@ namespace NajakBoi.Scripts.HealKits
             if (Input.GetKeyDown(KeyCode.H))
             {
                 if (GameManager.Instance.editMode ||
-                    najakBoi.playerId != GameManager.Instance.playerTurn ||
+                    najakBoi.playerId != GameManager.Instance.playerTurn.Value ||
                     available <= 0 || 
                     najakBoi.currentHealth >= najakBoi.maxHealth) return;
 

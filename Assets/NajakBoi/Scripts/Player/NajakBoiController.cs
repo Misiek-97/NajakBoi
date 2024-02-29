@@ -2,11 +2,12 @@ using NajakBoi.Scripts.UI.HUD;
 using NajakBoi.Scripts.Weapons;
 using SupanthaPaul;
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace NajakBoi.Scripts.Player
 {
-    public class NajakBoiController : MonoBehaviour, IDamageable
+    public class NajakBoiController : NetworkBehaviour, IDamageable
     {
         public PlayerId playerId;
         public HealthBar healthBar;
@@ -23,10 +24,41 @@ namespace NajakBoi.Scripts.Player
         public Launcher launcher;
 
         private bool _isDead;
+        private bool _connected;
 
-
-        private void Start()
+        public override void OnNetworkSpawn()
         {
+            if (GameManager.Instance.player1 == null)
+            {
+                GameManager.Instance.player1 = this;
+                playerId = PlayerId.Player1;
+                gameObject.name = "Player1";
+            }
+            else
+            {
+                
+                GameManager.Instance.player2 = this;
+                playerId = PlayerId.Player2;
+                gameObject.name = "Player2";
+            }
+            
+            if (playerId == PlayerId.Player1)
+            {
+                healthBar = GameManager.Instance.player1HealthBar;
+                movementBar = GameManager.Instance.player1MovementBar;
+                ammoDisplay = GameManager.Instance.player1AmmoDisplay;
+                gameObject.transform.position = GameManager.Instance.player1Grid.GetSpawnPos();
+            }
+            
+            if (playerId == PlayerId.Player2)
+            {
+                healthBar = GameManager.Instance.player2HealthBar;
+                movementBar = GameManager.Instance.player2MovementBar;
+                ammoDisplay = GameManager.Instance.player2AmmoDisplay;
+                gameObject.transform.position = GameManager.Instance.player2Grid.GetSpawnPos();
+                GameManager.Instance.EndEdit();
+            }
+            
             currentHealth = maxHealth;
 
             healthBar.najakBoi = this;
@@ -39,10 +71,37 @@ namespace NajakBoi.Scripts.Player
             movementBar.UpdateMovement();
 
             weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
+
+            _connected = true;
+
+        }
+
+        private void Start()
+        {
+            /*
+            currentHealth = maxHealth;
+
+            healthBar.najakBoi = this;
+            healthBar.UpdateHealth();
+            launcher = GetComponentInChildren<Launcher>();
+
+            currentMovement = maxMovement;
+
+            movementBar.najakBoi = this;
+            movementBar.UpdateMovement();
+
+            weaponSwitcher = GetComponentInChildren<WeaponSwitcher>();
+            */
         }
 
         private void Update()
         {
+            if (!_connected)
+            {
+                Debug.Log($"Player not connected");
+                return;
+            }
+            
             ammoDisplay.text = $"{launcher.gameObject.name} Ammo: {(!launcher.useAmmo ? "Infinite" : launcher.ammo)}";
             if (weaponSwitcher)
             {

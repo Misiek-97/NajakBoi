@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace SupanthaPaul
 {
-	public class PlayerController : MonoBehaviour
+	public class PlayerController : NetworkBehaviour
 	{
 		[SerializeField] private float speed;
 		[Header("Jumping")]
@@ -173,15 +174,13 @@ namespace SupanthaPaul
 				{
 					m_dustParticle.Play();
 				}
-
 			}
 		}
 
-		private void Update()
+		private void Move(float input, bool jump)
 		{
-			// horizontal input
-			moveInput = InputSystem.HorizontalRaw();
-
+			moveInput = input;
+			
 			if (isGrounded)
 			{
 				m_extraJumps = extraJumpCount;
@@ -217,20 +216,20 @@ namespace SupanthaPaul
 				m_hasDashedInAir = false;
 			
 			// Jumping
-			if(InputSystem.Jump() && m_extraJumps > 0 && !isGrounded && !m_wallGrabbing)	// extra jumping
+			if(jump && m_extraJumps > 0 && !isGrounded && !m_wallGrabbing)	// extra jumping
 			{
 				m_rb.velocity = new Vector2(m_rb.velocity.x, m_extraJumpForce); ;
 				m_extraJumps--;
 				// jumpEffect
 				PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
 			}
-			else if(InputSystem.Jump() && (isGrounded || m_groundedRemember > 0f))	// normal single jumping
+			else if(jump && (isGrounded || m_groundedRemember > 0f))	// normal single jumping
 			{
 				m_rb.velocity = new Vector2(m_rb.velocity.x, jumpForce);
 				// jumpEffect
 				PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
 			}
-			else if(InputSystem.Jump() && m_wallGrabbing && moveInput!=m_onWallSide )		// wall jumping off the wall
+			else if(jump && m_wallGrabbing && moveInput!=m_onWallSide )		// wall jumping off the wall
 			{
 				m_wallGrabbing = false;
 				m_wallJumping = true;
@@ -249,6 +248,29 @@ namespace SupanthaPaul
 				m_rb.AddForce(new Vector2(-m_onWallSide * wallClimbForce.x, wallClimbForce.y), ForceMode2D.Impulse);
 			}
 
+		}
+
+		private void Update()
+		{
+			var input = InputSystem.HorizontalRaw();
+			var jump = InputSystem.Jump();
+
+			if (IsServer && IsLocalPlayer)
+			{
+				Debug.Log("IS SERVER & LOCAL");
+				Move(input, jump);
+			}
+			else if (IsClient && IsLocalPlayer)
+			{
+				Debug.Log("IS CLIENT & LOCAL");
+				MoveServerRpc(input, jump);
+			}
+		}
+
+		[ServerRpc]
+		private void MoveServerRpc(float input, bool jump)
+		{
+			Move(input, jump);
 		}
 
 		void Flip()
